@@ -2,5 +2,6 @@
     "java.project.sourcePaths": [
         "gameserver",
         ""
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
