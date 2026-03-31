@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /app
 COPY . .
-RUN sh gradlew :gameserver:build --no-daemon
+RUN sh gradlew build --no-daemon
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/gameserver/build/libs/*.jar ./server.jar
