@@ -25,10 +25,10 @@ public class FirebaseTest {
     String PROJECT_ID = secrets.getString("PROJECT_ID");
 
 
-    public void doesAccountExist(String email) {
+    public void doesAccountExist(String email, AccountCheck check) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String jsonPayload = "{\"identifier\":\"" + email + "\",\"continueUri\":\"http:localhost\"}";
+        String jsonPayload = "{\"identifier\":\"" + email + "\",\"continueUri\":\"http://localhost\"}";
         String url = "https://identitytoolkit.googleapis.com/v1/accounts:createAuthUri?key=" + API_KEY;
 
         Net.HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.POST).url(url).header("Content-type", "application/json").content(jsonPayload).build();
@@ -43,23 +43,14 @@ public class FirebaseTest {
                     JsonReader reader = new JsonReader();
                     JsonValue file = reader.parse(responseString);
 
-                    boolean exists = file.getBoolean("registered");
-
-                    if (exists) {
-                        System.out.println("User exists.");
-                    } else {
-                        System.out.println("User does not exist.");
-                        System.out.println("Enter password:");
-                        Scanner in = new Scanner(System.in);
-                        String password = in.next();
-                        
-                        signUp(email, password);
-                    }
+                    boolean exists = file.getBoolean("registered", false);
+                    check.onResult(exists);
                 }
             }
             @Override
             public void failed(Throwable t) {
                 System.out.println("Failed");
+                t.printStackTrace();
             }
             @Override
             public void cancelled() {
@@ -68,10 +59,7 @@ public class FirebaseTest {
         });
     }
 
-    public void signUp(String email, String password) {
-        System.out.println("Enter a username");
-        Scanner in = new Scanner(System.in);
-        String username = in.next();
+    public void signUp(String email, String password, String username) {
 
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
