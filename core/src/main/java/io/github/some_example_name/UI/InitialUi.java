@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.AccountCheck;
 import io.github.some_example_name.FirebaseTest;
 import io.github.some_example_name.Main;
+import io.github.some_example_name.Stats;
 
 public class InitialUi implements Screen {
     private Main game;
@@ -88,12 +89,21 @@ public class InitialUi implements Screen {
                 button.setText("logging in");
                 button.setDisabled(true);
                 String password = passwordField.getText();
-                test.login(email, password);
-                Gdx.app.postRunnable(new Runnable() {
+                test.login(email, password, new Stats() {
                     @Override
-                    public void run() {
-                        // FIXED: Passing 'game' so the next menu can switch screens
-                        game.setScreen(new MainMenuUi(game, stage, game.skin));
+                    public void statsLoaded(String username, int games, int wins) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.games = games;
+                                game.username = username;
+                                game.wins = wins;
+
+                                stage.clear();
+
+                                game.setScreen(new MainMenuUi(game, stage, game.skin));
+                            }
+                        });
                     }
                 });
             }
@@ -137,7 +147,23 @@ public class InitialUi implements Screen {
             public void clicked(InputEvent e, float x, float y) {
                 String username = usernameTextField.getText();
                 if (!username.isEmpty()) {
-                    test.signUp(email, password, username);
+                    test.signUp(email, password, username, new Stats() {
+                        @Override
+                        public void statsLoaded(String username, int games, int wins) {
+                            Gdx.app.postRunnable(new Runnable() {
+                                @Override
+                                public void run() {
+                                    game.games = games;
+                                    game.username = username;
+                                    game.wins = wins;
+
+                                    stage.clear();
+
+                                    game.setScreen(new MainMenuUi(game, stage, game.skin));
+                                }
+                            });
+                        }
+                    });
                 }
             }
         });
@@ -165,8 +191,6 @@ public class InitialUi implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
-        stage.clear(); // <--- THIS WIPES THE OLD UI
 
         mainTable.setFillParent(true);
         stage.addActor(mainTable);

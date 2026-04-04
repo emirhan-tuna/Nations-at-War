@@ -56,7 +56,7 @@ public class FirebaseTest {
         });
     }
 
-    public void signUp(String email, String password, String username) {
+    public void signUp(String email, String password, String username, Stats aStats) {
 
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
@@ -78,6 +78,7 @@ public class FirebaseTest {
                     String userId = file.getString("localId");
 
                     createNewUser(userId, username);
+                    getPlayerStats(userId, aStats);
                 } else {
                     System.out.println("Not 200");
                 }
@@ -93,7 +94,7 @@ public class FirebaseTest {
         });
     }
 
-    public void login(String email, String password) {
+    public void login(String email, String password, Stats aStats) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
         String jsonPayload = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
@@ -113,7 +114,7 @@ public class FirebaseTest {
                     JsonValue file = reader.parse(responseString);
                     String userId = file.getString("localId");
 
-                    getPlayerStats(userId);
+                    getPlayerStats(userId, aStats);
                 } else {
                     System.out.println("Status code not 200.");
                 }
@@ -130,7 +131,7 @@ public class FirebaseTest {
         });
     }
     
-    public void getPlayerStats (String uID) {
+    public void getPlayerStats (String uID, Stats aStats) {
         HttpRequestBuilder requestBuild = new HttpRequestBuilder();
 
         String url = "https://firestore.googleapis.com/v1/projects/" + PROJECT_ID + "/databases/(default)/documents/users/" + uID  + "?key=" + API_KEY;
@@ -150,11 +151,10 @@ public class FirebaseTest {
                     JsonValue fields = file.get("fields");
 
                     String username = fields.get("username").getString("stringValue");
-
                     int playedGames = Integer.parseInt(fields.get("playedGames").getString("integerValue"));
                     int wins = Integer.parseInt(fields.get("wins").getString("integerValue"));
 
-                    System.out.println("username: " + username + " played games: " + playedGames + " wins: " + wins);
+                    aStats.statsLoaded(username, playedGames, wins);
                 } else {
                     System.out.println("Not 200 or 404.");
                 }

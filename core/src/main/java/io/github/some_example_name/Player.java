@@ -2,6 +2,7 @@ package io.github.some_example_name;
 
 public class Player {
     
+    private String email;
     private int playerID;
     private int resources;
     private int health;

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -13,33 +14,32 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.some_example_name.FirebaseTest;
 import io.github.some_example_name.Main;
 
-public class MainMenuUi implements Screen {
-    private Main game;
+public class MainMenuUi implements Screen{
     private Stage stage;
-    private Skin skin;
+    private Main game;
     private Table mainTable;
     private FirebaseTest test;
+    private Table statsTable;
 
-    // FIXED: Now accepts 'Main game'
-    public MainMenuUi(Main game, Stage aStage, Skin aSkin) {
-        this.game = game;
-        this.stage = aStage;
-        this.skin = aSkin;
+    public MainMenuUi(Main game, Stage stage, Skin skin) {
+        this.stage = new Stage();
         this.test = new FirebaseTest();
+        this.game = game;
 
         mainTable = new Table();
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
 
         showMainMenu();
+        showStats();
     }
 
     public void showMainMenu() {
         mainTable.clear();
 
-        TextButton playGameButton = new TextButton("Play Game", skin);
-        TextButton settingButton = new TextButton("Settings", skin);
-        TextButton quitButton = new TextButton("Quit", skin);
+        TextButton playGameButton = new TextButton("Play Game", game.skin);
+        TextButton settingButton = new TextButton("Settings", game.skin);
+        TextButton quitButton = new TextButton("Quit", game.skin);
 
         mainTable.add(playGameButton).width(150f).padBottom(50f).row();
         mainTable.add(settingButton).width(150f).padBottom(50f).row();
@@ -67,17 +67,33 @@ public class MainMenuUi implements Screen {
         });
     }
 
+    public void showStats() {
+        statsTable = new Table();
+        statsTable.setFillParent(true);
+
+        statsTable.top().right();
+
+        Label userLabel = new Label("username: " + game.username, game.skin);
+        Label gameLabel = new Label("Played games: " + game.games, game.skin);
+        Label winLabel = new Label("wins: " + game.wins, game.skin);
+
+        statsTable.add(userLabel).padRight(20f).padTop(20f).right().row();
+        statsTable.add(gameLabel).padRight(20f).padTop(5f).right().row();
+        statsTable.add(winLabel).padRight(20f).padTop(5f).right();
+
+        stage.addActor(statsTable);
+    }
+
     public void playGame() {
-        System.out.println("LOG: Transitioning to gameplay...");
+
     }
 
     public void showSettings() {
-        // FIXED: Switches to your new Settings screen
-        game.setScreen(new SettingsUi(game, stage, skin));
+        game.setScreen(new SettingsUi(game, stage, game.skin));
     }
 
     public void quit() {
-        Gdx.app.exit();
+
     }
 
     @Override
@@ -103,13 +119,14 @@ public class MainMenuUi implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
-        stage.clear(); // <--- THIS WIPES THE OLD UI
-
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
     }
 
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
+    @Override
+    public void pause() {}
+    @Override
+    public void resume() {}
+    @Override
+    public void hide() {}
 }

@@ -7,6 +7,9 @@ import io.github.some_example_name.UI.InitialUi;
 
 public class Main extends Game {
     public Skin skin;
+    public String username;
+    public int games;
+    public int wins;
 
     @Override
     public void create() {

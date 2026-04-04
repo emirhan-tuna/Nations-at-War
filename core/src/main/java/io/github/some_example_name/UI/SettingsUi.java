@@ -28,9 +28,10 @@ public class SettingsUi implements Screen {
     private float currentVolume = 1.0f;
 
     public SettingsUi(Main game, Stage stage, Skin skin) {
+        stage.clear();
         this.game = game;
         this.stage = stage;
-        this.skin = skin;
+        this.skin = game.skin;
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -156,10 +157,7 @@ public class SettingsUi implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
-        stage.clear(); // <--- THIS WIPES THE OLD UI
-
-        buildUi();
+        buildUi(); // Build everything fresh when the screen opens
     }
 
     @Override
