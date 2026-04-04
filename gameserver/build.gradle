@@ -1,0 +1,23 @@
+apply plugin: "java-library"
+
+dependencies {
+    implementation project(":core")
+    implementation "io.netty:netty-all:4.1.107.Final" 
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+}
+
+jar {
+    dependsOn(':core:jar')
+    
+    manifest {
+        attributes(
+            'Main-Class': 'StartServer' 
+        )
+    }
+    
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE 
+}

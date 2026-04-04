@@ -1,3 +1,6 @@
+**/assets/secrets.json
+
+
 ## Gradle:
 .gradle/
 gradle-app.setting
@@ -13,6 +16,7 @@ gradle-app.setting
 /headless/build/
 /server/build/
 /shared/build/
+/gameserver/build/
 
 ## Java:
 *.class

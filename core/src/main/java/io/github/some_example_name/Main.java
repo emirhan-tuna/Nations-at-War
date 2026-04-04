@@ -1,5 +1,7 @@
 package io.github.some_example_name;
 
+import java.util.Scanner;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +16,17 @@ public class Main extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         image = new Texture("libgdx.png");
+
+        Scanner in = new Scanner(System.in);
+        while (true) {
+            System.out.println("Enter email:");
+            String email = in.next();
+            System.out.println("Enter password");
+            String password = in.next();
+
+            FirebaseTest test = new FirebaseTest();
+            
+        }
     }
 
     @Override
