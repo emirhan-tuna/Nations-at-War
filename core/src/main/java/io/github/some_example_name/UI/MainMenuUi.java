@@ -11,14 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import io.github.some_example_name.FirebaseTest;
+import io.github.some_example_name.Main;
 
-public class MainMenuUi implements Screen{
+public class MainMenuUi implements Screen {
+    private Main game;
     private Stage stage;
     private Skin skin;
     private Table mainTable;
     private FirebaseTest test;
 
-    public MainMenuUi(Stage aStage, Skin aSkin) {
+    // FIXED: Now accepts 'Main game'
+    public MainMenuUi(Main game, Stage aStage, Skin aSkin) {
+        this.game = game;
         this.stage = aStage;
         this.skin = aSkin;
         this.test = new FirebaseTest();
@@ -64,15 +68,16 @@ public class MainMenuUi implements Screen{
     }
 
     public void playGame() {
-
+        System.out.println("LOG: Transitioning to gameplay...");
     }
 
     public void showSettings() {
-
+        // FIXED: Switches to your new Settings screen
+        game.setScreen(new SettingsUi(game, stage, skin));
     }
 
     public void quit() {
-
+        Gdx.app.exit();
     }
 
     @Override
@@ -97,15 +102,11 @@ public class MainMenuUi implements Screen{
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
     }
 
-    @Override
-    public void pause() {}
-    @Override
-    public void resume() {}
-    @Override
-    public void hide() {}
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
 }

@@ -16,7 +16,7 @@ import io.github.some_example_name.AccountCheck;
 import io.github.some_example_name.FirebaseTest;
 import io.github.some_example_name.Main;
 
-public class InitialUi implements Screen{
+public class InitialUi implements Screen {
     private Main game;
     private Stage stage;
     private Table mainTable;
@@ -31,8 +31,6 @@ public class InitialUi implements Screen{
 
         showEmailScreen();
     }
-
-    
 
     public void showEmailScreen() {
         mainTable.clear();
@@ -49,8 +47,8 @@ public class InitialUi implements Screen{
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               String email = emailField.getText();
-               if (!email.isEmpty()) {
+                String email = emailField.getText();
+                if (!email.isEmpty()) {
                     button.setText("Loading");
                     button.setDisabled(true);
                     test.doesAccountExist(email, new AccountCheck() {
@@ -68,7 +66,7 @@ public class InitialUi implements Screen{
                             });
                         }
                     });
-               }
+                }
             }
         });
     }
@@ -94,7 +92,8 @@ public class InitialUi implements Screen{
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new MainMenuUi(stage, game.skin));
+                        // FIXED: Passing 'game' so the next menu can switch screens
+                        game.setScreen(new MainMenuUi(game, stage, game.skin));
                     }
                 });
             }
@@ -172,10 +171,7 @@ public class InitialUi implements Screen{
         showEmailScreen();
     }
 
-    @Override
-    public void pause() {}
-    @Override
-    public void resume() {}
-    @Override
-    public void hide() {}
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
 }
