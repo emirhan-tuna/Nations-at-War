@@ -68,7 +68,9 @@ public class MainMenuUi implements Screen {
     }
 
     public void playGame() {
-        System.out.println("LOG: Transitioning to gameplay...");
+        System.out.println("LOG: Transitioning to Invite Menu...");
+        // This launches the new Invite menu!
+        game.setScreen(new InviteUi(game, stage, skin));
     }
 
     public void showSettings() {
