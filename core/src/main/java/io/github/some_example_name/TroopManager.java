@@ -20,22 +20,22 @@ public class TroopManager {
         for(Troop t: p2Troops){
             t.update(delta);
         }
-        resolveCollisions(); // checks for combat between opposing troops
+        resolveCollisions(delta);
         removeDead(p1Troops);
         removeDead(p2Troops);
     }
 
-    public void resolveCollisions(){
+    public void resolveCollisions(float delta){
         for(Troop attacker: p1Troops){
-            findAndEngageTarget(attacker, p2Troops);
+            findAndEngageTarget(attacker, p2Troops, delta);
         }
         for(Troop attacker: p2Troops){
-            findAndEngageTarget(attacker, p1Troops);
+            findAndEngageTarget(attacker, p1Troops, delta);
         }
     }
 
     // Finds the closest enemy in range for the attacker. If found, sets it as target and attacks.
-    private void findAndEngageTarget(Troop attacker, List<Troop> enemies){
+    private void findAndEngageTarget(Troop attacker, List<Troop> enemies, float delta) {
         Troop closest = null;
         float closestDist = Float.MAX_VALUE;
         for(Troop enemy: enemies){
@@ -56,7 +56,7 @@ public class TroopManager {
         }
         else if(closest != null){
             attacker.setTarget(closest);
-            attacker.moveTo(closest.getX(), closest.getY());
+            attacker.moveTo(closest.getX(), closest.getY(), delta);
         }
     }
 
@@ -77,11 +77,11 @@ public class TroopManager {
 
     private Troop createTroop(String type, float x, float y, int ownerID){
         switch(type.toLowerCase()){
-            // case "swordsman": return new Swordsman(x, y, ownerID);
-            // case "knight":    return new Knight(x, y, ownerID);
-            // case "archer":    return new Archer(x, y, ownerID);
-            // case "mage":      return new Mage(x, y, ownerID);
-            // case "dragon":    return new Dragon(x, y, ownerID);
+            case "swordsman": return new Swordsman(x, y, ownerID);
+            case "knight": return new Knight(x, y, ownerID);
+            case "archer": return new Archer(x, y, ownerID, 150);
+            case "mage": return new Mage(x, y, ownerID, 120, 60);
+            case "dragon": return new Dragon(x, y, ownerID);
             default:
                 return null;
         }
