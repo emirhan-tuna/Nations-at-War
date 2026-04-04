@@ -156,7 +156,10 @@ public class SettingsUi implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        buildUi(); // Build everything fresh when the screen opens
+
+        stage.clear(); // <--- THIS WIPES THE OLD UI
+
+        buildUi();
     }
 
     @Override

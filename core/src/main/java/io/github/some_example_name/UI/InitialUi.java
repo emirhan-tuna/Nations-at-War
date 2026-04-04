@@ -166,6 +166,8 @@ public class InitialUi implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
+        stage.clear(); // <--- THIS WIPES THE OLD UI
+
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
         showEmailScreen();

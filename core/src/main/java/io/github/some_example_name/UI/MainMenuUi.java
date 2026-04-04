@@ -102,6 +102,9 @@ public class MainMenuUi implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        stage.clear(); // <--- THIS WIPES THE OLD UI
+
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
     }
