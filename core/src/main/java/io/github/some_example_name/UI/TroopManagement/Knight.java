@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream:core/src/main/java/io/github/some_example_name/Knight.java
-package io.github.some_example_name;
-=======
+
 package io.github.some_example_name.UI.TroopManagement;
->>>>>>> Stashed changes:core/src/main/java/io/github/some_example_name/UI/TroopManagement/Knight.java
 
 public class Knight extends Troop {
     public Knight(float x, float y, int ownerID) {

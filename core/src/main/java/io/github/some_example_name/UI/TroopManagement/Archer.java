@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream:core/src/main/java/io/github/some_example_name/Archer.java
-package io.github.some_example_name;
-=======
 package io.github.some_example_name.UI.TroopManagement;
->>>>>>> Stashed changes:core/src/main/java/io/github/some_example_name/UI/TroopManagement/Archer.java
+
 
 public class Archer extends Troop {
     private int rangeAttr;

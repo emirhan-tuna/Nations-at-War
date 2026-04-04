@@ -24,6 +24,7 @@ public class InitialUi implements Screen{
 
     public InitialUi(Main game) {
         this.game = game;
+        this.stage = new Stage();
         this.test = new FirebaseTest();
 
         mainTable = new Table();

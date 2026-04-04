@@ -1,8 +1,6 @@
-<<<<<<< Updated upstream:core/src/main/java/io/github/some_example_name/Dragon.java
-package io.github.some_example_name;
-=======
+
 package io.github.some_example_name.UI.TroopManagement;
->>>>>>> Stashed changes:core/src/main/java/io/github/some_example_name/UI/TroopManagement/Dragon.java
+
 
 public class Dragon extends Troop {
     private boolean isFlying;

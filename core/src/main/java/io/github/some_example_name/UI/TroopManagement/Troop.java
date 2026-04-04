@@ -1,8 +1,6 @@
-<<<<<<< Updated upstream:core/src/main/java/io/github/some_example_name/Troop.java
-package io.github.some_example_name;
-=======
+
 package io.github.some_example_name.UI.TroopManagement;
->>>>>>> Stashed changes:core/src/main/java/io/github/some_example_name/UI/TroopManagement/Troop.java
+
 
 public abstract class Troop {
     

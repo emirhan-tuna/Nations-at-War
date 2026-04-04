@@ -1,8 +1,6 @@
-<<<<<<< Updated upstream:core/src/main/java/io/github/some_example_name/Mage.java
-package io.github.some_example_name;
-=======
+
 package io.github.some_example_name.UI.TroopManagement;
->>>>>>> Stashed changes:core/src/main/java/io/github/some_example_name/UI/TroopManagement/Mage.java
+
 
 public class Mage extends Troop {
     private int rangeAttr;
