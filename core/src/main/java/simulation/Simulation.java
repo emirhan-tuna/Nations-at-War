@@ -10,16 +10,48 @@ public class Simulation {
     private final ByteBuffer buffer = ByteBuffer.allocate(12);
     private static final int HISTORY_SIZE = 256;
     private final long[] checksumHistory = new long[HISTORY_SIZE];
+    private long currentChecksum;
+    private boolean isServer;
 
-    public Simulation() {
+    public Simulation(boolean isServer) {
         square = new Square(0, 0, 50, 10);
+        this.isServer = isServer;
+    }
+
+    public static class Snapshot {
+        public int tick;
+        public int x;
+        public int y;
+        public long checksum;
     }
 
     public void update() {
+        this.tick++;
         square.update();
-        long currentChecksum = updateChecksum();
-        checksumHistory[tick % HISTORY_SIZE] = currentChecksum;
-        tick++;
+        long currChecksum = updateChecksum();
+        this.currentChecksum = currChecksum;
+        if(this.isServer) {
+            checksumHistory[this.tick % HISTORY_SIZE] = currChecksum;
+        }
+    }
+
+    public void correct(int x, int y, int tick) {
+        int tickDiff = this.tick - tick;
+
+        if(tickDiff < 0) {
+            square.x = x;
+            square.y = y;
+            this.tick = tick;
+            return;
+        }
+
+        square.x = x;
+        square.y = y;
+        this.tick = tick;
+
+        for(int i = 0; i < tickDiff; i++) {
+            this.update();
+        }
     }
 
     public long updateChecksum() {
@@ -32,6 +64,10 @@ public class Simulation {
 
         crc32.update(buffer.array(), 0, buffer.position());
         return crc32.getValue();
+    }
+
+    public long getCurrentChecksum() {
+        return this.currentChecksum;
     }
 
     public long getChecksum(int tick) {

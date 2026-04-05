@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
+import Network.NetworkManager;
+import simulation.Simulation;
 
 public class NetworkTestUi implements Screen {
     private Main game;
@@ -35,11 +37,18 @@ public class NetworkTestUi implements Screen {
     // The mysterious blue box
     private Texture blueTexture;
     private Image blueBox;
+    private NetworkManager network;
+
+    private Simulation sim;
+    private final float TICK_RATE = 1f / 20f;
+    private float tickTime = 0f;
 
     public NetworkTestUi(Main game, Stage stage, Skin skin) {
         this.game = game;
         this.stage = stage;
         this.skin = skin;
+        this.sim = new Simulation(false);
+        this.network = new NetworkManager("ip", 9000);
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -112,8 +121,9 @@ public class NetworkTestUi implements Screen {
         connectBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                String code = codeField.getText();
+                int code = Integer.parseInt(codeField.getText());
                 addLog("Attempting to connect to room: " + code + "...");
+                network.connect(code, NetworkTestUi.this);
             }
         });
 
@@ -121,6 +131,8 @@ public class NetworkTestUi implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 addLog("Generating and sending checksum data...");
+                long checksum = sim.getCurrentChecksum();
+                network.sendChecksum(checksum, sim.getTick());
             }
         });
 
@@ -142,6 +154,10 @@ public class NetworkTestUi implements Screen {
             logScroll.scrollTo(0, 0, 0, 0);
         }
     }
+    
+    public void correctPosition(int x, int y, int tick) {
+        sim.correct(x, y, tick);
+    }
 
     @Override
     public void show() {
@@ -155,6 +171,16 @@ public class NetworkTestUi implements Screen {
 
     @Override
     public void render(float delta) {
+        tickTime += delta;
+
+        while(tickTime >= TICK_RATE) {
+            sim.update();
+            tickTime -= TICK_RATE;
+        }
+
+        blueBox.setX(sim.getX());
+        blueBox.setY(sim.getY());
+
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

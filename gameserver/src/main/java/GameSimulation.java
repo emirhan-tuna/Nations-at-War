@@ -5,7 +5,7 @@ public class GameSimulation implements Runnable {
     private boolean running = true;
 
     public GameSimulation() {
-        this.simulation = new Simulation();
+        this.simulation = new Simulation(true);
     }
 
     public long getChecksum(int tick) {

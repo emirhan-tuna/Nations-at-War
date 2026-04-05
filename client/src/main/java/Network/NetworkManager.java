@@ -1,4 +1,5 @@
 package Network;
+import UI.NetworkTestUi;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -24,7 +25,7 @@ public class NetworkManager {
         this.port = port;
     }
 
-    public void connect(int code) {
+    public void connect(int code, NetworkTestUi screen) {
         Thread networkThread = new Thread(() -> {
             EventLoopGroup group = new NioEventLoopGroup();
             try {
@@ -44,7 +45,7 @@ public class NetworkManager {
                         ch.pipeline().addLast(new PacketHandler());
                         
                         //clientbound
-                        ch.pipeline().addLast(new ClientPacketHandler(code)); 
+                        ch.pipeline().addLast(new ClientPacketHandler(code, screen)); 
                     }
                 });
 
@@ -76,13 +77,8 @@ public class NetworkManager {
         return channel != null && channel.isActive();
     }
 
-    public void sendAuth(int code) {
-        AuthPacket authPacket = new AuthPacket(code);
-        sendPacket(authPacket);
-    }
-
-    public void sendChecksum(int x, int y, int tick) {
-        ChecksumPacket checksumPacket = new ChecksumPacket(x, y, tick);
+    public void sendChecksum(long checksum, int tick) {
+        ChecksumPacket checksumPacket = new ChecksumPacket(checksum, tick);
         sendPacket(checksumPacket);
     }
 }

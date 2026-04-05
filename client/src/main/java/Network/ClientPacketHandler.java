@@ -1,4 +1,8 @@
 package Network;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+
+import UI.NetworkTestUi;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.AuthPacket;
@@ -8,9 +12,11 @@ import network.Packet;
 
 public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private int code;
+    private Screen screen;
 
-    public ClientPacketHandler(int code) {
+    public ClientPacketHandler(int code, Screen screen) {
         this.code = code;
+        this.screen = screen;
     }
 
     @Override
@@ -32,8 +38,11 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
             }
         } else if(msg instanceof ChecksumResponsePacket) {
             ChecksumResponsePacket checksum = (ChecksumResponsePacket) msg;
-            System.out.printf("server corrected pos to x: %d, y: %d, at tick: %d%n", checksum.getX(), checksum.getY(), checksum.getTick());
             System.out.printf("checksum: x:%d y:%d tick:%d", checksum.getX(), checksum.getY(), checksum.getTick());
+            Gdx.app.postRunnable(() -> {
+                ((NetworkTestUi) screen).correctPosition(checksum.getX(), checksum.getY(), checksum.getTick());
+            });
+
         }
     }
 
