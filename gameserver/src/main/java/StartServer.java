@@ -1,17 +1,20 @@
-
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import network.Packet;
 
 class StartServer {
     private int port;
+    private GameSimulation simulation = new GameSimulation();
     public StartServer(int port) {
         this.port = port;
     }
@@ -33,9 +36,12 @@ class StartServer {
             .childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new StringDecoder());
-                    ch.pipeline().addLast(new StringEncoder());
-                    ch.pipeline().addLast(new EchoMsgHandler());
+                    
+                    ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
+                    ch.pipeline().addLast(new LengthFieldPrepender(4));
+                    ch.pipeline().addLast(new ServerPacketEncoder());
+                    ch.pipeline().addLast(new ServerPacketDecoder());
+                    ch.pipeline().addLast(new ServerPacketHandler(StartServer.this));
 
                     System.out.println("new connection from ip: " + ch.remoteAddress());
                 }
@@ -51,4 +57,15 @@ class StartServer {
             bossGroup.shutdownGracefully();
         }
     }
+
+    public void sendPacket(Channel channel, Packet packet) {
+        channel.writeAndFlush(packet);
+    }
+
+    public void kickClient(Channel channel, String reason, Packet packet) {
+        System.out.println("kicked client: " + channel.remoteAddress() + " for reason: " + reason);
+        channel.writeAndFlush(packet).addListener(ChannelFutureListener.CLOSE);
+    }
+
+    public GameSimulation getSimulation() {return simulation;}
 }
