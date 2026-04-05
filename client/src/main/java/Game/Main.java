@@ -7,13 +7,15 @@ import UI.InitialUi;
 
 public class Main extends Game {
     public Skin skin;
+    public Player player;
     public String username;
     public int games;
     public int wins;
+    public String userID;
 
     @Override
     public void create() {
-        skin = new Skin(Gdx.files.internal("skins/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skins/def.json"));
 
         this.setScreen(new InitialUi(this));
     }

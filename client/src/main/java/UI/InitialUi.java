@@ -2,11 +2,13 @@ package UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -18,6 +20,8 @@ import Game.Main;
 import Network.Stats;
 
 public class InitialUi implements Screen {
+    private Texture backTexture;
+    private Image backImage;
     private Main game;
     private Stage stage;
     private Table mainTable;
@@ -27,6 +31,11 @@ public class InitialUi implements Screen {
         this.game = game;
         this.stage = new Stage();
         this.test = new FirebaseTest();
+        backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+        backImage = new Image(backTexture);
+
+        backImage.setFillParent(true);
+        stage.addActor(backImage);
 
         mainTable = new Table();
 
@@ -37,6 +46,7 @@ public class InitialUi implements Screen {
         mainTable.clear();
 
         Label emailLabel = new Label("Enter your email:", game.skin);
+        emailLabel.setColor(Color.BLACK);
         TextField emailField = new TextField("", game.skin);
         emailField.setMessageText("Email address:");
         TextButton button = new TextButton("Next", game.skin);
@@ -76,6 +86,7 @@ public class InitialUi implements Screen {
         mainTable.clear();
 
         Label emailLabel = new Label(email, game.skin);
+        emailLabel.setColor(Color.BLACK);
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
 
@@ -105,6 +116,15 @@ public class InitialUi implements Screen {
                             }
                         });
                     }
+                    @Override
+                    public void getUserID(String userID) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.userID = userID;
+                            }
+                        });
+                    }
                 });
             }
         });
@@ -114,6 +134,7 @@ public class InitialUi implements Screen {
         mainTable.clear();
 
         Label emailLabel = new Label(email, game.skin);
+        emailLabel.setColor(Color.BLACK);
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
 
@@ -160,6 +181,15 @@ public class InitialUi implements Screen {
                                     stage.clear();
 
                                     game.setScreen(new MainMenuUi(game, stage, game.skin));
+                                }
+                            });
+                        }
+                        @Override
+                        public void getUserID(String userID) {
+                            Gdx.app.postRunnable(new Runnable() {
+                                @Override
+                                public void run() {
+                                    game.userID = userID;
                                 }
                             });
                         }

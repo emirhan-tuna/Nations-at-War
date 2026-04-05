@@ -3,13 +3,11 @@ package UI.TroopManagement;
 
 
 public class Mage extends Troop {
-    private int rangeAttr;
-    private int AoE;
+    private int areaOfEffect;
 
-    public Mage(float x, float y, int ownerID, int range, int AoE) {
-        super(x, y, 60, 30, (float) range, ownerID);
-        this.rangeAttr = range;
-        this.AoE = AoE;
+    public Mage(float x, float y, String ownerID, int range, int AoE) {
+        super(x, y, 60, 45, 60f, ownerID, true, false, 150);
+        this.areaOfEffect = AoE;
     }
 
     @Override

@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.github.some_example_name.Main;
+
 public class TroopManager {
     
-    private List<Troop> p1Troops, p2Troops;
+    public ArrayList<Troop> p1Troops, p2Troops;
+    public Main game;
 
     public TroopManager(){
         this.p1Troops = new ArrayList<>();
@@ -60,14 +63,14 @@ public class TroopManager {
         }
     }
 
-    public void spawn(String type, int ownerID, float x, float y){
+    public void spawn(String type, String ownerID, float x, float y){
         Troop troop = createTroop(type, x, y, ownerID);
 
         if(troop == null){
             System.out.println("Unknown troop type: " + type);
             return;
         }
-        if(ownerID == 1){
+        if(ownerID == game.userID){
             p1Troops.add(troop);
         }
         else{
@@ -75,7 +78,7 @@ public class TroopManager {
         }
     }
 
-    private Troop createTroop(String type, float x, float y, int ownerID){
+    private Troop createTroop(String type, float x, float y, String ownerID){
         switch(type.toLowerCase()){
             case "swordsman": return new Swordsman(x, y, ownerID);
             case "knight": return new Knight(x, y, ownerID);
@@ -97,6 +100,6 @@ public class TroopManager {
     }
 
     // getters
-    public List<Troop> getP1Troops(){ return p1Troops; }
-    public List<Troop> getP2Troops(){ return p2Troops; }
+    public ArrayList<Troop> getP1Troops(){ return p1Troops; }
+    public ArrayList<Troop> getP2Troops(){ return p2Troops; }
 }

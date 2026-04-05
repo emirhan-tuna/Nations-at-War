@@ -3,8 +3,10 @@ package UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import Game.Main;
 import Network.FirebaseTest;
 
-public class MainMenuUi implements Screen {
+public class MainMenuUi implements Screen{
+    private Texture backTexture;
+    private Image backImage;
     private Stage stage;
     private Main game;
     private Table mainTable;
@@ -23,9 +27,16 @@ public class MainMenuUi implements Screen {
     private Table statsTable;
 
     public MainMenuUi(Main game, Stage stage, Skin skin) {
-        this.stage = new Stage();
+        this.stage = stage;
         this.test = new FirebaseTest();
         this.game = game;
+
+        stage.clear();
+
+        backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+        backImage = new Image(backTexture);
+        backImage.setFillParent(true);
+        stage.addActor(backImage);
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -43,7 +54,7 @@ public class MainMenuUi implements Screen {
         TextButton networkTestButton = new TextButton("Network Test", game.skin); // Friend's test button!
         TextButton quitButton = new TextButton("Quit", game.skin);
 
-        mainTable.add(playGameButton).width(150f).padBottom(50f).row();
+        mainTable.add(playGameButton).width(150f).padTop(80f).padBottom(50f).row();
         mainTable.add(settingButton).width(150f).padBottom(50f).row();
         mainTable.add(networkTestButton).width(150f).padBottom(50f).row();
         mainTable.add(quitButton).width(150f);

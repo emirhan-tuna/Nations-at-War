@@ -40,19 +40,6 @@ public class InviteUi implements Screen {
         leftColumn.top().left();
         rightColumn.top().left();
 
-        // ==========================================
-        // LEFT COLUMN: Info, Inviting, and Navigation
-        // ==========================================
-
-        Table infoBox = new Table(skin);
-        Label userEmailLabel = new Label("player@email.com", skin);
-        Label speedLabel = new Label("Ping: 45ms", skin);
-
-        infoBox.add(userEmailLabel).expandX().left();
-        infoBox.add(speedLabel).right();
-
-        leftColumn.add(infoBox).expandX().fillX().padBottom(40f).row();
-
         Label emailTitle = new Label("Email", skin);
         leftColumn.add(emailTitle).left().padBottom(5f).row();
 

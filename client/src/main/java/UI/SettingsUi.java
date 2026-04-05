@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -32,12 +34,22 @@ public class SettingsUi implements Screen {
         this.stage = stage;
         this.skin = game.skin;
 
+        Texture texture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+        Image image = new Image(texture);
+
+        image.setFillParent(true);
+        stage.addActor(image);
+
+
         mainTable = new Table();
         mainTable.setFillParent(true);
         mainTable.center();
+        stage.addActor(mainTable);
 
         // Loads the "NationsAtWarSettings" save file (or creates it if it doesn't exist)
         prefs = Gdx.app.getPreferences("NationsAtWarSettings");
+        
+        buildUi();
     }
 
     private void buildUi() {
@@ -92,7 +104,7 @@ public class SettingsUi implements Screen {
 
         buttonTable.add(applyButton).width(140f).padRight(20f);
         buttonTable.add(exitButton).width(140f);
-        mainTable.add(buttonTable).colspan(2).padTop(20f);
+        mainTable.add(buttonTable).colspan(2).padTop(20f).padBottom(100f);
 
         // ==========================================
         // BUTTON LOGIC
@@ -148,15 +160,11 @@ public class SettingsUi implements Screen {
                 game.setScreen(new MainMenuUi(game, stage, skin));
             }
         });
-
-        stage.addActor(mainTable);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        stage.clear();
-        buildUi();
     }
 
     @Override

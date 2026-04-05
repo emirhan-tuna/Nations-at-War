@@ -75,8 +75,9 @@ public class FirebaseTest {
 
                     String userId = file.getString("localId");
 
-                    createNewUser(userId, username);
+                    createNewUser(userId, username, aStats);
                     getPlayerStats(userId, aStats);
+                    aStats.getUserID(userId);
                 } else {
                     System.out.println("Not 200");
                 }
@@ -113,6 +114,7 @@ public class FirebaseTest {
                     String userId = file.getString("localId");
 
                     getPlayerStats(userId, aStats);
+                    aStats.getUserID(userId);
                 } else {
                     System.out.println("Status code not 200.");
                 }
@@ -170,7 +172,7 @@ public class FirebaseTest {
         });
     }
 
-    public void createNewUser(String uID, String username) {
+    public void createNewUser(String uID, String username, Stats aStats) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
         String jsonPayload = "{\"fields\": {\"username\": {\"stringValue\": \"" + username + "\"}, \"playedGames\": {\"integerValue\": \"0\"}, \"wins\": {\"integerValue\": \"0\"}}}";
@@ -185,6 +187,7 @@ public class FirebaseTest {
                 
                 if (statusCode == 201 ||statusCode == 200) {
                     System.out.println("Created user.");
+                    aStats.statsLoaded(username, 0, 0);
                 } else {
                     System.out.println("Failed to create user.");
                 }
@@ -199,4 +202,6 @@ public class FirebaseTest {
             }
         });
     }
+
+
 }
