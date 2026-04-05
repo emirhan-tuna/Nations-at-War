@@ -24,17 +24,7 @@ public class PacketHandler extends ByteToMessageDecoder {
 
             case 1:
                 //checksum result
-
-                boolean success = in.readBoolean();
-
-                if(!success) {
-                    int length = in.readInt();
-                    ByteBuf data = in.readRetainedSlice(length);
-                    packet = new ChecksumResponsePacket(data);
-                } else if(NetworkManager.debug) {
-                    System.out.println("checksum valid(debug)");
-                }
-
+                packet = new ChecksumResponsePacket(in);
                 break;
 
             default:

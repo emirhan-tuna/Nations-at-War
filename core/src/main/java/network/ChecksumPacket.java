@@ -5,10 +5,10 @@ public class ChecksumPacket extends ServerBoundPacket {
     private int tick;
     private long checksum;
 
-    public ChecksumPacket(int posX, int posY, int tick) {
+    public ChecksumPacket(long checksum, int tick) {
         super(PACKET_CHECKSUM);
         this.tick = tick;
-        this.checksum = posX ^ posY;
+        this.checksum = checksum;
     }
 
     public ChecksumPacket(ByteBuf data) {
