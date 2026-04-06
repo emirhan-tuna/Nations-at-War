@@ -20,6 +20,8 @@ import UI.TroopManagement.TroopManager;
 
 
 public class GameScreenUI implements Screen{
+    private Label healthLabel;
+    private Label resourceLabel;
     private SpriteBatch batch;
     private Table popupMenu;
     private String lastTroop = ""; 
@@ -106,15 +108,22 @@ public class GameScreenUI implements Screen{
     public void showHealthandResourc() {
         Table infoTable = new Table();
 
-        infoTable.bottom().right();
+        if(player.getId() == 1) {
+            infoTable.left();
+        } else {
+            infoTable.right();
+        }
+        
 
-        Label health = new Label(Integer.toString(player.getHealth()), game.skin);
-        Label resources = new Label(Integer.toString(player.getResources()), game.skin);
+        healthLabel = new Label("Base Health: " + Integer.toString(player.getHealth()), game.skin, "very_big_title");
+        //healthLabel.setFontScale(4f);
+        resourceLabel = new Label("Gold: " + Integer.toString(player.getResources()), game.skin, "very_big_title");
+        //resourceLabel.setFontScale(4f);
 
-        infoTable.add(health).padRight(20f).padBottom(20f).right().row();
-        infoTable.add(resources).padRight(20f).right();
+        infoTable.add(healthLabel).padRight(20f).padBottom(20f).right().row();
+        infoTable.add(resourceLabel).padRight(20f).right();
 
-        mainTable.add(infoTable).expand().bottom().right();
+        mainTable.add(infoTable).expand().bottom().right().pad(30f);
     }
 
     public void showTroops() {
@@ -201,6 +210,9 @@ public class GameScreenUI implements Screen{
         batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         troopManage.drawAll(batch);
         batch.end();
+        
+        healthLabel.setText("Health: " + Integer.toString(player.getHealth()));
+        resourceLabel.setText("Gold: " + Integer.toString(player.getResources()));
 
         stage.act();
         stage.draw();

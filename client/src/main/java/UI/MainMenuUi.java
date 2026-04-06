@@ -39,6 +39,10 @@ public class MainMenuUi implements Screen {
         stage.clear();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+        backImage = new Image(backTexture);
+        backImage.getColor().a = 0.8f;
+        backImage.setFillParent(true);
+        stage.addActor(backImage);
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -54,15 +58,12 @@ public class MainMenuUi implements Screen {
 
         TextButton playGameButton = new TextButton("Play Game", game.skin);
         TextButton settingButton = new TextButton("Settings", game.skin);
-        TextButton networkTestButton = new TextButton("Network Test", game.skin);
-        TextButton logOutButton = new TextButton("Log-out", game.skin);
         TextButton quitButton = new TextButton("Quit", game.skin);
 
-        mainTable.add(playGameButton).width(250f).height(60f).padBottom(20f).row();
-        mainTable.add(settingButton).width(250f).height(60f).padBottom(20f).row();
-        mainTable.add(networkTestButton).width(250f).height(60f).padBottom(20f).row();
-        mainTable.add(logOutButton).width(250f).height(60f).padBottom(20f).row();
-        mainTable.add(quitButton).width(250f).height(60f);
+        mainTable.add(playGameButton).width(150f).padTop(80f).padBottom(200f).row();
+        mainTable.add(settingButton).width(150f).padBottom(200f).row();
+        mainTable.add(quitButton).width(150f);
+        mainTable.add(logOutButton).padLeft(200f).width(150f).right().bottom();
 
         playGameButton.addListener(new ClickListener() {
             @Override
@@ -78,14 +79,7 @@ public class MainMenuUi implements Screen {
             }
         });
 
-        networkTestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent e, float x, float y) {
-                game.setScreen(new NetworkTestUi(game, stage, game.skin));
-            }
-        });
-
-        logOutButton.addListener(new ClickListener() {
+        quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 game.setScreen(new InitialUi(game));
@@ -105,23 +99,12 @@ public class MainMenuUi implements Screen {
         statsTable.setFillParent(true);
         statsTable.top().right();
 
-        // Dark, semi-transparent reddish-brown background for visibility
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.2f, 0.1f, 0.05f, 0.85f));
-        pixmap.fill();
-        statsBgTexture = new Texture(pixmap);
-        pixmap.dispose();
-
-        Table innerStatsBox = new Table();
-        innerStatsBox.setBackground(new TextureRegionDrawable(statsBgTexture));
-        innerStatsBox.pad(20f);
-
-        Label userLabel = new Label("Username: " + game.username, game.skin);
-        userLabel.setFontScale(1.5f);
-        Label gameLabel = new Label("Played games: " + game.games, game.skin);
-        gameLabel.setFontScale(1.5f);
-        Label winLabel = new Label("Wins: " + game.wins, game.skin);
-        winLabel.setFontScale(1.5f);
+        Label userLabel = new Label("username: " + game.username, game.skin, "very_big_title");
+        //userLabel.setFontScale(4f);
+        Label gameLabel = new Label("Played games: " + game.games, game.skin, "very_big_title");
+        //gameLabel.setFontScale(4f);
+        Label winLabel = new Label("wins: " + game.wins, game.skin, "very_big_title");
+        //winLabel.setFontScale(4f);
 
         innerStatsBox.add(userLabel).right().row();
         innerStatsBox.add(gameLabel).padTop(10f).right().row();

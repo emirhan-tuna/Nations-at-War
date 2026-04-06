@@ -2,7 +2,6 @@ package Network;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
-import UI.NetworkTestUi;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.ActionPacket;
@@ -44,7 +43,13 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
             }
         } else if(msg instanceof ChecksumResponsePacket) {
             ChecksumResponsePacket checksum = (ChecksumResponsePacket) msg;
+<<<<<<< HEAD
             Snapshot snapshot = checksum.getSnapshot();
+=======
+            System.out.printf("checksum: x:%d y:%d tick:%d", checksum.getX(), checksum.getY(), checksum.getTick());
+            Gdx.app.postRunnable(() -> {
+            });
+>>>>>>> f7bb98b (Skin changes)
 
             //Gdx.app.postRunnable(() -> {
             //    send snapshot here...

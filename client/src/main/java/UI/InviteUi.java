@@ -3,10 +3,9 @@ package UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -23,7 +22,7 @@ public class InviteUi implements Screen {
     private Skin skin;
     private Table mainTable;
     private Texture backTexture;
-    private SpriteBatch batch;
+    private Image backImage;
 
     public InviteUi(Main game, Stage stage, Skin skin) {
         this.game = game;
@@ -32,6 +31,10 @@ public class InviteUi implements Screen {
         this.batch = new SpriteBatch();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+        backImage = new Image(backTexture);
+        backImage.setFillParent(true);
+        backImage.getColor().a = 0.8f;
+        stage.addActor(backImage);
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -125,10 +128,10 @@ public class InviteUi implements Screen {
 
     @Override
     public void show() {
-        stage.setViewport(new FitViewport(1920, 1080));
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         Gdx.input.setInputProcessor(stage);
-        stage.clear();
+
+        mainTable.setFillParent(true);
+        stage.addActor(mainTable);
         buildUi();
     }
 

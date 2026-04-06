@@ -27,6 +27,7 @@ public class InitialUi implements Screen {
     private Stage stage;
     private Table mainTable;
     private FirebaseTest test;
+    private Label title;
 
     public InitialUi(Main game) {
         this.game = game;
@@ -35,6 +36,13 @@ public class InitialUi implements Screen {
         this.batch = new SpriteBatch();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+        backImage = new Image(backTexture);
+        backImage.getColor().a = 0.8f;
+
+        title = new Label("NATIONS AT WAR", game.skin, "title");
+
+        backImage.setFillParent(true);
+        stage.addActor(backImage);
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -45,16 +53,17 @@ public class InitialUi implements Screen {
 
     public void showEmailScreen() {
         mainTable.clear();
+        mainTable.add(title).padBottom(300f).top().center().row();
 
-        Label emailLabel = new Label("Enter your email:", game.skin);
+        Label emailLabel = new Label("Enter your email:", game.skin, "title");
         emailLabel.setColor(Color.BLACK);
-        emailLabel.setFontScale(2f);
+        //emailLabel.setFontScale(2f);
         TextField emailField = new TextField("", game.skin);
         emailField.setMessageText("Email address:");
         TextButton button = new TextButton("Next", game.skin);
 
-        mainTable.add(emailLabel).padBottom(20f).row();
-        mainTable.add(emailField).size(800f, 50f).padBottom(50f).row();
+        mainTable.add(emailLabel).padBottom(20f).center().row();
+        mainTable.add(emailField).size(800f, 50f).padBottom(50f).center().row();
         mainTable.add(button).size(400f, 50f);
 
         button.addListener(new ClickListener() {
@@ -84,9 +93,9 @@ public class InitialUi implements Screen {
     public void showLoginScreen(String email) {
         mainTable.clear();
 
-        Label emailLabel = new Label(email, game.skin);
+        Label emailLabel = new Label(email, game.skin, "title");
         emailLabel.setColor(Color.BLACK);
-        emailLabel.setFontScale(2f);
+        //emailLabel.setFontScale(2f);
 
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
@@ -125,9 +134,9 @@ public class InitialUi implements Screen {
     public void showSignupScreen(String email) {
         mainTable.clear();
 
-        Label emailLabel = new Label(email, game.skin);
+        Label emailLabel = new Label(email, game.skin, "title");
         emailLabel.setColor(Color.BLACK);
-        emailLabel.setFontScale(2f);
+        //emailLabel.setFontScale(2f);
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
         passwordField.setPasswordMode(true);
