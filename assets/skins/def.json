@@ -17,12 +17,13 @@ com.badlogic.gdx.graphics.Color: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	default: {
-		parent: default
 		imageUp: archer
 		imageDown: archer
 	}
 	archer: {
 		parent: default
+		imageUp: archer
+		imageDown: archer
 	}
 	knight: {
 		parent: default
@@ -45,6 +46,41 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 		imageDown: swordsman
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: old-england
+		fontColor: RGBA_0_0_0_255
+		background: empty_back
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: old-england
+		fontColorSelected: RGBA_0_0_0_255
+		fontColorUnselected: RGBA_0_0_0_255
+		selection: def_button-down
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: def_button-down
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: old-england
+		fontColor: RGBA_0_0_0_255
+		background: def_button-down
+		scrollStyle: default
+		listStyle: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		backgroundOver: def_textField
+		background: def_button-down
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: old-england
@@ -60,6 +96,11 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 		background: def_textField
 		messageFont: old-england
 		messageFontColor: RGBA_0_0_0_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
 	}
 }
 }

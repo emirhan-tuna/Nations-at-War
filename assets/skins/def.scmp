@@ -241,7 +241,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: backgroundOver
 						optional: true
-						value: null
+						value: def_textField
 					}
 					backgroundDown: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -289,7 +289,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: false
-						value: null
+						value: def_button-down
 					}
 					disabledBackground: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -476,25 +476,25 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: null
+						value: old-england
 					}
 					fontColorSelected: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColorSelected
 						optional: false
-						value: null
+						value: RGBA_0_0_0_255
 					}
 					fontColorUnselected: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColorUnselected
 						optional: false
-						value: null
+						value: RGBA_0_0_0_255
 					}
 					selection: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: selection
 						optional: false
-						value: null
+						value: def_button-down
 					}
 					down: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -726,7 +726,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: true
-						value: null
+						value: def_button-down
 					}
 					corner: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -974,13 +974,13 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: null
+						value: old-england
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: false
-						value: null
+						value: RGBA_0_0_0_255
 					}
 					overFontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -998,7 +998,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: true
-						value: null
+						value: def_button-down
 					}
 					scrollStyle: {
 						type: com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle
@@ -1080,19 +1080,19 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: null
+						value: old-england
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: null
+						value: RGBA_0_0_0_255
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: true
-						value: null
+						value: empty_back
 					}
 				}
 				deletable: false
@@ -1519,7 +1519,7 @@ jsonData: {
 					}
 				}
 				deletable: false
-				parent: default
+				parent: null
 			}
 			{
 				class: com.ray3k.skincomposer.data.StyleData
@@ -1530,13 +1530,13 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: imageUp
 						optional: true
-						value: null
+						value: archer
 					}
 					imageDown: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: imageDown
 						optional: true
-						value: null
+						value: archer
 					}
 					imageOver: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable

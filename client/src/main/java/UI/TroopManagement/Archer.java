@@ -1,10 +1,11 @@
 package UI.TroopManagement;
 
+import com.badlogic.gdx.graphics.Texture;
 
 public class Archer extends Troop {
 
-    public Archer(float x, float y, int ownerID, float range) {
-        super(x, y, 100, 25, 70f, ownerID, true, false, 100);
+    public Archer(Texture texture, float x, float y, int ownerID, float range) {
+        super(texture, x, y, 100, 25, 70f, ownerID, true, false, 100);
     }
 
     @Override

@@ -3,16 +3,27 @@ package UI.TroopManagement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import Game.Main;
 
 public class TroopManager {
     
     public ArrayList<Troop> p1Troops, p2Troops;
     public Main game;
+    private Texture swordsman, archer, dragon, knight, mage;
 
     public TroopManager(){
         this.p1Troops = new ArrayList<>();
         this.p2Troops = new ArrayList<>();
+
+        archer = new Texture(Gdx.files.internal("sprites/archer_sprite.png"));
+        dragon = new Texture(Gdx.files.internal("sprites/dragon_sprite.png"));
+        knight = new Texture(Gdx.files.internal("sprites/knight_sprite.png"));
+        mage = new Texture(Gdx.files.internal("sprites/mage_sprite.png"));
     }
 
     public void updateAll(float delta){
@@ -59,6 +70,12 @@ public class TroopManager {
         else if(closest != null){
             attacker.setTarget(closest);
             attacker.moveTo(closest.getX(), closest.getY(), delta);
+        } else {
+            if (attacker.getOwnerID() == 1) {
+                attacker.moveTo(1920f, attacker.getY(), delta);
+            } else {
+                attacker.moveTo(0f, attacker.getY(), delta);
+            }
         }
     }
 
@@ -77,13 +94,13 @@ public class TroopManager {
         }
     }
 
-    private Troop createTroop(String type, float x, float y, int ownerID){
+    public Troop createTroop(String type, float x, float y, int ownerID){
         switch(type.toLowerCase()){
-            case "swordsman": return new Swordsman(x, y, ownerID);
-            case "knight": return new Knight(x, y, ownerID);
-            case "archer": return new Archer(x, y, ownerID, 150);
-            case "mage": return new Mage(x, y, ownerID, 120, 60);
-            case "dragon": return new Dragon(x, y, ownerID);
+            case "swordsman": return new Swordsman(swordsman, x, y, ownerID);
+            case "knight": return new Knight(knight, x, y, ownerID);
+            case "archer": return new Archer(archer, x, y, ownerID, 150);
+            case "mage": return new Mage(mage, x, y, ownerID, 120, 60);
+            case "dragon": return new Dragon(dragon, x, y, ownerID);
             default:
                 return null;
         }
@@ -95,6 +112,15 @@ public class TroopManager {
             if(it.next().isDead()){
                 it.remove();
             }
+        }
+    }
+
+    public void drawAll(SpriteBatch batch) {
+        for (int i = 0; i < p1Troops.size(); i++) {
+            p1Troops.get(i).draw(batch);
+        }
+        for (int i = 0; i < p2Troops.size(); i++) {
+            p2Troops.get(i).draw(batch);
         }
     }
 

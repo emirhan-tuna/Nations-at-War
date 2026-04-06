@@ -55,11 +55,11 @@ public class MainMenuUi implements Screen{
         TextButton quitButton = new TextButton("Quit", game.skin);
         TextButton logOutButton = new TextButton("Log-out", game.skin);
 
-        mainTable.add(playGameButton).width(150f).padTop(80f).padBottom(50f).row();
-        mainTable.add(settingButton).width(150f).padBottom(50f).row();
-        mainTable.add(networkTestButton).width(150f).padBottom(50f).row();
+        mainTable.add(playGameButton).width(150f).padTop(80f).padBottom(200f).row();
+        mainTable.add(settingButton).width(150f).padBottom(200f).row();
+        mainTable.add(networkTestButton).width(150f).padBottom(200f).row();
         mainTable.add(quitButton).width(150f);
-        mainTable.add(logOutButton).width(150f).right().bottom();
+        mainTable.add(logOutButton).padLeft(200f).width(150f).right().bottom();
 
         playGameButton.addListener(new ClickListener() {
             @Override
@@ -105,8 +105,11 @@ public class MainMenuUi implements Screen{
         statsTable.top().right();
 
         Label userLabel = new Label("username: " + game.username, game.skin);
+        userLabel.setFontScale(4f);;
         Label gameLabel = new Label("Played games: " + game.games, game.skin);
+        gameLabel.setFontScale(4f);
         Label winLabel = new Label("wins: " + game.wins, game.skin);
+        winLabel.setFontScale(4f);
 
         statsTable.add(userLabel).padRight(20f).padTop(20f).right().row();
         statsTable.add(gameLabel).padRight(20f).padTop(5f).right().row();

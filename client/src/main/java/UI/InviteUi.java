@@ -55,6 +55,9 @@ public class InviteUi implements Screen {
         TextButton backBtn = new TextButton("Back to main menu", skin);
         leftColumn.add(backBtn).expandX().fillX().height(50f).row();
 
+        TextButton testButton = new TextButton("Test", skin);
+        leftColumn.add(testButton).expandX().fillX().height(50f).row();
+
 
         // ==========================================
         // RIGHT COLUMN: Incoming Invites List
@@ -98,6 +101,13 @@ public class InviteUi implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuUi(game, stage, skin));
+            }
+        });
+
+        testButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent e, float x, float y) {
+                game.setScreen(new GameScreenUI(game));
             }
         });
 
