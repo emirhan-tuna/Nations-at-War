@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import Game.Main;
 import Network.NetworkManager;
 import simulation.Simulation;
+import simulation.Simulation.Snapshot;
 
 public class NetworkTestUi implements Screen {
     private Main game;
@@ -155,8 +156,8 @@ public class NetworkTestUi implements Screen {
         }
     }
     
-    public void correctPosition(int x, int y, int tick) {
-        sim.correct(x, y, tick);
+    public void correctPosition(Snapshot snapshot) {
+        sim.correct(snapshot);
     }
 
     @Override
@@ -177,9 +178,6 @@ public class NetworkTestUi implements Screen {
             sim.update();
             tickTime -= TICK_RATE;
         }
-
-        blueBox.setX(sim.getX());
-        blueBox.setY(sim.getY());
 
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

@@ -1,23 +1,37 @@
+
+import network.ActionPacket;
 import simulation.Simulation;
+import simulation.ScheduledActions.ScheduledAction;
+import simulation.ScheduledActions.SpawnAction;
+import simulation.Simulation.Snapshot;
 
 public class GameSimulation implements Runnable {
+    private StartServer server;
     private Simulation simulation;
     private boolean running = true;
 
-    public GameSimulation() {
+    public GameSimulation(StartServer server) {
         this.simulation = new Simulation(true);
+        this.server = server;
+    }
+
+    public ScheduledAction scheduleAction(ScheduledAction action) {
+        return simulation.scheduleAction(action);
+    }
+
+    public ScheduledAction scheduleSpawn(int type, int team) {
+        SpawnAction spawn = new SpawnAction(type, team, 0);
+        ScheduledAction actionToSend = scheduleAction(spawn);
+
+        return actionToSend;
     }
 
     public long getChecksum(int tick) {
         return simulation.getChecksum(tick);
     }
 
-    public int getX() {
-        return simulation.getX();
-    }
-
-    public int getY() {
-        return simulation.getY();
+    public Snapshot getSnapshot() {
+        return simulation.getSnapshot();
     }
 
     public int getTick() {

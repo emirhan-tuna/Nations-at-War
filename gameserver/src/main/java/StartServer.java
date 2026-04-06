@@ -10,11 +10,14 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import network.ActionPacket;
 import network.Packet;
+import simulation.ScheduledActions.ScheduledAction;
 
 class StartServer {
     private int port;
-    private GameSimulation simulation = new GameSimulation();
+    private GameSimulation simulation = new GameSimulation(this);
+    private PlayerManager playerManager = new PlayerManager();
     public StartServer(int port) {
         this.port = port;
     }
@@ -63,10 +66,17 @@ class StartServer {
         channel.writeAndFlush(packet);
     }
 
+    public void broadcast(Packet packet) {
+        for (Player p : playerManager.getAllPlayers()) {
+            p.getChannel().writeAndFlush(packet);
+        }
+    }
+
     public void kickClient(Channel channel, String reason, Packet packet) {
         System.out.println("kicked client: " + channel.remoteAddress() + " for reason: " + reason);
         channel.writeAndFlush(packet).addListener(ChannelFutureListener.CLOSE);
     }
 
     public GameSimulation getSimulation() {return simulation;}
+    public PlayerManager getPlayerManager() {return playerManager;}
 }

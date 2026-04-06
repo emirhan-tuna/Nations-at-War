@@ -1,34 +1,25 @@
 package network;
 import io.netty.buffer.ByteBuf;
+import simulation.Simulation.Snapshot;
 public class ChecksumResponsePacket extends ClientBoundPacket {
-    private int posX;
-    private int posY;
-    private int tick;
+    private Snapshot snapshot;
 
     public ChecksumResponsePacket(ByteBuf data) {
         super(PACKET_CHECKSUM_RESPONSE, data);
     }
 
-    public ChecksumResponsePacket(int x, int y, int tick) {
+    public ChecksumResponsePacket(Snapshot snapshot) {
         super(PACKET_CHECKSUM_RESPONSE);
-        this.tick = tick;
-        this.posX = x;
-        this.posY = y;
+        this.snapshot = snapshot;
     }
 
     public void decodeData(ByteBuf data) {
-        posX = data.readInt();
-        posY = data.readInt();
-        tick = data.readInt();
+        this.snapshot = new Snapshot(data);
     }
 
     public void write(ByteBuf buf) {
-        buf.writeInt(this.posX);
-        buf.writeInt(this.posY);
-        buf.writeInt(this.tick);
+        this.snapshot.write(buf);
     }
 
-    public int getX() {return posX;}
-    public int getY() {return posY;}
-    public int getTick() {return tick;}
+    public Snapshot getSnapshot() {return this.snapshot;}
 }

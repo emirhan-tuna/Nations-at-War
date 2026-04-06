@@ -5,10 +5,13 @@ import com.badlogic.gdx.Screen;
 import UI.NetworkTestUi;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import network.ActionPacket;
 import network.AuthPacket;
 import network.AuthResponsePacket;
 import network.ChecksumResponsePacket;
 import network.Packet;
+import simulation.ScheduledActions.ScheduledAction;
+import simulation.Simulation.Snapshot;
 
 public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private int code;
@@ -33,16 +36,24 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
 
             if(authPacket.getResponse()) {
                 System.out.println("auth successful");
+
+                //use this id elsewhere(0 for left, 1 for right side)
+                authPacket.getId();
             } else {
                 System.out.println("auth failed");
             }
         } else if(msg instanceof ChecksumResponsePacket) {
             ChecksumResponsePacket checksum = (ChecksumResponsePacket) msg;
-            System.out.printf("checksum: x:%d y:%d tick:%d", checksum.getX(), checksum.getY(), checksum.getTick());
-            Gdx.app.postRunnable(() -> {
-                ((NetworkTestUi) screen).correctPosition(checksum.getX(), checksum.getY(), checksum.getTick());
-            });
+            Snapshot snapshot = checksum.getSnapshot();
 
+            //Gdx.app.postRunnable(() -> {
+            //    send snapshot here...
+            //});
+
+        } else if(msg instanceof ActionPacket) {
+            ActionPacket actionPacket = (ActionPacket) msg;
+            ScheduledAction action = actionPacket.getAction();
+            //...
         }
     }
 

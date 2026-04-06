@@ -1,10 +1,13 @@
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import network.ActionPacket;
 import network.AuthPacket;
 import network.AuthResponsePacket;
 import network.ChecksumPacket;
 import network.ChecksumResponsePacket;
 import network.Packet;
+import network.SpawnPacket;
+import simulation.ScheduledActions.ScheduledAction;
 
 public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private StartServer server;
@@ -20,31 +23,76 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
     
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Packet msg) {
+        Player player = server.getPlayerManager().getPlayer(ctx.channel());
+
         if(msg instanceof AuthPacket) {
+
             AuthPacket auth = (AuthPacket) msg;
 
             if(auth.getCode() == 69693131) {
                 System.out.println("client at addr " + ctx.channel().remoteAddress() + " authenticated successfully");
-                ctx.writeAndFlush(new AuthResponsePacket(true));
+                player = server.getPlayerManager().addPlayer(ctx.channel());
+                System.out.println("got id " + player.getId());
+
+                ctx.writeAndFlush(new AuthResponsePacket(player.getId(), true));
             } else {
+
                 System.out.println("wrong code by " + ctx.channel().remoteAddress() + " kicking...");
-                server.kickClient(ctx.channel(), "wrong auth", new AuthResponsePacket(false));
+                server.kickClient(ctx.channel(), "wrong auth", new AuthResponsePacket(0, false));
             }
-        } else if(msg instanceof ChecksumPacket) {
+
+            return;
+
+        }
+
+        if (player == null) {
+            System.out.println("unauthenticated!");
+            ctx.close();
+            return;
+        }
+        
+        if(msg instanceof ChecksumPacket) {
+
             ChecksumPacket checksumPacket = (ChecksumPacket) msg;
-            //ctx.writeAndFlush(new ChecksumResponsePacket(0, 0, 0));
             int tick = checksumPacket.getTick();
             long checksum = checksumPacket.getChecksum();
             System.out.println("received checksum, tick: " + tick + ",checksum: " + checksum);
 
             if(server.getSimulation().getChecksum(tick) == checksum) {
+
                 System.out.println("checksum correct");
+
             } else {
+
                 System.out.println("desync");
-                ctx.writeAndFlush(new ChecksumResponsePacket(server.getSimulation().getX(),
-                server.getSimulation().getY(),
-                server.getSimulation().getTick()));
+                ctx.writeAndFlush(new ChecksumResponsePacket(
+                    server.getSimulation().getSnapshot()
+                ));
+
             }
+        } else if(msg instanceof SpawnPacket) {
+            //spawn
+
+            SpawnPacket actionPacket = (SpawnPacket) msg;
+            int type = actionPacket.getObjType();
+            int team = player.getTeam();
+            
+            System.out.println("spawn request: " + type + " from: " + player.getId());
+
+            ScheduledAction scheduledSpawn = server.getSimulation().scheduleSpawn(type, team);
+            
+            server.broadcast(new ActionPacket(scheduledSpawn));
+        }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        Player removed = server.getPlayerManager().removePlayer(ctx.channel());
+        
+        if (removed != null) {
+             System.out.println("player " + removed.getId() + " disconnected.");
+        } else {
+             System.out.println("anonymous socket disconnected.");
         }
     }
 

@@ -2,6 +2,7 @@ package Network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import network.ActionPacket;
 import network.AuthResponsePacket;
 import network.ChecksumResponsePacket;
 import network.Packet;
@@ -25,6 +26,11 @@ public class PacketHandler extends ByteToMessageDecoder {
             case 1:
                 //checksum result
                 packet = new ChecksumResponsePacket(in);
+                break;
+
+            case 2:
+                //checksum result
+                packet = new ActionPacket(in);
                 break;
 
             default:
