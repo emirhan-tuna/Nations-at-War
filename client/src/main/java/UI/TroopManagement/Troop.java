@@ -1,9 +1,11 @@
 
 package UI.TroopManagement;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class Troop {
-    
+    protected Texture texture;
     protected int cost;
     protected boolean isFlying;
     protected float x, y;
@@ -14,7 +16,8 @@ public abstract class Troop {
     protected Troop target;
     protected boolean canAttackAir;
 
-    public Troop(float x, float y, int health, int damage, float range, int ownerID, boolean airAttack, boolean isFlying, int cost){
+    public Troop(Texture texture, float x, float y, int health, int damage, float range, int ownerID, boolean airAttack, boolean isFlying, int cost){
+        this.texture = texture;
         this.x = x;
         this.y = y;
         this.health = health;
@@ -55,7 +58,14 @@ public abstract class Troop {
         return this.health <= 0;
     }
 
-    // getters
+    public void draw(SpriteBatch batch) {
+        if (ownerID != 1) {
+            batch.draw(texture, x , y ,-150f, 150f);
+        } else {
+            batch.draw(texture, x, y, 150f, 150f);
+        }
+    } 
+
     public float getX(){ return x; }
     public float getY(){ return y; }
     public int getHealth(){ return health; }
@@ -64,7 +74,6 @@ public abstract class Troop {
     public int getOwnerID(){ return ownerID; }
     public Troop getTarget(){ return target; }
 
-    // setters
     public void setTarget(Troop target) {
         this.target = target;
     }

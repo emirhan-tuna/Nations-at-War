@@ -1,9 +1,10 @@
 package UI.TroopManagement;
 
+import com.badlogic.gdx.graphics.Texture;
 
 public class Swordsman extends Troop {
-    public Swordsman(float x, float y, int ownerID) {
-        super(x, y, 100, 50, 30f, ownerID, false, false, 50);
+    public Swordsman(Texture texture, float x, float y, int ownerID) {
+        super(texture, x, y, 100, 50, 30f, ownerID, false, false, 50);
     }
 
     @Override

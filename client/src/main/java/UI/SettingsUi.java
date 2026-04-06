@@ -25,7 +25,6 @@ public class SettingsUi implements Screen {
     private Skin skin;
     private Table mainTable;
 
-    // The LibGDX save file system
     private Preferences prefs;
 
     public SettingsUi(Main game, Stage stage, Skin skin) {
@@ -46,7 +45,6 @@ public class SettingsUi implements Screen {
         mainTable.center();
         stage.addActor(mainTable);
 
-        // Loads the "NationsAtWarSettings" save file (or creates it if it doesn't exist)
         prefs = Gdx.app.getPreferences("NationsAtWarSettings");
         
         buildUi();
@@ -55,17 +53,14 @@ public class SettingsUi implements Screen {
     private void buildUi() {
         mainTable.clear();
 
-        // 0. Title
         Label titleLabel = new Label("Settings menu", skin);
         titleLabel.setFontScale(1.5f);
         mainTable.add(titleLabel).colspan(2).padBottom(50f).row();
 
-        // Load saved values from memory (with fallbacks if the player has never saved before)
         float savedVolume = prefs.getFloat("volume", 1.0f);
         String savedFps = prefs.getString("fps", "60");
         String savedWindowMode = prefs.getString("windowMode", "windowed");
 
-        // 1. Volume Bar
         Label volumeLabel = new Label("Volume bar", skin);
         volumeLabel.setAlignment(Align.left);
 
@@ -75,7 +70,6 @@ public class SettingsUi implements Screen {
         mainTable.add(volumeLabel).width(150f).padBottom(30f);
         mainTable.add(volumeSlider).width(300f).padBottom(30f).row();
 
-        // 2. FPS Limiter
         Label fpsLabel = new Label("FPS Limiter", skin);
         fpsLabel.setAlignment(Align.left);
 
@@ -86,7 +80,6 @@ public class SettingsUi implements Screen {
         mainTable.add(fpsLabel).width(150f).padBottom(30f);
         mainTable.add(fpsBox).width(300f).padBottom(30f).row();
 
-        // 3. Window Mode
         Label windowLabel = new Label("Window Mode", skin);
         windowLabel.setAlignment(Align.left);
 

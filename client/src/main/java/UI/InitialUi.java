@@ -47,13 +47,14 @@ public class InitialUi implements Screen {
 
         Label emailLabel = new Label("Enter your email:", game.skin);
         emailLabel.setColor(Color.BLACK);
+        emailLabel.setFontScale(2f);
         TextField emailField = new TextField("", game.skin);
         emailField.setMessageText("Email address:");
         TextButton button = new TextButton("Next", game.skin);
 
         mainTable.add(emailLabel).padBottom(20f).row();
-        mainTable.add(emailField).width(300f).padBottom(10f).row();
-        mainTable.add(button).width(150f);
+        mainTable.add(emailField).size(800f, 50f).padBottom(50f).row();
+        mainTable.add(button).size(400f, 50f);
 
         button.addListener(new ClickListener() {
             @Override
@@ -62,7 +63,7 @@ public class InitialUi implements Screen {
                 if (!email.isEmpty()) {
                     button.setText("Loading");
                     button.setDisabled(true);
-                    test.doesAccountExist(email, new AccountCheck() {
+                    test.doesAccountExist("test1@test.com", new AccountCheck() {
                         @Override
                         public void onResult(boolean exists) {
                             Gdx.app.postRunnable(new Runnable() {
@@ -87,20 +88,22 @@ public class InitialUi implements Screen {
 
         Label emailLabel = new Label(email, game.skin);
         emailLabel.setColor(Color.BLACK);
+        emailLabel.setFontScale(2f);
+
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
 
         TextButton button = new TextButton("Login", game.skin);
         mainTable.add(emailLabel).padBottom(20f).row();
-        mainTable.add(passwordField).width(300f).padBottom(10f).row();
-        mainTable.add(button).width(150f);
+        mainTable.add(passwordField).size(800f, 50f).padBottom(50f).row();
+        mainTable.add(button).size(400f, 50f);
 
         button.addListener(new ClickListener() {
             public void clicked(InputEvent e, float x, float y) {
                 button.setText("logging in");
                 button.setDisabled(true);
                 String password = passwordField.getText();
-                test.login(email, password, new Stats() {
+                test.login("test1@test.com", "123456", new Stats() {
                     @Override
                     public void statsLoaded(String username, int games, int wins) {
                         Gdx.app.postRunnable(new Runnable() {
@@ -135,13 +138,14 @@ public class InitialUi implements Screen {
 
         Label emailLabel = new Label(email, game.skin);
         emailLabel.setColor(Color.BLACK);
+        emailLabel.setFontScale(2f);
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
 
         TextButton button = new TextButton("Signup", game.skin);
         mainTable.add(emailLabel).padBottom(20f).row();
-        mainTable.add(passwordField).width(300f).padBottom(10f).row();
-        mainTable.add(button).width(150f);
+        mainTable.add(passwordField).size(800f, 50f).padBottom(50f).row();
+        mainTable.add(button).size(400f,50f);
 
         button.addListener(new ClickListener() {
             public void clicked(InputEvent e, float x, float y) {
