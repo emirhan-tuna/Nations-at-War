@@ -83,7 +83,8 @@ public class Simulation {
 
     public int getWinner() {
         if (towerList[0].isDead()) return 1;
-        else return 0;
+        else if (towerList[1].isDead()) return 0;
+        else return -1;
     }
 
     public void update() {
@@ -321,5 +322,9 @@ public class Simulation {
 
     public int getTick() {
         return tick;
+    }
+
+    public SimPlayer getSimPlayer(int id) {
+        return players[id];
     }
 }
