@@ -2,11 +2,30 @@ package simulation.GameObjects.Troops;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import io.netty.buffer.ByteBuf;
+import simulation.GameObjects.GameObject;
 
-public class Tower extends Troop {
 
-    public Tower(int x, int y, int team) {
-        super(4, x, y, 75, 1000, 75, 100, team);
+public class Tower extends GameObject{
+    protected int size;
+    protected int damage;
+    protected int health;
+    protected Troop target;
+    protected int cost;
+    protected int range;
+
+    public Tower(int type, int x, int y, int damage, int health, int cost, int range, int team) {
+        super(type, x, y, team);
+        this.damage = damage;
+        this.health = health;
+        this.cost = cost;
+        this.range = range;
+
+        if (team == 0) {
+            this.x = 50;
+        } else {
+            this.x = 900;
+        }
     }
 
     public void update() {
@@ -17,4 +36,13 @@ public class Tower extends Troop {
             }
         }
     }
+
+    public void attack(Troop target) {
+        target.takeDamage(damage);
+    }
+
+    @Override
+    public void write(ByteBuf buf) {
+
+    } 
 }

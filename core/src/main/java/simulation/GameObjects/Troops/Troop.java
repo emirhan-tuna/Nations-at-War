@@ -19,6 +19,7 @@ public abstract class Troop extends GameObject implements Movable {
         this.range = range;
     }
 
+    @Override
     public void move() {
         int speed = 50;
 

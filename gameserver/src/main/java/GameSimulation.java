@@ -17,8 +17,8 @@ public class GameSimulation implements Runnable {
         return simulation.scheduleAction(action);
     }
 
-    public ScheduledAction scheduleSpawn(int type, int team) {
-        SpawnAction spawn = new SpawnAction(type, team, 0);
+    public ScheduledAction scheduleSpawn(int type, int team, int lane) {
+        SpawnAction spawn = new SpawnAction(type, team, 0, lane);
         ScheduledAction actionToSend = scheduleAction(spawn);
 
         return actionToSend;

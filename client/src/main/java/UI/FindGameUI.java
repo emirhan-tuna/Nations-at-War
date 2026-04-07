@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import Game.Main;
 import Game.Player;
 import Network.NetworkManager;
-import UI.TroopManagement.TroopManager;
 
 public class FindGameUI implements Screen{
     private Texture backTexture;
