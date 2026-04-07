@@ -15,6 +15,7 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import network.GameOverPacket;
 import network.Packet;
 import network.Routes;
+import network.StartGamePacket;
 
 class StartServer {
     public static int port = 9000;
@@ -81,6 +82,8 @@ class StartServer {
 
     public void startGame() {
         new Thread(this.simulation).start();
+        broadcast(new StartGamePacket());
+        
         this.currentGameId = rng.nextLong();
         api.reserveGameFromApi();
     }

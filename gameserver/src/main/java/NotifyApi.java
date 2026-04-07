@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import network.Routes;
 
@@ -30,8 +31,8 @@ public class NotifyApi {
 
     private void ping() {
         try {
-            URL url = new URL("http://" + Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_HEARTBEAT);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            URL url = new URL("https://" + Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_HEARTBEAT);
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
@@ -61,8 +62,8 @@ public class NotifyApi {
         System.out.println("reserving game...");
         
         try {
-            URL url = new URL("http://" + Routes.API_HOST + ":" + Routes.API_PORT + "/reserve");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            URL url = new URL("https://" + Routes.API_HOST + ":" + Routes.API_PORT + "/reserve");
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
             
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");

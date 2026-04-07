@@ -54,7 +54,9 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
         } else if(msg instanceof ActionPacket) {
             ActionPacket actionPacket = (ActionPacket) msg;
             ScheduledAction action = actionPacket.getAction();
-            //...
+            simulation.scheduleFromNetwork(() -> {
+                simulation.addAction(action, action.getTick());
+            });
         } else if(msg instanceof GameOverPacket) {
 
         } else if(msg instanceof StartGamePacket) {
