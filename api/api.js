@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-// Import your Firebase Admin configuration
 const {auth, db} = require('./user/firebase');
 const {serverAuth} = require('./server/server.js')
 
@@ -83,7 +82,7 @@ app.post('/update-profile', checkAuth, async (req, res) => {
     }
 });
 
-//srv
+//server
 
 let serverActive = null;
 
@@ -141,7 +140,7 @@ app.post('/heartbeat', (req, res) => {
         currentServer.port = port;
         currentServer.lastHeartbeat = Date.now();
     }
-    
+
     res.status(204).send(); 
 });
 
