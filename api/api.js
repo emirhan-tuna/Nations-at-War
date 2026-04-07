@@ -104,9 +104,7 @@ app.get('/hello', (req, res) => {
     }
 })
 
-app.use(serverAuth);
-
-app.post('/reserve', (req, res) => {
+app.post('/reserve', serverAuth, (req, res) => {
     const {host, port, gameId} = req.body;
 
     if(!host || !port || !gameId) {
@@ -124,7 +122,7 @@ app.post('/reserve', (req, res) => {
     res.status(204).send();
 })
 
-app.post('/heartbeat', (req, res) => {
+app.post('/heartbeat', serverAuth, (req, res) => {
     const {host, port} = req.body
     const currentServer = getActive();
     if(currentServer == null) {

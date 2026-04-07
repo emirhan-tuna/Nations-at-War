@@ -83,9 +83,9 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             System.out.println("spawn request: " + type + " from: " + player.getId());
 
             simulation.scheduleFromNetwork(() -> {
-            SpawnAction spawn = new SpawnAction(type, team, 0, lane);
-            ScheduledAction scheduledSpawn = simulation.scheduleAction(spawn);
-            server.broadcast(new ActionPacket(scheduledSpawn));
+                SpawnAction spawn = new SpawnAction(type, team, 0, lane);
+                ScheduledAction scheduledSpawn = simulation.scheduleAction(spawn);
+                server.broadcast(new ActionPacket(scheduledSpawn));
             });
         }
     }

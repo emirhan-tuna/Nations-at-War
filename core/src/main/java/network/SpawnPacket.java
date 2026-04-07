@@ -22,10 +22,12 @@ public class SpawnPacket extends ServerBoundPacket {
     @Override
     protected void decodeData(ByteBuf data) {
         this.objType = data.readByte();
+        this.lane = data.readByte();
     }
 
     @Override
     public void write(ByteBuf buf) {
-        buf.writeInt(objType);
+        buf.writeByte(objType);
+        buf.writeByte(lane);
     }
 }

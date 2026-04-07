@@ -13,7 +13,7 @@ public class AuthPacket extends ServerBoundPacket {
     }
 
     public void decodeData(ByteBuf data) {
-        this.code = data.readInt();
+        this.code = data.readLong();
     }
 
     public void write(ByteBuf buf) {

@@ -1,5 +1,6 @@
 package simulation.GameObjects.Troops;
 
+import io.netty.buffer.ByteBuf;
 import simulation.GameObjects.GameObject;
 import simulation.GameObjects.Movable;
 
@@ -16,6 +17,17 @@ public abstract class Troop extends GameObject implements Movable {
     public Troop(int type, int x, int y, int team) {
         super(type, x, y, team);
         cooldown = 20;
+    }
+
+    public Troop(ByteBuf buf) {
+        super(buf);
+        this.health = buf.readInt();
+    }
+
+    @Override
+    public void write(ByteBuf buf) {
+        super.write(buf);
+        buf.writeInt(health);
     }
 
     @Override
