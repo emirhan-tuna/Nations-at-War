@@ -11,7 +11,7 @@ import io.netty.buffer.ByteBuf;
 public class Knight extends Troop {
     
     public Knight(int x, int y, int team) {
-        super(2, x, y, 50, 200, 50, 5, team);
+        super(2, x, y, 50, 200, 50, 5, team, false);
     }
 
     public void update() {

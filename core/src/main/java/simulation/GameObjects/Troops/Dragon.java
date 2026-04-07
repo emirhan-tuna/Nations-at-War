@@ -3,10 +3,12 @@ package simulation.GameObjects.Troops;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import io.netty.buffer.ByteBuf;
+
 
 public class Dragon extends Troop {
     public Dragon(int x, int y, int team) {
-        super(1, x, y, 100, 250, 500, 100, team);
+        super(1, x, y, 100, 250, 500, 100, team, true);
     }
 
     public void update() {
@@ -22,4 +24,9 @@ public class Dragon extends Troop {
             move();
         }
     }
+
+    @Override
+    public void write(ByteBuf buf) {
+
+    } 
 }

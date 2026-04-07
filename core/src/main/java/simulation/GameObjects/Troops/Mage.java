@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 public class Mage extends Troop {
 
     public Mage(int x, int y, int team) {
-        super(3, x, y, 75, 30, 100, 100, team);
+        super(3, x, y, 75, 30, 100, 100, team, false);
     }
 
     public void update() {

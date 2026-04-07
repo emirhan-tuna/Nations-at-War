@@ -30,7 +30,7 @@ public class SpawnAction extends ScheduledAction {
     }
 
     public void execute(Simulation sim) {
-        sim.spawnObject(this.type, team, 0);
+        sim.spawnObject(this.type, team, 1);
     }
     
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
 import Network.FirebaseTest;
@@ -24,19 +26,17 @@ public class MainMenuUi implements Screen{
     private Table mainTable;
     private FirebaseTest test;
     private Table statsTable;
+    private SpriteBatch batch;
 
     public MainMenuUi(Main game, Stage stage, Skin skin) {
         this.stage = stage;
         this.test = new FirebaseTest();
         this.game = game;
+        this.batch = new SpriteBatch();
 
         stage.clear();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
-        backImage = new Image(backTexture);
-        backImage.getColor().a = 0.8f;
-        backImage.setFillParent(true);
-        stage.addActor(backImage);
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -126,6 +126,11 @@ public class MainMenuUi implements Screen{
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.begin();
+        batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+
         stage.act();
         stage.draw();
     }
@@ -142,6 +147,8 @@ public class MainMenuUi implements Screen{
 
     @Override
     public void show() {
+        stage.setViewport(new FitViewport(1920, 1080));
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         Gdx.input.setInputProcessor(stage);
 
         mainTable.setFillParent(true);

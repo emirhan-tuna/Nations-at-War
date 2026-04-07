@@ -16,6 +16,7 @@ import simulation.GameObjects.Troops.Dragon;
 import simulation.GameObjects.Troops.Knight;
 import simulation.GameObjects.Troops.Mage;
 import simulation.GameObjects.Troops.Tower;
+import simulation.GameObjects.Troops.Troop;
 import simulation.ScheduledActions.ActionDecoder;
 import simulation.ScheduledActions.ActionEncoder;
 import simulation.ScheduledActions.ScheduledAction;
@@ -37,6 +38,19 @@ public class Simulation {
     public Simulation(boolean isServer) {
         spawnObject(0, 0, 1);
         this.isServer = isServer;
+    }
+
+    public void setTarget() {
+        for(GameObject gameObject : gameObjects) {
+            for (GameObject gameObject2 : gameObjects) {
+                if (gameObject instanceof Troop) {
+                    gameObject = (Troop) gameObject;
+                    if (((Troop)gameObject).getAttack()) {
+
+                    }
+                }
+            }
+        }
     }
 
     public void update() {

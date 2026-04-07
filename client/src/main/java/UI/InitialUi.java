@@ -33,20 +33,19 @@ public class InitialUi implements Screen {
 
     public InitialUi(Main game) {
         this.game = game;
-        this.stage = new Stage();
+        this.stage = new Stage(new FitViewport(1920, 1080));
         this.test = new FirebaseTest();
         this.batch = new SpriteBatch();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
-        backImage = new Image(backTexture);
-        backImage.getColor().a = 0.8f;
 
         title = new Label("NATIONS AT WAR", game.skin, "title");
 
-        backImage.setFillParent(true);
-        stage.addActor(backImage);
-
         mainTable = new Table();
+        mainTable.setFillParent(true);
+        stage.addActor(mainTable);
+
+        showEmailScreen();
     }
 
     public void showEmailScreen() {
@@ -196,6 +195,11 @@ public class InitialUi implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.begin();
+        batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
 
         stage.act();
         stage.draw();
