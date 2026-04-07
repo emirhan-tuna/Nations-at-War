@@ -66,6 +66,10 @@ public class Simulation {
         }
     }
 
+    public List<GameObject> getObjects() {
+        return gameObjects;
+    }
+
     public boolean isGameOver() {
         for(int i = 0; i < 2; i++) {
             if (gameObjects.get(i) instanceof Tower) {

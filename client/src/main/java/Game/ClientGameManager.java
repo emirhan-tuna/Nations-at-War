@@ -1,6 +1,10 @@
 package Game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import simulation.Simulation;
+import simulation.GameObjects.GameObject;
 
 public class ClientGameManager {
     private Simulation simulation;
@@ -14,6 +18,10 @@ public class ClientGameManager {
 
     public Simulation getSimulation() {
         return simulation;
+    }
+
+    public List<GameObject> getObjects() {
+        return simulation.getObjects();
     }
 
     public void update(float delta) {
