@@ -47,38 +47,70 @@ public class Simulation {
     public void setTarget() {
         for(GameObject gameObject : gameObjects) {
             for (GameObject gameObject2 : gameObjects) {
-                if (gameObject instanceof Troop) {
-                    gameObject = (Troop) gameObject;
-                    if (((Troop)gameObject).getAttack()) {
-
+                if (gameObject instanceof Troop && gameObject2 instanceof Troop) {
+                    Troop troop1 = (Troop) gameObject;
+                    Troop troop2 = (Troop) gameObject2;
+                    if (troop1.canAttack(troop2)) {
+                        if (troop1.getTarget() == null) {
+                            troop1.setTarget(troop2);
+                        } else {
+                            int distance = troop1.calculateDistance(troop2); 
+                            if (troop1.calculateDistance(troop1.getTarget()) > distance) {
+                                troop1.setTarget(troop2);
+                            } 
+                        }
                     }
                 }
             }
         }
     }
 
+    public boolean isGameOVer() {
+        for(int i = 0; i < 2; i++) {
+            if (gameObjects.get(i) instanceof Tower) {
+                Tower tower = (Tower) gameObjects.get(i);
+                if (tower.isDead()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void update() {
         processNetworkTasks();
 
         this.tick++;
+        if (!isGameOVer()) {
+            this.tick++;
+            ArrayList<Troop> toRemove = new ArrayList<>();
 
-        for(GameObject gameObject : gameObjects) {
-            gameObject.update();
-        }
+            for(GameObject gameObject : gameObjects) {
+                if (gameObject instanceof Troop) {
+                    if(((Troop)gameObject).isDead()) {
+                        toRemove.add((Troop) gameObject);
+                    }
+                }
 
-        List<ScheduledAction> actionsThisTick = actionQueue.get(this.tick);
-        if (actionsThisTick != null) {
-            for (ScheduledAction action : actionsThisTick) {
-                action.execute(this); 
+                gameObject.update();
             }
-        }
 
-        actionQueue.remove(this.tick);
+            gameObjects.removeAll(toRemove);
 
-        long currChecksum = updateChecksum();
-        this.currentChecksum = currChecksum;
-        if(this.isServer) {
-            checksumHistory[this.tick % HISTORY_SIZE] = currChecksum;
+            List<ScheduledAction> actionsThisTick = actionQueue.get(this.tick);
+            if (actionsThisTick != null) {
+                for (ScheduledAction action : actionsThisTick) {
+                    action.execute(this); 
+                }
+            }
+
+            actionQueue.remove(this.tick);
+
+            long currChecksum = updateChecksum();
+            this.currentChecksum = currChecksum;
+            if(this.isServer) {
+                checksumHistory[this.tick % HISTORY_SIZE] = currChecksum;
+            }
         }
     }
 

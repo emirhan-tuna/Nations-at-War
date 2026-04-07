@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import simulation.GameObjects.GameObject;
 
 
-public class Tower extends GameObject{
+public class Tower extends Troop{
     protected int size;
     protected int damage;
     protected int health;
@@ -15,7 +15,7 @@ public class Tower extends GameObject{
     protected int range;
 
     public Tower(int type, int x, int y, int damage, int health, int cost, int range, int team) {
-        super(type, x, y, team);
+        super(5, x, y, 100, 500, 0, 100, team, true);
         this.damage = damage;
         this.health = health;
         this.cost = cost;

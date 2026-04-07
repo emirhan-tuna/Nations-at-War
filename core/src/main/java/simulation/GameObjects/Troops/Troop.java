@@ -11,6 +11,7 @@ public abstract class Troop extends GameObject implements Movable {
     protected int cost;
     protected int range;
     protected boolean canAttackOtherLane;
+    protected int cooldown;
 
     public Troop(int type, int x, int y, int damage, int health, int cost, int range, int team, boolean canAttackOtherLane) {
         super(type, x, y, team);
@@ -19,6 +20,7 @@ public abstract class Troop extends GameObject implements Movable {
         this.cost = cost;
         this.range = range;
         this.canAttackOtherLane = canAttackOtherLane;
+        cooldown = 20;
     }
 
     @Override
@@ -33,7 +35,12 @@ public abstract class Troop extends GameObject implements Movable {
     }
 
     public void attack(Troop target) {
-        target.takeDamage(damage);
+        if (cooldown == 20) {
+            target.takeDamage(damage);
+            cooldown = 0;
+        } else {
+            cooldown++;
+        }
     }
 
     public void takeDamage(int damage) {
@@ -48,8 +55,31 @@ public abstract class Troop extends GameObject implements Movable {
         }
     }
 
+    public boolean canAttack(Troop troop) {
+        if (troop instanceof Tower) {
+            return true;
+        }
+        if (this.y == troop.getY() || this.canAttackOtherLane) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean getAttack() {
         return this.canAttackOtherLane;
+    }
+
+    public void setTarget(Troop troop) {
+        this.target = troop;
+    }
+
+    public Troop getTarget() {
+        return this.target;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
     }
 
     public abstract void update();

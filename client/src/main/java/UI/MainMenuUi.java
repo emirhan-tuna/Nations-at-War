@@ -110,7 +110,7 @@ public class MainMenuUi implements Screen{
 
     public void playGame() {
         System.out.println("LOG: Transitioning to Invite Menu...");
-        game.setScreen(new FindGameUI(game));
+        game.setScreen(new GameScreenUI(game));
     }
 
     public void showSettings() {

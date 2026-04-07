@@ -37,8 +37,17 @@ public class GameScreenUI implements Screen{
         batch = new SpriteBatch();
 
         backTexture = new Texture("menu_items/background.jpg");
+        TextButton button = new TextButton("Game Over test", game.skin);
+
+        button.addListener(new ClickListener() {    
+            @Override
+            public void clicked(InputEvent e, float x, float y) {
+                game.setScreen(new GameOverUI(game));
+            }
+        });
 
         mainTable = new Table(); 
+        mainTable.add(button);
         popupMenu = new Table();
         popupMenu.setVisible(false);
     }

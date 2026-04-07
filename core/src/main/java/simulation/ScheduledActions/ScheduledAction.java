@@ -12,7 +12,7 @@ public abstract class ScheduledAction {
         this.tick = tick;
     }
 
-    public abstract void execute(Simulation sim);
+    public abstract void execute(Simulation sim, int lane);
 
     public abstract void write(ByteBuf buf);
 
