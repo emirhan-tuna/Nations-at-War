@@ -1,9 +1,4 @@
-
-import network.ActionPacket;
-import simulation.Simulation;
-import simulation.ScheduledActions.ScheduledAction;
-import simulation.ScheduledActions.SpawnAction;
-import simulation.Simulation.Snapshot;
+import simulation.Simulation;;
 
 public class GameSimulation implements Runnable {
     private Simulation simulation;
@@ -13,27 +8,8 @@ public class GameSimulation implements Runnable {
         this.simulation = new Simulation(true);
     }
 
-    public ScheduledAction scheduleAction(ScheduledAction action) {
-        return simulation.scheduleAction(action);
-    }
-
-    public ScheduledAction scheduleSpawn(int type, int team) {
-        SpawnAction spawn = new SpawnAction(type, team, 0);
-        ScheduledAction actionToSend = scheduleAction(spawn);
-
-        return actionToSend;
-    }
-
-    public long getChecksum(int tick) {
-        return simulation.getChecksum(tick);
-    }
-
-    public Snapshot getSnapshot() {
-        return simulation.getSnapshot();
-    }
-
-    public int getTick() {
-        return simulation.getTick();
+    public Simulation getSimulation() {
+        return simulation;
     }
 
     @Override

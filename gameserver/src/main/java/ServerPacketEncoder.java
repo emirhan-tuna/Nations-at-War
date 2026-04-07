@@ -8,6 +8,5 @@ public class ServerPacketEncoder extends MessageToByteEncoder<ClientBoundPacket>
     protected void encode(ChannelHandlerContext ctx, ClientBoundPacket packet, ByteBuf buf) {
         buf.writeByte(packet.getType());
         packet.write(buf);
-    }
-    
+    }  
 }

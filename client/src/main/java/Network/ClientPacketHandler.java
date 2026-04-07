@@ -10,12 +10,14 @@ import network.AuthPacket;
 import network.AuthResponsePacket;
 import network.ChecksumResponsePacket;
 import network.Packet;
+import simulation.Simulation;
 import simulation.ScheduledActions.ScheduledAction;
 import simulation.Simulation.Snapshot;
 
 public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private int code;
     private Screen screen;
+    private Simulation simulation;
 
     public ClientPacketHandler(int code, Screen screen) {
         this.code = code;
@@ -45,6 +47,10 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
         } else if(msg instanceof ChecksumResponsePacket) {
             ChecksumResponsePacket checksum = (ChecksumResponsePacket) msg;
             Snapshot snapshot = checksum.getSnapshot();
+
+            simulation.scheduleFromNetwork(() -> {
+                simulation.correct(snapshot);
+            });
 
             //Gdx.app.postRunnable(() -> {
             //    send snapshot here...

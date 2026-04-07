@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.CRC32;
 
 import io.netty.buffer.ByteBuf;
@@ -22,11 +24,13 @@ public class Simulation {
 
     private final List<GameObject> gameObjects = new ArrayList<>();
     private final Map<Integer, List<ScheduledAction>> actionQueue = new HashMap<>();
+    private final Queue<Runnable> taskQueue = new ConcurrentLinkedQueue<>();
 
     private final CRC32 crc32 = new CRC32();
     private final ByteBuffer buffer = ByteBuffer.allocate(12);
     private static final int HISTORY_SIZE = 256;
     private final long[] checksumHistory = new long[HISTORY_SIZE];
+
     private long currentChecksum;
     private boolean isServer;
 
@@ -36,6 +40,8 @@ public class Simulation {
     }
 
     public void update() {
+        processNetworkTasks();
+
         this.tick++;
 
         for(GameObject gameObject : gameObjects) {
@@ -55,6 +61,17 @@ public class Simulation {
         this.currentChecksum = currChecksum;
         if(this.isServer) {
             checksumHistory[this.tick % HISTORY_SIZE] = currChecksum;
+        }
+    }
+
+    public void scheduleFromNetwork(Runnable task) {
+        taskQueue.offer(task);
+    }
+
+    private void processNetworkTasks() {
+        Runnable task;
+        while ((task = taskQueue.poll()) != null) {
+            task.run(); 
         }
     }
 
@@ -127,7 +144,7 @@ public class Simulation {
         }
     }
 
-    public long updateChecksum() {
+    private long updateChecksum() {
         crc32.reset();
         
         gameObjects.sort((a, b) -> Integer.compare(a.getId(), b.getId()));

@@ -1,0 +1,52 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "node",
+            "name": "api",
+            "request": "launch",
+            "program": "${workspaceFolder}/api/api.js",
+            "cwd": "${workspaceFolder}/api",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "Lwjgl3Launcher(1)",
+            "request": "launch",
+            "mainClass": "tr.edu.bilkent.cs102.game.lwjgl3.Lwjgl3Launcher",
+            "projectName": "Nations at War-lwjgl3"
+        },
+        {
+            "type": "java",
+            "name": "StartServer",
+            "request": "launch",
+            "mainClass": "StartServer",
+            "projectName": "gameserver"
+        }
+    ],
+
+    "compounds": [
+        {
+            "name": "run both server and api",
+            "configurations": [
+                "StartServer",
+                "api"
+            ],
+        }
+    ]
+}

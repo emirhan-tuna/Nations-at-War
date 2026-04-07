@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,12 +13,24 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import network.Packet;
+import network.Routes;
 
 class StartServer {
     public static int port = 9000;
-    private GameSimulation simulation = new GameSimulation(this);
-    private PlayerManager playerManager = new PlayerManager();
-    public StartServer() {}
+
+    
+    private PlayerManager playerManager;
+    private GameSimulation simulation;
+    private NotifyApi api;
+
+    private long currentGameId = 0;
+    private Random rng = new Random();
+
+    public StartServer() {
+        this.playerManager = new PlayerManager();
+        this.api = new NotifyApi(this);
+        api.startHeartbeat();
+    }
 
     public static void main(String[] args) throws Exception {
         new StartServer().run();
@@ -27,7 +41,6 @@ class StartServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
-            new Thread(simulation).start();
             b.group(bossGroup, workerGroup)
             .channel(NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 128)
@@ -50,6 +63,7 @@ class StartServer {
             System.out.println("starting gameserver(port: " + port + ")");
             ChannelFuture f = b.bind(port).sync();
             System.out.println("server (should be) running!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            startGame();
 
             f.channel().closeFuture().sync();
         } finally {
@@ -57,6 +71,20 @@ class StartServer {
             bossGroup.shutdownGracefully();
         }
     }
+
+    public void startGame() {
+        this.simulation = new GameSimulation(this);
+        new Thread(this.simulation).start();
+        this.currentGameId = rng.nextLong();
+        api.reserveGameFromApi();
+    }
+
+    public long getGameId() {
+        return currentGameId;
+    }
+
+    public long getCurrentGameId() {return currentGameId;}
+
 
     public void sendPacket(Channel channel, Packet packet) {
         channel.writeAndFlush(packet);

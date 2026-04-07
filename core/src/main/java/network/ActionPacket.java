@@ -2,6 +2,7 @@ package network;
 
 import io.netty.buffer.ByteBuf;
 import simulation.ScheduledActions.ActionDecoder;
+import simulation.ScheduledActions.ActionEncoder;
 import simulation.ScheduledActions.ScheduledAction;
 
 public class ActionPacket extends ClientBoundPacket {
@@ -23,8 +24,7 @@ public class ActionPacket extends ClientBoundPacket {
 
     @Override
     public void write(ByteBuf buf) {
-        buf.writeByte(action.getId());
-        action.write(buf);
+        ActionEncoder.encode(buf, action);
     }
 
     public ScheduledAction getAction() {return action;}

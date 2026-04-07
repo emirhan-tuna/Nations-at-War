@@ -7,13 +7,18 @@ import network.ChecksumPacket;
 import network.ChecksumResponsePacket;
 import network.Packet;
 import network.SpawnPacket;
+import simulation.Simulation;
+import simulation.Simulation.Snapshot;
 import simulation.ScheduledActions.ScheduledAction;
+import simulation.ScheduledActions.SpawnAction;
 
 public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private StartServer server;
+    private Simulation simulation;
 
     protected ServerPacketHandler(StartServer server) {
         this.server = server;
+        this.simulation = server.getSimulation().getSimulation();
     }
 
     @Override
@@ -29,7 +34,7 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
 
             AuthPacket auth = (AuthPacket) msg;
 
-            if(auth.getCode() == 69693131) {
+            if(server.getCurrentGameId() != 0 && auth.getCode() == server.getCurrentGameId()) {
                 System.out.println("client at addr " + ctx.channel().remoteAddress() + " authenticated successfully");
                 player = server.getPlayerManager().addPlayer(ctx.channel());
                 System.out.println("got id " + player.getId());
@@ -56,20 +61,17 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             ChecksumPacket checksumPacket = (ChecksumPacket) msg;
             int tick = checksumPacket.getTick();
             long checksum = checksumPacket.getChecksum();
-            System.out.println("received checksum, tick: " + tick + ",checksum: " + checksum);
 
-            if(server.getSimulation().getChecksum(tick) == checksum) {
-
-                System.out.println("checksum correct");
-
-            } else {
-
-                System.out.println("desync");
-                ctx.writeAndFlush(new ChecksumResponsePacket(
-                    server.getSimulation().getSnapshot()
-                ));
-
-            }
+            simulation.scheduleFromNetwork(() -> {
+                long serverChecksum = simulation.getChecksum(tick);
+                
+                if (serverChecksum != checksum) {
+                    Snapshot snapshot = simulation.getSnapshot();
+                    ChecksumResponsePacket response = new ChecksumResponsePacket(snapshot);
+                    
+                    ctx.writeAndFlush(response); 
+                }
+            });
         } else if(msg instanceof SpawnPacket) {
             //spawn
 
@@ -79,9 +81,11 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             
             System.out.println("spawn request: " + type + " from: " + player.getId());
 
-            ScheduledAction scheduledSpawn = server.getSimulation().scheduleSpawn(type, team);
-            
+            simulation.scheduleFromNetwork(() -> {
+            SpawnAction spawn = new SpawnAction(type, team, 0);
+            ScheduledAction scheduledSpawn = simulation.scheduleAction(spawn);
             server.broadcast(new ActionPacket(scheduledSpawn));
+            });
         }
     }
 
