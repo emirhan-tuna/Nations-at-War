@@ -2,39 +2,33 @@ package UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
 import Network.FirebaseTest;
 
-public class MainMenuUi implements Screen {
+public class MainMenuUi implements Screen{
     private Texture backTexture;
-    private SpriteBatch batch;
+    private Image backImage;
     private Stage stage;
     private Main game;
     private Table mainTable;
     private FirebaseTest test;
     private Table statsTable;
-    private Texture statsBgTexture;
 
     public MainMenuUi(Main game, Stage stage, Skin skin) {
         this.stage = stage;
         this.test = new FirebaseTest();
         this.game = game;
-        this.batch = new SpriteBatch();
 
         stage.clear();
 
@@ -54,11 +48,11 @@ public class MainMenuUi implements Screen {
 
     public void showMainMenu() {
         mainTable.clear();
-        mainTable.center();
 
         TextButton playGameButton = new TextButton("Play Game", game.skin);
         TextButton settingButton = new TextButton("Settings", game.skin);
         TextButton quitButton = new TextButton("Quit", game.skin);
+        TextButton logOutButton = new TextButton("Log-out", game.skin);
 
         mainTable.add(playGameButton).width(150f).padTop(80f).padBottom(200f).row();
         mainTable.add(settingButton).width(150f).padBottom(200f).row();
@@ -68,28 +62,28 @@ public class MainMenuUi implements Screen {
         playGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                game.setScreen(new InviteUi(game, stage, game.skin));
+                playGame();
             }
         });
 
         settingButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                game.setScreen(new SettingsUi(game, stage, game.skin));
+                showSettings();
             }
         });
 
         quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent e, float x, float y) {
+                quit();
+            }
+        });
+
+        logOutButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 game.setScreen(new InitialUi(game));
-            }
-        });
-
-        quitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent e, float x, float y) {
-                Gdx.app.exit();
             }
         });
     }
@@ -97,6 +91,7 @@ public class MainMenuUi implements Screen {
     public void showStats() {
         statsTable = new Table();
         statsTable.setFillParent(true);
+
         statsTable.top().right();
 
         Label userLabel = new Label("username: " + game.username, game.skin, "very_big_title");
@@ -106,24 +101,30 @@ public class MainMenuUi implements Screen {
         Label winLabel = new Label("wins: " + game.wins, game.skin, "very_big_title");
         //winLabel.setFontScale(4f);
 
-        innerStatsBox.add(userLabel).right().row();
-        innerStatsBox.add(gameLabel).padTop(10f).right().row();
-        innerStatsBox.add(winLabel).padTop(10f).right();
+        statsTable.add(userLabel).padRight(20f).padTop(20f).right().row();
+        statsTable.add(gameLabel).padRight(20f).padTop(5f).right().row();
+        statsTable.add(winLabel).padRight(20f).padTop(5f).right();
 
-        statsTable.add(innerStatsBox).padTop(30f).padRight(30f);
         stage.addActor(statsTable);
+    }
+
+    public void playGame() {
+        System.out.println("LOG: Transitioning to Invite Menu...");
+        game.setScreen(new FindGameUI(game));
+    }
+
+    public void showSettings() {
+        game.setScreen(new SettingsUi(game, stage, game.skin));
+    }
+
+    public void quit() {
+        Gdx.app.exit();
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Render background to absolute window size
-        batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.begin();
-        batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
 
         stage.act();
         stage.draw();
@@ -137,16 +138,10 @@ public class MainMenuUi implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        backTexture.dispose();
-        batch.dispose();
-        if (statsBgTexture != null) statsBgTexture.dispose();
     }
 
     @Override
     public void show() {
-        stage.setViewport(new FitViewport(1920, 1080));
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-
         Gdx.input.setInputProcessor(stage);
 
         mainTable.setFillParent(true);

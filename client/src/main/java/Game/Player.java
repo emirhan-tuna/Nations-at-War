@@ -8,8 +8,8 @@ public class Player {
 
     public Player(int playerID){
         this.id = playerID;
-        this.resources = 100; // placeholder
-        this.health = 1000; // placeholder
+        this.resources = 100;
+        this.health = 1000;
     }
 
     public void takeBaseDamage(int damage){
@@ -32,8 +32,8 @@ public class Player {
         this.resources += amount;
     }
 
-    // getters
-    public int getId(){ return this.id; }
+    public int getId(){ 
+        return this.id;}
     public int getHealth(){ return this.health; }
     public int getResources(){ return this.resources; }
 }

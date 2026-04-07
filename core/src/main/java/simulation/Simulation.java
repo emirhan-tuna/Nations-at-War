@@ -11,7 +11,8 @@ import io.netty.buffer.ByteBuf;
 import simulation.GameObjects.GameObject;
 import simulation.GameObjects.ObjectDecoder;
 import simulation.GameObjects.ObjectEncoder;
-import simulation.GameObjects.Square;
+import simulation.GameObjects.Troops.Archer;
+import simulation.GameObjects.Troops.Dragon;
 import simulation.ScheduledActions.ActionDecoder;
 import simulation.ScheduledActions.ActionEncoder;
 import simulation.ScheduledActions.ScheduledAction;
@@ -70,8 +71,10 @@ public class Simulation {
 
         switch(type) {
             case 0:
-                newObj = new Square(x, y);
+                newObj = new Archer(x, y, team);
                 break;
+            case 1:
+                newobj = new Dragon(x, y , team);   
             default:
                 System.out.println("unknown object");
                 break;

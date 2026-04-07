@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -22,6 +23,7 @@ import Network.Stats;
 
 public class InitialUi implements Screen {
     private Texture backTexture;
+    private Image backImage;
     private SpriteBatch batch;
     private Main game;
     private Stage stage;
@@ -31,7 +33,7 @@ public class InitialUi implements Screen {
 
     public InitialUi(Main game) {
         this.game = game;
-        this.stage = new Stage(new FitViewport(1920, 1080));
+        this.stage = new Stage();
         this.test = new FirebaseTest();
         this.batch = new SpriteBatch();
 
@@ -45,10 +47,6 @@ public class InitialUi implements Screen {
         stage.addActor(backImage);
 
         mainTable = new Table();
-        mainTable.setFillParent(true);
-        stage.addActor(mainTable);
-
-        showEmailScreen();
     }
 
     public void showEmailScreen() {
@@ -199,12 +197,6 @@ public class InitialUi implements Screen {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Render background to absolute window size
-        batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.begin();
-        batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
-
         stage.act();
         stage.draw();
     }
@@ -221,7 +213,13 @@ public class InitialUi implements Screen {
         batch.dispose();
     }
 
-    @Override public void show() { Gdx.input.setInputProcessor(stage); }
+    @Override public void show() { 
+        Gdx.input.setInputProcessor(stage);
+        mainTable.setFillParent(true);
+        stage.addActor(mainTable); 
+
+        showEmailScreen();
+    }
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}
