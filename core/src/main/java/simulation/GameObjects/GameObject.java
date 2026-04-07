@@ -8,12 +8,14 @@ public abstract class GameObject {
     protected int x;
     protected int y;
     protected int size;
+    protected int team;
 
-    public GameObject(int type, int x, int y) {
+    public GameObject(int type, int x, int y, int team) {
         this.id = 0;
         this.type = type;
         this.x = x;
         this.y = y;
+        this.team = team;
     }
 
     public abstract void update();
@@ -24,6 +26,7 @@ public abstract class GameObject {
     public int getType() {return this.type;}
     public int getX() {return this.x;}
     public int getY() {return this.y;}
+    public int getTeam() {return this.team;}
 
     public void setId(int id) {this.id = id;}
     public void setX(int x) {this.x = x;}

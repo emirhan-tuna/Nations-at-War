@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -22,11 +23,13 @@ import Network.Stats;
 
 public class InitialUi implements Screen {
     private Texture backTexture;
+    private Image backImage;
     private SpriteBatch batch;
     private Main game;
     private Stage stage;
     private Table mainTable;
     private FirebaseTest test;
+    private Label title;
 
     public InitialUi(Main game) {
         this.game = game;
@@ -35,6 +38,8 @@ public class InitialUi implements Screen {
         this.batch = new SpriteBatch();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
+
+        title = new Label("NATIONS AT WAR", game.skin, "title");
 
         mainTable = new Table();
         mainTable.setFillParent(true);
@@ -45,16 +50,17 @@ public class InitialUi implements Screen {
 
     public void showEmailScreen() {
         mainTable.clear();
+        mainTable.add(title).padBottom(300f).top().center().row();
 
-        Label emailLabel = new Label("Enter your email:", game.skin);
+        Label emailLabel = new Label("Enter your email:", game.skin, "title");
         emailLabel.setColor(Color.BLACK);
-        emailLabel.setFontScale(2f);
+        //emailLabel.setFontScale(2f);
         TextField emailField = new TextField("", game.skin);
         emailField.setMessageText("Email address:");
         TextButton button = new TextButton("Next", game.skin);
 
-        mainTable.add(emailLabel).padBottom(20f).row();
-        mainTable.add(emailField).size(800f, 50f).padBottom(50f).row();
+        mainTable.add(emailLabel).padBottom(20f).center().row();
+        mainTable.add(emailField).size(800f, 50f).padBottom(50f).center().row();
         mainTable.add(button).size(400f, 50f);
 
         button.addListener(new ClickListener() {
@@ -84,9 +90,9 @@ public class InitialUi implements Screen {
     public void showLoginScreen(String email) {
         mainTable.clear();
 
-        Label emailLabel = new Label(email, game.skin);
+        Label emailLabel = new Label(email, game.skin, "title");
         emailLabel.setColor(Color.BLACK);
-        emailLabel.setFontScale(2f);
+        //emailLabel.setFontScale(2f);
 
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
@@ -125,9 +131,9 @@ public class InitialUi implements Screen {
     public void showSignupScreen(String email) {
         mainTable.clear();
 
-        Label emailLabel = new Label(email, game.skin);
+        Label emailLabel = new Label(email, game.skin, "title");
         emailLabel.setColor(Color.BLACK);
-        emailLabel.setFontScale(2f);
+        //emailLabel.setFontScale(2f);
         TextField passwordField = new TextField("", game.skin);
         passwordField.setMessageText("Password:");
         passwordField.setPasswordMode(true);
@@ -190,7 +196,6 @@ public class InitialUi implements Screen {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Render background to absolute window size
         batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.begin();
         batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -212,7 +217,13 @@ public class InitialUi implements Screen {
         batch.dispose();
     }
 
-    @Override public void show() { Gdx.input.setInputProcessor(stage); }
+    @Override public void show() { 
+        Gdx.input.setInputProcessor(stage);
+        mainTable.setFillParent(true);
+        stage.addActor(mainTable); 
+
+        showEmailScreen();
+    }
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}

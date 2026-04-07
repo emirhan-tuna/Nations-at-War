@@ -78,6 +78,7 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             SpawnPacket actionPacket = (SpawnPacket) msg;
             int type = actionPacket.getObjType();
             int team = player.getTeam();
+            int lane = actionPacket.getLane();
             
             System.out.println("spawn request: " + type + " from: " + player.getId());
 

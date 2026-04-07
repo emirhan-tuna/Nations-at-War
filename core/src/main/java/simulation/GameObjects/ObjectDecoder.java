@@ -1,6 +1,7 @@
 package simulation.GameObjects;
 
 import io.netty.buffer.ByteBuf;
+import simulation.GameObjects.Troops.Archer;
 
 public class ObjectDecoder {
     public static GameObject decode(ByteBuf buf) {
@@ -10,7 +11,7 @@ public class ObjectDecoder {
 
         switch(objType) {
             case 0:
-                object = new Square(buf);
+                object = new Archer(0, 0 ,0);
                 break;
             default:
                 throw new IllegalArgumentException("unknown object type: " + objType);

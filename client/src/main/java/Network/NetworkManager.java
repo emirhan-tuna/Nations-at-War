@@ -107,8 +107,8 @@ public class NetworkManager {
         sendPacket(checksumPacket);
     }
 
-    public void sendSpawn(int type) {
-        SpawnPacket spawnPacket = new SpawnPacket(type);
+    public void sendSpawn(int type, int lane) {
+        SpawnPacket spawnPacket = new SpawnPacket(type, lane);
         sendPacket(spawnPacket);
     }
 }

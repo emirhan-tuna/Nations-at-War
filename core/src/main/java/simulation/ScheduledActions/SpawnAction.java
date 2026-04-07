@@ -6,11 +6,13 @@ import simulation.Simulation;
 public class SpawnAction extends ScheduledAction {
     private int type;
     private int team;
+    private int lane;
 
-    public SpawnAction(int type, int team, int tick) {
+    public SpawnAction(int type, int team, int tick, int lane) {
         super(0, tick);
         this.type = type;
         this.team = team;
+        this.lane = lane;
     }
 
     public SpawnAction(ByteBuf buf) {
@@ -19,13 +21,16 @@ public class SpawnAction extends ScheduledAction {
         this.team = buf.readByte();
     }
 
-    public void execute(Simulation sim) {
-        sim.spawnObject(this.type, team);
+    public void execute(Simulation sim, int lane) {
+        sim.spawnObject(this.type, team, lane);
     }
 
     public void write(ByteBuf buf) {
         buf.writeByte(this.team);
     }
 
-
+    public void execute(Simulation sim) {
+        sim.spawnObject(this.type, team, 1);
+    }
+    
 }

@@ -13,7 +13,12 @@ import io.netty.buffer.ByteBuf;
 import simulation.GameObjects.GameObject;
 import simulation.GameObjects.ObjectDecoder;
 import simulation.GameObjects.ObjectEncoder;
-import simulation.GameObjects.Square;
+import simulation.GameObjects.Troops.Archer;
+import simulation.GameObjects.Troops.Dragon;
+import simulation.GameObjects.Troops.Knight;
+import simulation.GameObjects.Troops.Mage;
+import simulation.GameObjects.Troops.Tower;
+import simulation.GameObjects.Troops.Troop;
 import simulation.ScheduledActions.ActionDecoder;
 import simulation.ScheduledActions.ActionEncoder;
 import simulation.ScheduledActions.ScheduledAction;
@@ -35,8 +40,21 @@ public class Simulation {
     private boolean isServer;
 
     public Simulation(boolean isServer) {
-        spawnObject(0, 0);
+        spawnObject(0, 0, 1);
         this.isServer = isServer;
+    }
+
+    public void setTarget() {
+        for(GameObject gameObject : gameObjects) {
+            for (GameObject gameObject2 : gameObjects) {
+                if (gameObject instanceof Troop) {
+                    gameObject = (Troop) gameObject;
+                    if (((Troop)gameObject).getAttack()) {
+
+                    }
+                }
+            }
+        }
     }
 
     public void update() {
@@ -75,9 +93,16 @@ public class Simulation {
         }
     }
 
-    public void spawnObject(int type, int team) {
+    public void spawnObject(int type, int team, int lane) {
         GameObject newObj = null;
-        int y = 0;
+        int y;
+        if (lane == 1) {
+            y = 900;
+        } else if (lane == 2) {
+            y = 540;
+        } else {
+            y = 180;
+        } 
         int x;
         if(team == 0) {
             x = 0;
@@ -87,8 +112,16 @@ public class Simulation {
 
         switch(type) {
             case 0:
-                newObj = new Square(x, y);
+                newObj = new Archer(x, y, team);
                 break;
+            case 1:
+                newObj = new Dragon(x, y , team); 
+            case 2:
+                newObj = new Knight(x, y, team);
+            case 3: 
+                newObj = new Mage(x, y, team);
+            case 4: 
+                newObj = new Tower(4, x, 540, 150, 1000, 0, 150, team);
             default:
                 System.out.println("unknown object");
                 break;

@@ -15,7 +15,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        skin = new Skin(Gdx.files.internal("skins/uiskin_mod.json"));
+        skin = new Skin(Gdx.files.internal("skins/uiskinfontfix.json"));
 
         this.setScreen(new InitialUi(this));
     }

@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import Game.Main;
 import Game.Player;
-import UI.TroopManagement.TroopManager;
-
 
 public class GameScreenUI implements Screen{
+    private Label healthLabel;
+    private Label resourceLabel;
     private SpriteBatch batch;
     private Table popupMenu;
     private String lastTroop = ""; 
@@ -28,14 +28,12 @@ public class GameScreenUI implements Screen{
     private Main game;
     private Stage stage;
     private Table mainTable;
-    private UI.TroopManagement.TroopManager troopManage;
     private Game.Player player;
 
     public GameScreenUI(Main game) {
         this.player = new Player(2);
         this.game = game;
         this.stage = new Stage();
-        this.troopManage = new TroopManager();
         batch = new SpriteBatch();
 
         backTexture = new Texture("menu_items/background.jpg");
@@ -64,11 +62,8 @@ public class GameScreenUI implements Screen{
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 if (player.getId() == 1) {
-                    troopManage.spawn(lastTroop, player.getId(), 20f, 680f);
-                    troopManage.createTroop(lastTroop, 20f, 600f, player.getId());
+
                 } else {
-                    troopManage.spawn(lastTroop, player.getId(), 1600f, 680f);
-                    troopManage.createTroop(lastTroop, 1600f, 680f, player.getId());
                 }
                 popupMenu.setVisible(false);
             }
@@ -78,11 +73,9 @@ public class GameScreenUI implements Screen{
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 if (player.getId() == 1) {
-                    troopManage.spawn(lastTroop, player.getId(), 1600f, 400f);
-                    troopManage.createTroop(lastTroop, 1600f, 4000f, player.getId());
+
                 } else {
-                    troopManage.spawn(lastTroop, player.getId(), 1600f, 400f);
-                    troopManage.createTroop(lastTroop, 1600f, 400f, player.getId());
+
                 }
                 popupMenu.setVisible(false);
             }
@@ -92,11 +85,9 @@ public class GameScreenUI implements Screen{
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 if (player.getId() == 1) {
-                    troopManage.spawn(lastTroop, player.getId(), 1600f, 120f);
-                    troopManage.createTroop(lastTroop, 1600f, 120f, player.getId());
+
                 } else {
-                    troopManage.spawn(lastTroop, player.getId(), 1600f, 120f);
-                    troopManage.createTroop(lastTroop, 1600f, 120f, player.getId());
+
                 }
                popupMenu.setVisible(false);
             }
@@ -106,15 +97,22 @@ public class GameScreenUI implements Screen{
     public void showHealthandResourc() {
         Table infoTable = new Table();
 
-        infoTable.bottom().right();
+        if(player.getId() == 1) {
+            infoTable.left();
+        } else {
+            infoTable.right();
+        }
+        
 
-        Label health = new Label(Integer.toString(player.getHealth()), game.skin);
-        Label resources = new Label(Integer.toString(player.getResources()), game.skin);
+        healthLabel = new Label("Base Health: " + Integer.toString(player.getHealth()), game.skin, "very_big_title");
+        //healthLabel.setFontScale(4f);
+        resourceLabel = new Label("Gold: " + Integer.toString(player.getResources()), game.skin, "very_big_title");
+        //resourceLabel.setFontScale(4f);
 
-        infoTable.add(health).padRight(20f).padBottom(20f).right().row();
-        infoTable.add(resources).padRight(20f).right();
+        infoTable.add(healthLabel).padRight(20f).padBottom(20f).right().row();
+        infoTable.add(resourceLabel).padRight(20f).right();
 
-        mainTable.add(infoTable).expand().bottom().right();
+        mainTable.add(infoTable).expand().bottom().right().pad(30f);
     }
 
     public void showTroops() {
@@ -125,8 +123,6 @@ public class GameScreenUI implements Screen{
 
         ImageButton archerButton = new ImageButton(game.skin, "archer");
         archerButton.getImageCell().expand().fill();
-        ImageButton swordsmanButton = new ImageButton(game.skin, "swordsman");
-        swordsmanButton.getImageCell().expand().fill();
         ImageButton mageButton = new ImageButton(game.skin, "mage");
         mageButton.getImageCell().expand().fill();
         ImageButton knighButton = new ImageButton(game.skin, "knight");
@@ -136,14 +132,12 @@ public class GameScreenUI implements Screen{
 
         troopTable.add(dragonButton).size(buttonWidth, buttonHeight).padRight(10f);
         troopTable.add(archerButton).size(buttonWidth, buttonHeight).padRight(10f);
-        troopTable.add(swordsmanButton).size(buttonWidth, buttonHeight).padRight(10f);
         troopTable.add(knighButton).size(buttonWidth, buttonHeight).padRight(10f);
         troopTable.add(mageButton).size(buttonWidth, buttonHeight).padRight(10f);
         troopTable.row().padTop(5f);
 
         troopTable.add(new Label("500", game.skin)).center().padRight(10f);
         troopTable.add(new Label("100", game.skin)).center().padRight(10f);
-        troopTable.add(new Label("50", game.skin)).center().padRight(10f);
         troopTable.add(new Label("75", game.skin)).center().padRight(10f);
         troopTable.add(new Label("150", game.skin)).center().padRight(10f);
 
@@ -155,13 +149,6 @@ public class GameScreenUI implements Screen{
             }
         });
 
-        swordsmanButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent e, float x, float y) {
-                lastTroop = "swordsman";
-                popupMenu();
-            }
-        });
 
         knighButton.addListener(new ClickListener() {
             @Override
@@ -196,11 +183,12 @@ public class GameScreenUI implements Screen{
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        troopManage.updateAll(delta);
         batch.begin();
         batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        troopManage.drawAll(batch);
         batch.end();
+        
+        healthLabel.setText("Health: " + Integer.toString(player.getHealth()));
+        resourceLabel.setText("Gold: " + Integer.toString(player.getResources()));
 
         stage.act();
         stage.draw();

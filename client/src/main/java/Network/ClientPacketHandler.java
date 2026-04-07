@@ -2,7 +2,6 @@ package Network;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
-import UI.NetworkTestUi;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.ActionPacket;
