@@ -19,6 +19,7 @@ public class SpawnAction extends ScheduledAction {
         super(0, 0);
         this.type = buf.readByte();
         this.team = buf.readByte();
+        this.lane = buf.readByte();
     }
 
     public void execute(Simulation sim) {
@@ -26,7 +27,9 @@ public class SpawnAction extends ScheduledAction {
     }
 
     public void write(ByteBuf buf) {
+        buf.writeByte(this.type);
         buf.writeByte(this.team);
+        buf.writeByte(this.lane);
     }
     
 }

@@ -20,9 +20,13 @@ public class Knight extends Troop {
         super(2, x, y, team);
     }
 
+    public Knight(ByteBuf buf) {
+        super(buf);
+    }
+
     public void update() {
         if (this.target != null && target.health > 0) {
-            float dist = (float) (target.getX() - x);
+            int dist = (int) (target.getX() - x);
             if (dist <= range) {
                 attack(target);
             }
@@ -33,9 +37,4 @@ public class Knight extends Troop {
             move();
         }
     }
-
-    @Override
-    public void write(ByteBuf buf) {
-
-    } 
 }

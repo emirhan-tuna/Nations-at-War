@@ -24,9 +24,13 @@ public class Tower extends Troop{
         }
     }
 
+    public Tower(ByteBuf buf) {
+        super(buf);
+    }
+
     public void update() {
         if (this.target != null && target.health > 0) {
-            float dist = (float) Math.hypot(target.getX() - x, target.getY() - y);
+            int dist = (int) Math.hypot(target.getX() - x, target.getY() - y);
             if (dist <= range) {
                 attack(target);
             }
@@ -36,9 +40,4 @@ public class Tower extends Troop{
     public void attack(Troop target) {
         target.takeDamage(damage);
     }
-
-    @Override
-    public void write(ByteBuf buf) {
-
-    } 
 }

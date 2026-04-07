@@ -40,6 +40,10 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 System.out.println("got id " + player.getId());
 
                 ctx.writeAndFlush(new AuthResponsePacket(player.getId(), true));
+
+                if(server.getPlayerManager().getAllPlayers().size() == 2) {
+                    server.startGame();
+                }
             } else {
 
                 System.out.println("wrong code by " + ctx.channel().remoteAddress() + " kicking...");

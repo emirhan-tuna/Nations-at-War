@@ -5,7 +5,10 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import network.ActionPacket;
 import network.AuthResponsePacket;
 import network.ChecksumResponsePacket;
+import network.ClientBoundPacket;
+import network.GameOverPacket;
 import network.Packet;
+import network.StartGamePacket;
 
 import java.util.List;
 
@@ -18,21 +21,21 @@ public class PacketHandler extends ByteToMessageDecoder {
         Packet packet = null;
 
         switch(packetType) {
-            case 0:
-                //auth
+            case ClientBoundPacket.PACKET_AUTH_RESPONSE:
                 packet = new AuthResponsePacket(in);
                 break;
-
-            case 1:
-                //checksum result
+            case ClientBoundPacket.PACKET_CHECKSUM_RESPONSE:
                 packet = new ChecksumResponsePacket(in);
                 break;
-
-            case 2:
-                //checksum result
+            case ClientBoundPacket.PACKET_ACTION:
                 packet = new ActionPacket(in);
                 break;
-
+            case ClientBoundPacket.PACKET_GAMEOVER:
+                packet = new GameOverPacket(in);
+                break;
+            case ClientBoundPacket.PACKET_STARTGAME:
+                packet = new StartGamePacket(in);
+                break;
             default:
                 System.out.println("unknown packet type: " + packetType);
                 in.skipBytes(in.readableBytes());

@@ -27,6 +27,7 @@ public class Simulation {
     private int tick = 0;
     private int currentObjId;
 
+    private final SimPlayer[] players = new SimPlayer[2];
     private final List<GameObject> gameObjects = new ArrayList<>();
     private final Map<Integer, List<ScheduledAction>> actionQueue = new HashMap<>();
     private final Queue<Runnable> taskQueue = new ConcurrentLinkedQueue<>();
@@ -65,7 +66,7 @@ public class Simulation {
         }
     }
 
-    public boolean isGameOVer() {
+    public boolean isGameOver() {
         for(int i = 0; i < 2; i++) {
             if (gameObjects.get(i) instanceof Tower) {
                 Tower tower = (Tower) gameObjects.get(i);
@@ -78,10 +79,17 @@ public class Simulation {
     }
 
     public void update() {
+
+        if(this.tick % 20 == 0) {
+            players[0].addGold(100);
+            players[1].addGold(100);
+        }
         
-        if (!isGameOVer()) {
+        if (!isGameOver()) {
             processNetworkTasks();
             this.tick++;
+
+            setTarget();
             ArrayList<Troop> toRemove = new ArrayList<>();
 
             for(GameObject gameObject : gameObjects) {

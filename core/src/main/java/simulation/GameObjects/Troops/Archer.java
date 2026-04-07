@@ -15,6 +15,10 @@ public class Archer extends Troop {
         super(0, x, y, team);
     }
 
+    public Archer(ByteBuf buf) {
+        super(buf);
+    }
+
     public void update() {
         if (this.target != null) {
             int dist = target.getX() - x;
@@ -27,9 +31,4 @@ public class Archer extends Troop {
             move();
         }
     }
-
-    @Override
-    public void write(ByteBuf buf) {
-
-    } 
 }

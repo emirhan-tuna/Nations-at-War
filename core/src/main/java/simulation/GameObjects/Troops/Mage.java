@@ -18,9 +18,13 @@ public class Mage extends Troop {
         super(3, x, y, team);
     }
 
+    public Mage(ByteBuf buf) {
+        super(buf);
+    }
+
     public void update() {
         if (this.target != null && target.health > 0) {
-            float dist = (float) (target.getX() - x);
+            int dist = (int) (target.getX() - x);
             if (dist <= range) {
                 attack(target);
             }
@@ -31,9 +35,4 @@ public class Mage extends Troop {
             move();
         }
     }
-
-    @Override
-    public void write(ByteBuf buf) {
-
-    } 
 }

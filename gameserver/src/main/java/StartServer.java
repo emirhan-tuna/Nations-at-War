@@ -63,7 +63,7 @@ class StartServer {
             System.out.println("starting gameserver(port: " + port + ")");
             ChannelFuture f = b.bind(port).sync();
             System.out.println("server (should be) running!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            startGame();
+            readyGame();
 
             f.channel().closeFuture().sync();
         } finally {
@@ -72,11 +72,21 @@ class StartServer {
         }
     }
 
-    public void startGame() {
+    public void readyGame() {
         this.simulation = new GameSimulation(this);
+        this.currentGameId = rng.nextLong();
+        api.reserveGameFromApi();
+    }
+
+    public void startGame() {
         new Thread(this.simulation).start();
         this.currentGameId = rng.nextLong();
         api.reserveGameFromApi();
+    }
+
+    public void endGame() {
+        //api.endGame();
+        this.readyGame();
     }
 
     public long getGameId() {

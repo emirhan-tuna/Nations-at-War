@@ -18,6 +18,10 @@ public class Dragon extends Troop {
         super(1, x, y,team);
     }
 
+    public Dragon(ByteBuf buf) {
+        super(buf);
+    }
+
     public void update() {
         if (this.target != null && target.health > 0) {
             int dist = (int) Math.hypot(target.getX() - x, target.getY() - y);
@@ -30,10 +34,5 @@ public class Dragon extends Troop {
         } else {
             move();
         }
-    }
-
-    @Override
-    public void write(ByteBuf buf) {
-
     } 
 }

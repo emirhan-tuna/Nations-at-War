@@ -22,12 +22,14 @@ public abstract class Troop extends GameObject implements Movable {
     public Troop(ByteBuf buf) {
         super(buf);
         this.health = buf.readInt();
+        this.cooldown = buf.readInt();
     }
 
     @Override
     public void write(ByteBuf buf) {
         super.write(buf);
         buf.writeInt(health);
+        buf.writeInt(cooldown);
     }
 
     @Override

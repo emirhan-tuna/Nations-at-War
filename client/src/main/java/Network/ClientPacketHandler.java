@@ -8,7 +8,9 @@ import network.ActionPacket;
 import network.AuthPacket;
 import network.AuthResponsePacket;
 import network.ChecksumResponsePacket;
+import network.GameOverPacket;
 import network.Packet;
+import network.StartGamePacket;
 import simulation.Simulation;
 import simulation.ScheduledActions.ScheduledAction;
 import simulation.Simulation.Snapshot;
@@ -37,8 +39,6 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
 
             if(authPacket.getResponse()) {
                 System.out.println("auth successful");
-
-                //use this id elsewhere(0 for left, 1 for right side)
                 authPacket.getId();
             } else {
                 System.out.println("auth failed");
@@ -51,14 +51,14 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 simulation.correct(snapshot);
             });
 
-            //Gdx.app.postRunnable(() -> {
-            //    send snapshot here...
-            //});
-
         } else if(msg instanceof ActionPacket) {
             ActionPacket actionPacket = (ActionPacket) msg;
             ScheduledAction action = actionPacket.getAction();
             //...
+        } else if(msg instanceof GameOverPacket) {
+
+        } else if(msg instanceof StartGamePacket) {
+
         }
     }
 
