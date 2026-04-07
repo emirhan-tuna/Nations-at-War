@@ -7,24 +7,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
 import Game.Player;
 
-public class GameScreenUI implements Screen{
+public class GameScreenUI implements Screen {
     private Label healthLabel;
     private Label resourceLabel;
     private SpriteBatch batch;
     private Table popupMenu;
-    private String lastTroop = ""; 
-    private Texture backTexture;
-    private Image backImage;
+    private String lastTroop = "";
+
+    // Separate textures for layering
+    private Texture skyTexture;
+    private Texture groundTexture;
+
     private Main game;
     private Stage stage;
     private Table mainTable;
@@ -33,21 +36,16 @@ public class GameScreenUI implements Screen{
     public GameScreenUI(Main game) {
         this.player = new Player(2);
         this.game = game;
-        this.stage = new Stage();
-        batch = new SpriteBatch();
 
-        backTexture = new Texture("menu_items/background.jpg");
-        TextButton button = new TextButton("Game Over test", game.skin);
+        // Use FitViewport so the background, ground, and troops scale perfectly together
+        this.stage = new Stage(new FitViewport(1920, 1080));
+        this.batch = new SpriteBatch();
 
-        button.addListener(new ClickListener() {    
-            @Override
-            public void clicked(InputEvent e, float x, float y) {
-                game.setScreen(new GameOverUI(game));
-            }
-        });
+        // EXACT PATHS MATCHING YOUR INTRLLI-J DIRECTORY:
+        skyTexture = new Texture(Gdx.files.internal("Sprites/background_clouds.png"));
+        groundTexture = new Texture(Gdx.files.internal("Sprites/ground_lanes.png"));
 
-        mainTable = new Table(); 
-        mainTable.add(button);
+        mainTable = new Table();
         popupMenu = new Table();
         popupMenu.setVisible(false);
     }
@@ -98,7 +96,7 @@ public class GameScreenUI implements Screen{
                 } else {
 
                 }
-               popupMenu.setVisible(false);
+                popupMenu.setVisible(false);
             }
         });
     }
@@ -111,12 +109,9 @@ public class GameScreenUI implements Screen{
         } else {
             infoTable.right();
         }
-        
 
         healthLabel = new Label("Base Health: " + Integer.toString(player.getHealth()), game.skin, "very_big_title");
-        //healthLabel.setFontScale(4f);
         resourceLabel = new Label("Gold: " + Integer.toString(player.getResources()), game.skin, "very_big_title");
-        //resourceLabel.setFontScale(4f);
 
         infoTable.add(healthLabel).padRight(20f).padBottom(20f).right().row();
         infoTable.add(resourceLabel).padRight(20f).right();
@@ -192,13 +187,25 @@ public class GameScreenUI implements Screen{
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Tie the batch drawing to the 1920x1080 virtual camera
+        // This ensures the background and ground don't warp or stretch weirdly
+        batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
+
         batch.begin();
-        batch.draw(backTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        // 1. Draw Sky (Bottom Layer)
+        batch.draw(skyTexture, 0, 0, 1920, 1080);
+
+        // 2. Draw Ground Lanes (Middle Layer - Sky shows through the transparent top)
+        batch.draw(groundTexture, 0, 0, 1920, 1080);
+
+        // 3. TODO: In the future, loop through your troops and draw them here!
+
         batch.end();
-        
+
         healthLabel.setText("Health: " + Integer.toString(player.getHealth()));
         resourceLabel.setText("Gold: " + Integer.toString(player.getResources()));
 
+        // 4. Draw UI (Top Layer)
         stage.act();
         stage.draw();
     }
@@ -211,6 +218,9 @@ public class GameScreenUI implements Screen{
     @Override
     public void dispose() {
         stage.dispose();
+        batch.dispose();
+        skyTexture.dispose();
+        groundTexture.dispose();
     }
 
     @Override
