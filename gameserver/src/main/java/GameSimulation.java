@@ -6,13 +6,11 @@ import simulation.ScheduledActions.SpawnAction;
 import simulation.Simulation.Snapshot;
 
 public class GameSimulation implements Runnable {
-    private StartServer server;
     private Simulation simulation;
     private boolean running = true;
 
     public GameSimulation(StartServer server) {
         this.simulation = new Simulation(true);
-        this.server = server;
     }
 
     public ScheduledAction scheduleAction(ScheduledAction action) {

@@ -10,20 +10,16 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import network.ActionPacket;
 import network.Packet;
-import simulation.ScheduledActions.ScheduledAction;
 
 class StartServer {
-    private int port;
+    public static int port = 9000;
     private GameSimulation simulation = new GameSimulation(this);
     private PlayerManager playerManager = new PlayerManager();
-    public StartServer(int port) {
-        this.port = port;
-    }
+    public StartServer() {}
 
     public static void main(String[] args) throws Exception {
-        new StartServer(9000).run();
+        new StartServer().run();
     }
 
     public void run() throws Exception {

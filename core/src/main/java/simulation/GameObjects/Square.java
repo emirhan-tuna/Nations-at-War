@@ -1,7 +1,5 @@
 package simulation.GameObjects;
 
-import com.badlogic.gdx.Game;
-
 import io.netty.buffer.ByteBuf;
 
 public class Square extends GameObject implements Movable {

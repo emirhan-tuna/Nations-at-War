@@ -49,6 +49,8 @@ public class Simulation {
             }
         }
 
+        actionQueue.remove(this.tick);
+
         long currChecksum = updateChecksum();
         this.currentChecksum = currChecksum;
         if(this.isServer) {
@@ -107,7 +109,7 @@ public class Simulation {
 
         this.actionQueue.clear();
         for (ScheduledAction action : snapshot.getActions()) {
-            this.addAction(action, snapshot.getTick());
+            this.addAction(action, action.getTick());
         }
 
         this.gameObjects.clear();

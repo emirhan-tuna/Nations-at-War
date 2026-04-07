@@ -1,5 +1,6 @@
 package Network;
-import UI.NetworkTestUi;
+import com.badlogic.gdx.Screen;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -10,59 +11,68 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import network.AuthPacket;
 import network.ChecksumPacket;
 import network.ServerBoundPacket;
+import network.SpawnPacket;
 
 public class NetworkManager {
     public static boolean debug = true;
     private String host;
     private int port;
     private Channel channel;
+    private final EventLoopGroup workerGroup;
 
-    public NetworkManager(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public NetworkManager() {
+        this.workerGroup = new NioEventLoopGroup();
     }
 
-    public void connect(int code, NetworkTestUi screen) {
-        Thread networkThread = new Thread(() -> {
-            EventLoopGroup group = new NioEventLoopGroup();
-            try {
-                Bootstrap b = new Bootstrap();
-                b.group(group)
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    public void initChannel(SocketChannel ch) {
-                        
-                        //clientbound
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
-                        ch.pipeline().addLast(new LengthFieldPrepender(4));
+    public void connect(String host, int port, int code, Screen screen) {
 
-                        //serverbound
-                        ch.pipeline().addLast(new PacketEncoder());
-                        ch.pipeline().addLast(new PacketHandler());
-                        
-                        //clientbound
-                        ch.pipeline().addLast(new ClientPacketHandler(code, screen)); 
-                    }
-                });
+        if (isConnected()) {
+            System.out.println("already connected");
+            disconnect();
+        }
 
-                System.out.println("Connecting to server at " + host + ":" + port);
-                ChannelFuture f = b.connect(host, port).sync();
-                this.channel = f.channel();
-                
-                f.channel().closeFuture().sync(); 
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                group.shutdownGracefully();
-            }
-        });
-        
-        networkThread.setDaemon(true);
-        networkThread.start();
+        this.host = host;
+        this.port = port;
+
+
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(workerGroup)
+            .channel(NioSocketChannel.class)
+            .handler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) {
+                    
+                    //clientbound
+                    ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
+                    ch.pipeline().addLast(new LengthFieldPrepender(4));
+
+                    //serverbound
+                    ch.pipeline().addLast(new PacketEncoder());
+                    ch.pipeline().addLast(new PacketHandler());
+                    
+                    //clientbound
+                    ch.pipeline().addLast(new ClientPacketHandler(code, screen)); 
+                }
+            });
+
+            System.out.println("Connecting to server at " + host + ":" + port);
+            
+            ChannelFuture f = b.connect(host, port).sync();
+            f.addListener((ChannelFuture future) -> {
+                if (future.isSuccess()) {
+                    this.channel = future.channel();
+                    System.out.println("Successfully connected!");
+                } else {
+                    System.err.println("Failed to connect!");
+                    future.cause().printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendPacket(ServerBoundPacket packet) {
@@ -77,8 +87,28 @@ public class NetworkManager {
         return channel != null && channel.isActive();
     }
 
+    public void disconnect() {
+        if (isConnected()) {
+            channel.close().addListener(future -> {
+                System.out.println("disconnected");
+            });
+        }
+    }
+
+    public void dispose() {
+        disconnect();
+        if (workerGroup != null) {
+            workerGroup.shutdownGracefully();
+        }
+    }
+
     public void sendChecksum(long checksum, int tick) {
         ChecksumPacket checksumPacket = new ChecksumPacket(checksum, tick);
         sendPacket(checksumPacket);
+    }
+
+    public void sendSpawn(int type) {
+        SpawnPacket spawnPacket = new SpawnPacket(type);
+        sendPacket(spawnPacket);
     }
 }
