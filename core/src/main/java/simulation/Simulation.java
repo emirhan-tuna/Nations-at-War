@@ -29,6 +29,7 @@ public class Simulation {
 
     private final SimPlayer[] players = new SimPlayer[2];
     private final List<GameObject> gameObjects = new ArrayList<>();
+    private Tower[] towerList = new Tower[2];
     private final Map<Integer, List<ScheduledAction>> actionQueue = new HashMap<>();
     private final Queue<Runnable> taskQueue = new ConcurrentLinkedQueue<>();
 
@@ -41,7 +42,8 @@ public class Simulation {
     private boolean isServer;
 
     public Simulation(boolean isServer) {
-        spawnObject(0, 0, 1);
+        towerList[0] = new Tower(4, 20, 540, 100, 1000, 0, 100, 0);
+        towerList[1] = new Tower(4, 20, 540, 100, 1000, 0, 100, 1);
         this.isServer = isServer;
     }
 
@@ -72,14 +74,16 @@ public class Simulation {
 
     public boolean isGameOver() {
         for(int i = 0; i < 2; i++) {
-            if (gameObjects.get(i) instanceof Tower) {
-                Tower tower = (Tower) gameObjects.get(i);
-                if (tower.isDead()) {
-                    return true;
-                }
+            if (towerList[i].isDead()) {
+                return true;
             }
         }
         return false;
+    }
+
+    public int getWinner() {
+        if (towerList[0].isDead()) return 1;
+        else return 0;
     }
 
     public void update() {

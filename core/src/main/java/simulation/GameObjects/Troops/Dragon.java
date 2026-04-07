@@ -15,7 +15,7 @@ public class Dragon extends Troop {
     final boolean canAttackOtherLane = false;
 
     public Dragon(int x, int y, int team) {
-        super(1, x, y,team);
+        super(1, x, y, team);
     }
 
     public Dragon(ByteBuf buf) {

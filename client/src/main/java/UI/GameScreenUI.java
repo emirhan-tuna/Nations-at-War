@@ -1,5 +1,8 @@
 package UI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,9 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import Game.ClientGameManager;
 import Game.Main;
 import Game.Player;
 import Network.NetworkManager;
+import simulation.GameObjects.GameObject;
 
 public class GameScreenUI implements Screen {
     private Label healthLabel;
@@ -25,7 +30,6 @@ public class GameScreenUI implements Screen {
     private Table popupMenu;
     private String lastTroop = "";
 
-    // Separate textures for layering
     private Texture skyTexture;
     private Texture groundTexture;
 
@@ -34,25 +38,26 @@ public class GameScreenUI implements Screen {
     private Table mainTable;
     private Game.Player player;
     private NetworkManager manager;
+    private ClientGameManager clientManager;
 
     public GameScreenUI(Main game, NetworkManager manager) {
-        this.player = new Player(2);
+        this.player = new Player(1);
         this.game = game;
         this.stage = new Stage();
         batch = new SpriteBatch();
         this.manager = manager;
+        clientManager = new ClientGameManager();
 
-        // Use FitViewport so the background, ground, and troops scale perfectly together
         this.stage = new Stage(new FitViewport(1920, 1080));
         this.batch = new SpriteBatch();
 
-        // EXACT PATHS MATCHING YOUR INTRLLI-J DIRECTORY:
         skyTexture = new Texture(Gdx.files.internal("Sprites/background_clouds.png"));
         groundTexture = new Texture(Gdx.files.internal("Sprites/ground_lanes.png"));
 
         mainTable = new Table();
         popupMenu = new Table();
         popupMenu.setVisible(false);
+
     }
 
     public void popupMenu() {
@@ -73,10 +78,7 @@ public class GameScreenUI implements Screen {
         one.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                if (player.getId() == 1) {
-
-                } else {
-                }
+                manager.sendSpawn(troopID(lastTroop), 1);
                 popupMenu.setVisible(false);
             }
         });
@@ -84,11 +86,7 @@ public class GameScreenUI implements Screen {
         two.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                if (player.getId() == 1) {
-
-                } else {
-
-                }
+                manager.sendSpawn(troopID(lastTroop), 2);
                 popupMenu.setVisible(false);
             }
         });
@@ -96,11 +94,7 @@ public class GameScreenUI implements Screen {
         third.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                if (player.getId() == 1) {
-
-                } else {
-
-                }
+                manager.sendSpawn(troopID(lastTroop), 3);
                 popupMenu.setVisible(false);
             }
         });
@@ -186,31 +180,72 @@ public class GameScreenUI implements Screen {
         mainTable.add(troopTable).expand().top().right();
     }
 
+    public int troopID(String troop) {
+        if (troop.equals("archer")) {
+            return 0;
+        } else if (troop.equals("dragon")) {
+            return 1;
+        } else if (troop.equals("knight")) {
+            return 2;
+        } else if (troop.equals("mage")) {
+            return 3;
+        }
+
+        return -1;
+    }
+
+    public void draw(GameObject object) {
+        if (object.getTeam() == 0) {
+            if (object.getType() == 0) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/archer_sprite_left.png")), object.getX(), object.getY());
+            } else if (object.getType() == 1) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/dragon_sprite_left.png")), object.getX(), object.getY());
+            } else if (object.getType() == 2) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/knight_sprite_left.png")), object.getX(), object.getY());
+            } else if (object.getType() == 3) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/mage_sprite_left.png")), object.getX(), object.getY());
+            } else if (object.getType() == 4) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/tower_sprite.png")), object.getX(), object.getY());
+            }
+        } else {
+            if (object.getType() == 0) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/archer_sprite_right.png")), object.getX(), object.getY());
+            } else if (object.getType() == 1) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/dragon_sprite_right.png")), object.getX(), object.getY());
+            } else if (object.getType() == 2) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/knight_sprite_right.png")), object.getX(), object.getY());
+            } else if (object.getType() == 3) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/mage_sprite_right.png")), object.getX(), object.getY());
+            } else if (object.getType() == 4) {
+                batch.draw(new Texture(Gdx.files.internal("sprites/tower_sprite.png")), object.getX(), object.getY());
+            }
+        }
+    }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Tie the batch drawing to the 1920x1080 virtual camera
-        // This ensures the background and ground don't warp or stretch weirdly
         batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
 
         batch.begin();
-        // 1. Draw Sky (Bottom Layer)
         batch.draw(skyTexture, 0, 0, 1920, 1080);
 
-        // 2. Draw Ground Lanes (Middle Layer - Sky shows through the transparent top)
         batch.draw(groundTexture, 0, 0, 1920, 1080);
 
-        // 3. TODO: In the future, loop through your troops and draw them here!
+        clientManager.update(delta);
+        List<GameObject> objects= clientManager.getObjects();
+
+        for(GameObject object : objects) {
+            draw(object);
+        }
 
         batch.end();
 
         healthLabel.setText("Health: " + Integer.toString(player.getHealth()));
         resourceLabel.setText("Gold: " + Integer.toString(player.getResources()));
 
-        // 4. Draw UI (Top Layer)
         stage.act();
         stage.draw();
     }

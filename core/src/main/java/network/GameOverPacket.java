@@ -23,4 +23,8 @@ public class GameOverPacket extends ClientBoundPacket {
     public void write(ByteBuf buf) {
         buf.writeInt(this.winnerId);
     }
+
+    public int getID() {
+        return winnerId;
+    }
 }
