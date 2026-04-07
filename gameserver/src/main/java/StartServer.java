@@ -12,6 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import network.GameOverPacket;
 import network.Packet;
 import network.Routes;
 
@@ -84,13 +85,16 @@ class StartServer {
         api.reserveGameFromApi();
     }
 
-    public void endGame() {
-        //api.endGame();
-        this.readyGame();
-    }
+    public void endGame(int winnerId) {
+        broadcast(new GameOverPacket(winnerId));
 
-    public long getGameId() {
-        return currentGameId;
+        for (Player p : playerManager.getAllPlayers()) {
+            p.getChannel().close(); 
+        }
+
+        playerManager.clearPlayers();
+
+        this.readyGame();
     }
 
     public long getCurrentGameId() {return currentGameId;}

@@ -3,9 +3,11 @@ import simulation.Simulation;;
 public class GameSimulation implements Runnable {
     private Simulation simulation;
     private boolean running = true;
+    public StartServer server;
 
     public GameSimulation(StartServer server) {
         this.simulation = new Simulation(true);
+        this.server = server;
     }
 
     public Simulation getSimulation() {
@@ -23,6 +25,13 @@ public class GameSimulation implements Runnable {
             if(now >= time) {
                 simulation.update();
                 time += NANOS_PER_TICK;
+
+                int winnerId = simulation.getWinner();
+                if (winnerId != -1) {
+                    running = false;
+                    server.endGame(winnerId);
+                }
+                
             } else {
                 long sleepTime = (time - now) / 1000000;
                 if(sleepTime > 0) {

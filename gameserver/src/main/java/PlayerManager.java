@@ -28,6 +28,10 @@ public class PlayerManager {
         return removed;
     }
 
+    public void clearPlayers() {
+        activePlayers.clear();
+    }
+
     public Collection<Player> getAllPlayers() {
         return activePlayers.values();
     }
