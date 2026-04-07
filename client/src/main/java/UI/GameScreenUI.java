@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
 import Game.Player;
+import Network.NetworkManager;
 
 public class GameScreenUI implements Screen {
     private Label healthLabel;
@@ -32,10 +33,14 @@ public class GameScreenUI implements Screen {
     private Stage stage;
     private Table mainTable;
     private Game.Player player;
+    private NetworkManager manager;
 
-    public GameScreenUI(Main game) {
+    public GameScreenUI(Main game, NetworkManager manager) {
         this.player = new Player(2);
         this.game = game;
+        this.stage = new Stage();
+        batch = new SpriteBatch();
+        this.manager = manager;
 
         // Use FitViewport so the background, ground, and troops scale perfectly together
         this.stage = new Stage(new FitViewport(1920, 1080));

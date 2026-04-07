@@ -1,9 +1,9 @@
 package network;
 import io.netty.buffer.ByteBuf;
 public class AuthPacket extends ServerBoundPacket {
-    private int code;
+    private long code;
 
-    public AuthPacket(int code) {
+    public AuthPacket(long code) {
         super(PACKET_AUTH);
         this.code = code;
     }
@@ -17,8 +17,8 @@ public class AuthPacket extends ServerBoundPacket {
     }
 
     public void write(ByteBuf buf) {
-        buf.writeInt(code);//31316969
+        buf.writeLong(code);//31316969
     }
 
-    public int getCode() {return code;}
+    public long getCode() {return code;}
 }

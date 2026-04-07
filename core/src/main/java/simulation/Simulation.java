@@ -78,10 +78,9 @@ public class Simulation {
     }
 
     public void update() {
-        processNetworkTasks();
-
-        this.tick++;
+        
         if (!isGameOVer()) {
+            processNetworkTasks();
             this.tick++;
             ArrayList<Troop> toRemove = new ArrayList<>();
 

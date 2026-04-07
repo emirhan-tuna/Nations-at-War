@@ -4,9 +4,15 @@ import io.netty.buffer.ByteBuf;
 
 
 public class Archer extends Troop {
+    final int type = 0;
+    final int damage = 75;
+    final int health = 50;
+    final int cost = 75;
+    final int range = 100;
+    final boolean canAttackOtherLane = false;
 
     public Archer(int x, int y, int team) {
-        super(0, x, y, 75, 50, 75, 100, team, false);
+        super(0, x, y, team);
     }
 
     public void update() {

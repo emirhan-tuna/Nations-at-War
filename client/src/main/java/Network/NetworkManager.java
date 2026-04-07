@@ -26,7 +26,7 @@ public class NetworkManager {
         this.workerGroup = new NioEventLoopGroup();
     }
 
-    public void connect(String host, int port, int code, Screen screen) {
+    public void connect(String host, int port, long code, Screen screen) {
 
         if (isConnected()) {
             System.out.println("already connected");

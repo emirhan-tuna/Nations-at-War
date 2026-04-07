@@ -12,25 +12,6 @@ public class GameSimulation implements Runnable {
         return simulation;
     }
 
-    public ScheduledAction scheduleSpawn(int type, int team, int lane) {
-        SpawnAction spawn = new SpawnAction(type, team, 0, lane);
-        ScheduledAction actionToSend = scheduleAction(spawn);
-
-        return actionToSend;
-    }
-
-    public long getChecksum(int tick) {
-        return simulation.getChecksum(tick);
-    }
-
-    public Snapshot getSnapshot() {
-        return simulation.getSnapshot();
-    }
-
-    public int getTick() {
-        return simulation.getTick();
-    }
-
     @Override
     public void run() {
         long time = System.nanoTime();

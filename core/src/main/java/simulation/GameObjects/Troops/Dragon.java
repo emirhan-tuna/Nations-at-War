@@ -7,8 +7,15 @@ import io.netty.buffer.ByteBuf;
 
 
 public class Dragon extends Troop {
+    final int type = 0;
+    final int damage = 75;
+    final int health = 50;
+    final int cost = 75;
+    final int range = 100;
+    final boolean canAttackOtherLane = false;
+
     public Dragon(int x, int y, int team) {
-        super(1, x, y, 100, 250, 500, 100, team, true);
+        super(1, x, y,team);
     }
 
     public void update() {

@@ -1,13 +1,17 @@
 package UI;
 
+import org.omg.CORBA.Request;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Net.HttpRequest;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -18,9 +22,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 import Game.Main;
 import Network.NetworkManager;
+import network.Routes;
 
 public class FindGameUI implements Screen {
     private Texture backTexture;
@@ -39,6 +46,8 @@ public class FindGameUI implements Screen {
         this.game = game;
         this.stage = new Stage(new FitViewport(1920, 1080));
         this.batch = new SpriteBatch();
+        this.stage = new Stage();
+        networkManage = new NetworkManager();
 
         backTexture = new Texture(Gdx.files.internal("menu_items/background.jpg"));
 
@@ -46,6 +55,40 @@ public class FindGameUI implements Screen {
         mainTable.setFillParent(true);
 
         this.networkManage = new NetworkManager();
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+
+        String url = "https://nationsapi.fly.dev/hello";
+
+        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(Routes.API_hello).build();
+
+        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse response) {
+
+                String responseString = response.getResultAsString();
+                JsonReader reader = new JsonReader();
+                JsonValue file = reader.parse(responseString);
+
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        String serverIP = file.getString("host");
+                        int port = file.getInt("port");
+                        long id = file.getLong("id");
+
+                        GameScreenUI newUI = new GameScreenUI(game, networkManage);
+
+                        networkManage.connect(serverIP, port, id, newUI);
+
+                        GameScreenUI newUI = new GameScreenUI(game);
+                    }
+                });
+            }
+            @Override
+            public void failed(Throwable t) {}
+            @Override
+            public void cancelled() {}
+        });
     }
 
     public void createUI() {

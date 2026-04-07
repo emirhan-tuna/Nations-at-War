@@ -9,9 +9,15 @@ import io.netty.buffer.ByteBuf;
 
 
 public class Knight extends Troop {
+    final int type = 0;
+    final int damage = 75;
+    final int health = 50;
+    final int cost = 75;
+    final int range = 100;
+    final boolean canAttackOtherLane = false;
     
     public Knight(int x, int y, int team) {
-        super(2, x, y, 50, 200, 50, 5, team, false);
+        super(2, x, y, team);
     }
 
     public void update() {
