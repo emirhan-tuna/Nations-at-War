@@ -60,6 +60,8 @@ public class GameScreenUI implements Screen {
 
     }
 
+    public ClientGameManager getClientManager() {return clientManager;}
+
     public void popupMenu() {
         popupMenu.clear();
         popupMenu.setVisible(true);
@@ -234,7 +236,10 @@ public class GameScreenUI implements Screen {
 
         batch.draw(groundTexture, 0, 0, 1920, 1080);
 
-        clientManager.update(delta);
+        if(clientManager.getStarted()) {
+            clientManager.update(delta);
+        }
+
         List<GameObject> objects= clientManager.getObjects();
 
         for(GameObject object : objects) {

@@ -8,6 +8,7 @@ import simulation.GameObjects.GameObject;
 
 public class ClientGameManager {
     private Simulation simulation;
+    private boolean isStarted = false;
     
     private static final float TIME_STEP = 1f / 20f; 
     private float accumulator = 0f;
@@ -18,6 +19,15 @@ public class ClientGameManager {
 
     public Simulation getSimulation() {
         return simulation;
+    }
+
+    public void start() {
+        this.simulation = new Simulation(false);
+        isStarted = true;
+    }
+
+    public boolean getStarted() {
+        return isStarted;
     }
 
     public List<GameObject> getObjects() {

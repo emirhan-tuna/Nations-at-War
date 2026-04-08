@@ -2,6 +2,7 @@ package Network;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
+import UI.GameScreenUI;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.ActionPacket;
@@ -54,13 +55,23 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
         } else if(msg instanceof ActionPacket) {
             ActionPacket actionPacket = (ActionPacket) msg;
             ScheduledAction action = actionPacket.getAction();
-            simulation.scheduleFromNetwork(() -> {
-                simulation.addAction(action, action.getTick());
+            Simulation sim = ((GameScreenUI)screen).getClientManager().getSimulation();
+            sim.scheduleFromNetwork(() -> {
+                sim.addAction(action, action.getTick());
             });
         } else if(msg instanceof GameOverPacket) {
 
         } else if(msg instanceof StartGamePacket) {
-
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    if (screen instanceof GameScreenUI) {
+                        ((GameScreenUI)screen).getClientManager().start();
+                    } else {
+                        System.out.println("Warning: Received StartGamePacket but current screen is not GameScreenUI");
+                    }
+                }
+            });
         }
     }
 
