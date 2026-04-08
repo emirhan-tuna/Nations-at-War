@@ -27,6 +27,7 @@ public class ServerPacketDecoder extends ByteToMessageDecoder {
             case 2:
                 //spawn
                 packet = new SpawnPacket(in);
+                break;
             default:
                 System.out.println("unknown packet with type: " + packetType + " received");
                 in.skipBytes(in.readableBytes());         

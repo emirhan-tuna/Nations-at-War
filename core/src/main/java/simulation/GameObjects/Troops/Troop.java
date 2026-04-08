@@ -92,4 +92,8 @@ public abstract class Troop extends GameObject implements Movable {
     }
 
     public abstract void update();
+
+    public int getHealth() {
+        return this.health;
+    }
 }
