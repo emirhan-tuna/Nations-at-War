@@ -42,6 +42,8 @@ public class Simulation {
     private boolean isServer;
 
     public Simulation(boolean isServer) {
+        players[0] = new SimPlayer(0);
+        players[1] = new SimPlayer(1);
         towerList[0] = new Tower(4, 20, 540, 100, 1000, 0, 100, 0);
         towerList[1] = new Tower(4, 20, 540, 100, 1000, 0, 100, 1);
         this.isServer = isServer;

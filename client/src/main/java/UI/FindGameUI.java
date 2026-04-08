@@ -48,10 +48,13 @@ public class FindGameUI implements Screen{
 
         HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
 
+        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
+
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse response) {
 
+                System.out.print("Got response");
                 String responseString = response.getResultAsString();
                 JsonReader reader = new JsonReader();
                 JsonValue file = reader.parse(responseString);
@@ -66,6 +69,7 @@ public class FindGameUI implements Screen{
                         GameScreenUI newUI = new GameScreenUI(game, networkManage);
 
                         networkManage.connect(serverIP, port, id, newUI);
+                        game.setScreen(new GameScreenUI(game, networkManage));
 
                     }
                 });
