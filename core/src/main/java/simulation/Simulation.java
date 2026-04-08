@@ -46,6 +46,14 @@ public class Simulation {
         players[1] = new SimPlayer(1);
         towerList[0] = new Tower(4, 20, 540, 100, 1000, 0, 100, 0);
         towerList[1] = new Tower(4, 20, 540, 100, 1000, 0, 100, 1);
+
+        towerList[0].setId(currentObjId++);
+        this.addObject(towerList[0]);
+
+
+        towerList[1].setId(currentObjId++);
+        this.addObject(towerList[1]);
+        
         this.isServer = isServer;
     }
 

@@ -83,7 +83,6 @@ class StartServer {
     public void startGame() {
         new Thread(this.simulation).start();
         broadcast(new StartGamePacket());
-        api.reserveGameFromApi();
     }
 
     public void endGame(int winnerId) {

@@ -6,7 +6,7 @@ public class GameOverPacket extends ClientBoundPacket {
     private int winnerId;
 
     public GameOverPacket(ByteBuf buf) {
-        super(PACKET_GAMEOVER);
+        super(PACKET_GAMEOVER, buf);
     }
 
     public GameOverPacket(int winnerId) {
