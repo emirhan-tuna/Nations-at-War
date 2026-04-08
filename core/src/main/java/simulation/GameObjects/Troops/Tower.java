@@ -7,15 +7,16 @@ import simulation.GameObjects.GameObject;
 
 
 public class Tower extends Troop{
-    final int type = 0;
-    final int damage = 75;
-    final int health = 50;
-    final int cost = 75;
-    final int range = 100;
-    final boolean canAttackOtherLane = false;
 
-    public Tower(int type, int x, int y, int damage, int health, int cost, int range, int team) {
+    public Tower(int type, int x, int y, int team) {
         super(5, x, y, team);
+
+        this.type = 0;
+        this.damage = 75;
+        this.health = 1000; 
+        this.cost = 75;
+        this.range = 100;
+        this.canAttackOtherLane = false;
 
         if (team == 0) {
             this.x = 50;

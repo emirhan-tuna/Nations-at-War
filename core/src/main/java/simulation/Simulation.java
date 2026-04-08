@@ -44,8 +44,8 @@ public class Simulation {
     public Simulation(boolean isServer) {
         players[0] = new SimPlayer(0);
         players[1] = new SimPlayer(1);
-        towerList[0] = new Tower(4, 20, 540, 100, 1000, 0, 100, 0);
-        towerList[1] = new Tower(4, 20, 540, 100, 1000, 0, 100, 1);
+        towerList[0] = new Tower(4, 20, 50,  0);
+        towerList[1] = new Tower(4, 500, 50, 1);
 
         towerList[0].setId(currentObjId++);
         this.addObject(towerList[0]);
@@ -53,7 +53,7 @@ public class Simulation {
 
         towerList[1].setId(currentObjId++);
         this.addObject(towerList[1]);
-        
+
         this.isServer = isServer;
     }
 
@@ -178,8 +178,6 @@ public class Simulation {
                 newObj = new Knight(x, y, team);
             case 3: 
                 newObj = new Mage(x, y, team);
-            case 4: 
-                newObj = new Tower(4, x, 540, 150, 1000, 0, 150, team);
             default:
                 System.out.println("unknown object");
                 break;
