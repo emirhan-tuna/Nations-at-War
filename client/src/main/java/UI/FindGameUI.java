@@ -48,8 +48,6 @@ public class FindGameUI implements Screen{
 
         HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
 
-        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
-
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse response) {
