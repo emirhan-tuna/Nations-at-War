@@ -46,7 +46,7 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 }
             } else {
 
-                System.out.println("wrong code by " + ctx.channel().remoteAddress() + " kicking...");
+                System.out.println("wrong code by " + ctx.channel().remoteAddress() + " (" + auth.getCode() + ") " + " kicking...");
                 server.kickClient(ctx.channel(), "wrong auth", new AuthResponsePacket(0, false));
             }
 

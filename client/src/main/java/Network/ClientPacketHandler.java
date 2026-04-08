@@ -16,11 +16,11 @@ import simulation.ScheduledActions.ScheduledAction;
 import simulation.Simulation.Snapshot;
 
 public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
-    private long code;
+    private int code;
     private Screen screen;
     private Simulation simulation;
 
-    public ClientPacketHandler(long code, Screen screen) {
+    public ClientPacketHandler(int code, Screen screen) {
         this.code = code;
         this.screen = screen;
     }

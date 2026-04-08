@@ -46,7 +46,7 @@ public class FindGameUI implements Screen{
 
         String url = "https://nationsapi.fly.dev/hello";
 
-        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(Routes.API_hello).build();
+        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
 
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
@@ -61,7 +61,7 @@ public class FindGameUI implements Screen{
                     public void run() {
                         String serverIP = file.getString("host");
                         int port = file.getInt("port");
-                        long id = file.getLong("id");
+                        int id = file.getInt("id");
 
                         GameScreenUI newUI = new GameScreenUI(game, networkManage);
 

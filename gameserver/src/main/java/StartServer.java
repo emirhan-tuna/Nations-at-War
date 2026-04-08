@@ -25,7 +25,7 @@ class StartServer {
     private GameSimulation simulation;
     private NotifyApi api;
 
-    private long currentGameId = 0;
+    private int currentGameId = 0;
     private Random rng = new Random();
 
     public StartServer() {
@@ -76,15 +76,13 @@ class StartServer {
 
     public void readyGame() {
         this.simulation = new GameSimulation(this);
-        this.currentGameId = rng.nextLong();
+        this.currentGameId = rng.nextInt(10000);
         api.reserveGameFromApi();
     }
 
     public void startGame() {
         new Thread(this.simulation).start();
         broadcast(new StartGamePacket());
-        
-        this.currentGameId = rng.nextLong();
         api.reserveGameFromApi();
     }
 

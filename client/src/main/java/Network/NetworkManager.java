@@ -1,4 +1,5 @@
 package Network;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import io.netty.bootstrap.Bootstrap;
@@ -26,7 +27,7 @@ public class NetworkManager {
         this.workerGroup = new NioEventLoopGroup();
     }
 
-    public void connect(String host, int port, long code, Screen screen) {
+    public void connect(String host, int port, int code, Screen screen) {
 
         if (isConnected()) {
             System.out.println("already connected");
@@ -60,11 +61,20 @@ public class NetworkManager {
 
             System.out.println("Connecting to server at " + host + ":" + port);
             
-            ChannelFuture f = b.connect(host, port).sync();
+            ChannelFuture f = b.connect(host, port); 
+            
             f.addListener((ChannelFuture future) -> {
                 if (future.isSuccess()) {
                     this.channel = future.channel();
                     System.out.println("Successfully connected!");
+                    
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            //code here
+                        }
+                    });
+                    
                 } else {
                     System.err.println("Failed to connect!");
                     future.cause().printStackTrace();
