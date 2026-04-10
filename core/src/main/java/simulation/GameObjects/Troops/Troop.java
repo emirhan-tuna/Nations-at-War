@@ -14,6 +14,12 @@ public abstract class Troop extends GameObject implements Movable {
     protected boolean canAttackOtherLane;
     protected int cooldown;
 
+    public static int ARCHER = 0;
+    public static int DRAGON = 1;
+    public static int KNIGHT = 2;
+    public static int MAGE = 3;
+    public static int TOWER = 4;
+
     public Troop(int type, int x, int y, int team) {
         super(type, x, y, team);
         cooldown = 20;

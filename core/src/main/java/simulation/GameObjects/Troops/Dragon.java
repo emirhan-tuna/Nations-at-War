@@ -18,6 +18,7 @@ public class Dragon extends Troop {
 
     public Dragon(ByteBuf buf) {
         super(buf);
+        this.type = DRAGON;
     }
 
     public void update() {

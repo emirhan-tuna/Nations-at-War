@@ -21,6 +21,7 @@ public class Tower extends Troop{
 
     public Tower(ByteBuf buf) {
         super(buf);
+        this.type = TOWER;
     }
 
     public void update() {

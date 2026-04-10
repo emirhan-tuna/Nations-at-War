@@ -28,7 +28,7 @@ public abstract class GameObject {
     public void write(ByteBuf buf) {
         buf.writeInt(x);
         buf.writeInt(y);
-        buf.writeInt(team);
+        buf.writeByte(team);
     }
 
     public int getId() {return this.id;}

@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 
 
 public class Archer extends Troop {
-    final int type = 0;
     final int damage = 75;
     final int health = 50;
     final int cost = 75;
@@ -17,6 +16,7 @@ public class Archer extends Troop {
 
     public Archer(ByteBuf buf) {
         super(buf);
+        this.type = ARCHER;
     }
 
     public void update() {

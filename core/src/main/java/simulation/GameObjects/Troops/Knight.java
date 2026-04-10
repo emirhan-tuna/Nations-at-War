@@ -21,6 +21,7 @@ public class Knight extends Troop {
 
     public Knight(ByteBuf buf) {
         super(buf);
+        this.type = KNIGHT;
     }
 
     public void update() {

@@ -19,6 +19,7 @@ public class Mage extends Troop {
 
     public Mage(ByteBuf buf) {
         super(buf);
+        this.type = MAGE;
     }
 
     public void update() {
