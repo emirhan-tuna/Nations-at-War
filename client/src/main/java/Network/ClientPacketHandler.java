@@ -2,6 +2,8 @@ package Network;
 import com.badlogic.gdx.Gdx;
 
 import Game.ClientGameManager;
+import Game.Main;
+import UI.GameOverUI;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.ActionPacket;
@@ -60,15 +62,13 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 sim.addAction(action, action.getTick());
             });
         } else if(msg instanceof GameOverPacket) {
-            Main game = ((GameScreenUI) screen).getScreen();
+            Main game = manager.getGame();
 
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    if (screen instanceof GameScreenUI) {
-                        ((GameScreenUI) screen).getClientManager().stop();
-                        game.setScreen(new GameOverUI(game));
-                    }
+                    manager.stop();
+                    game.setScreen(new GameOverUI(game));
                 }
             });
 

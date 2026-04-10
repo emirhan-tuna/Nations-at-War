@@ -8,11 +8,12 @@ import simulation.GameObjects.GameObject;
 public class ClientGameManager {
     private Simulation simulation;
     private boolean isStarted = false;
+    private Main game;
     
     private static final float TIME_STEP = 1f / 20f; 
     private float accumulator = 0f;
 
-    public ClientGameManager() {
+    public ClientGameManager(Main main) {
         this.simulation = new Simulation(false); 
     }
 
@@ -37,11 +38,13 @@ public class ClientGameManager {
         return simulation.getObjects();
     }
 
+    public Main getGame() {return game;}
+
     public void update(float delta) {
         if (!isStarted || simulation == null) {
             return; 
         }
-        
+
         float frameTime = Math.min(delta, 0.25f); 
         
         accumulator += frameTime;

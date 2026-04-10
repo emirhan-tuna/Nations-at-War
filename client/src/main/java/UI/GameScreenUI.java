@@ -65,7 +65,7 @@ public class GameScreenUI implements Screen {
         this.stage = new Stage();
         batch = new SpriteBatch();
         this.manager = manager;
-        clientManager = new ClientGameManager();
+        clientManager = new ClientGameManager(game);
 
         this.stage = new Stage(new FitViewport(1920, 1080));
         this.batch = new SpriteBatch();
