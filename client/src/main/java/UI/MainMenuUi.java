@@ -110,7 +110,7 @@ public class MainMenuUi implements Screen{
     }
 
     public void playGame() {
-        game.setScreen(new GameScreenUI(game, new NetworkManager()));
+        game.setScreen(new FindGameUI(game));
     }
 
     public void showSettings() {

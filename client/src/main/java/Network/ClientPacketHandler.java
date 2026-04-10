@@ -60,6 +60,17 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 sim.addAction(action, action.getTick());
             });
         } else if(msg instanceof GameOverPacket) {
+            Main game = ((GameScreenUI) screen).getScreen();
+
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    if (screen instanceof GameScreenUI) {
+                        ((GameScreenUI) screen).getClientManager().stop();
+                        game.setScreen(new GameOverUI(game));
+                    }
+                }
+            });
 
         } else if(msg instanceof StartGamePacket) {
             Gdx.app.postRunnable(new Runnable() {
