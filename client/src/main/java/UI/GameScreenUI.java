@@ -7,7 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -39,8 +41,27 @@ public class GameScreenUI implements Screen {
     private Game.Player player;
     private NetworkManager manager;
     private ClientGameManager clientManager;
+    private Texture archer, knight, dragon, towerPlayer, towerEnemy, mage;
 
     public GameScreenUI(Main game, NetworkManager manager) {
+        archer = new Texture(Gdx.files.internal("Sprites/archer_16x16.png"));
+        archer.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        knight = new Texture(Gdx.files.internal("Sprites/knight_16x16.png"));
+        knight.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+        dragon = new Texture(Gdx.files.internal("Sprites/dragon_16x16.png"));
+        dragon.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+        mage = new Texture(Gdx.files.internal("Sprites/mage_16x16.png"));
+        mage.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+        towerPlayer = new Texture(Gdx.files.internal("Sprites/tower_player_16x16.png"));
+        towerPlayer.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+        towerEnemy = new Texture(Gdx.files.internal("Sprites/tower_enemy_16x16.png"));
+        towerEnemy.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
         this.player = new Player(1);
         this.game = game;
         this.stage = new Stage();
@@ -51,7 +72,9 @@ public class GameScreenUI implements Screen {
         this.stage = new Stage(new FitViewport(1920, 1080));
         this.batch = new SpriteBatch();
 
-        skyTexture = new Texture(Gdx.files.internal("Sprites/background_clouds.png"));
+        skyTexture = new Texture(Gdx.files.internal("Sprites/sky_background_144x81.png"));
+        skyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
         groundTexture = new Texture(Gdx.files.internal("Sprites/ground_lanes.png"));
 
         mainTable = new Table();
@@ -138,13 +161,13 @@ public class GameScreenUI implements Screen {
         troopTable.add(dragonButton).size(buttonWidth, buttonHeight).padRight(10f);
         troopTable.add(archerButton).size(buttonWidth, buttonHeight).padRight(10f);
         troopTable.add(knighButton).size(buttonWidth, buttonHeight).padRight(10f);
-        troopTable.add(mageButton).size(buttonWidth, buttonHeight).padRight(10f);
+        troopTable.add(mageButton).size(buttonWidth, buttonHeight);
         troopTable.row().padTop(5f);
 
         troopTable.add(new Label("500", game.skin)).center().padRight(10f);
         troopTable.add(new Label("100", game.skin)).center().padRight(10f);
         troopTable.add(new Label("75", game.skin)).center().padRight(10f);
-        troopTable.add(new Label("150", game.skin)).center().padRight(10f);
+        troopTable.add(new Label("150", game.skin)).center();
 
         archerButton.addListener(new ClickListener() {
             @Override
@@ -179,7 +202,7 @@ public class GameScreenUI implements Screen {
             }
         });
 
-        mainTable.add(troopTable).expand().top().right();
+        mainTable.add(troopTable).expand().top().right().row();
     }
 
     public int troopID(String troop) {
@@ -197,29 +220,32 @@ public class GameScreenUI implements Screen {
     }
 
     public void draw(GameObject object) {
+        float width = 128f;
+        float height = 128f;
+
         if (object.getTeam() == 0) {
-            if (object.getType() == 0) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/archer_sprite_left.png")), object.getX(), object.getY());
+            if (object.getType() == 0) {   
+                batch.draw(archer, object.getX(), object.getY(), width, height);
             } else if (object.getType() == 1) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/dragon_sprite_left.png")), object.getX(), object.getY());
+                batch.draw(dragon, object.getX(), object.getY(), width, height);
             } else if (object.getType() == 2) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/knight_sprite_left.png")), object.getX(), object.getY());
+                batch.draw(knight, object.getX(), object.getY(), width, height);
             } else if (object.getType() == 3) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/mage_sprite_left.png")), object.getX(), object.getY());
+                batch.draw(mage, object.getX(), object.getY(), width, height);
             } else if (object.getType() == 4) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/tower_sprite.png")), object.getX(), object.getY());
-            }
+                batch.draw(towerPlayer, object.getX(), object.getY(), 512f, 512f);
+            } 
         } else {
-            if (object.getType() == 0) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/archer_sprite_right.png")), object.getX(), object.getY());
+            if (object.getType() == 0) {   
+                batch.draw(archer, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 1) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/dragon_sprite_right.png")), object.getX(), object.getY());
+                batch.draw(dragon, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 2) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/knight_sprite_right.png")), object.getX(), object.getY());
+                batch.draw(knight, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 3) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/mage_sprite_right.png")), object.getX(), object.getY());
+                batch.draw(mage, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 4) {
-                batch.draw(new Texture(Gdx.files.internal("sprites/tower_sprite.png")), object.getX(), object.getY());
+                batch.draw(towerEnemy, object.getX(), object.getY(), 512f, 512f);
             }
         }
     }

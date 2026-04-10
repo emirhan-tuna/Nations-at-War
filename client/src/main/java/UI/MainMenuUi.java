@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
 import Network.FirebaseTest;
+import Network.NetworkManager;
 
 public class MainMenuUi implements Screen{
     private Texture backTexture;
@@ -109,8 +110,7 @@ public class MainMenuUi implements Screen{
     }
 
     public void playGame() {
-        System.out.println("LOG: Transitioning to Invite Menu...");
-        game.setScreen(new FindGameUI(game));
+        game.setScreen(new GameScreenUI(game, new NetworkManager()));
     }
 
     public void showSettings() {

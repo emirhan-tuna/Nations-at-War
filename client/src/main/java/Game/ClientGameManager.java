@@ -1,6 +1,5 @@
 package Game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import simulation.Simulation;
@@ -47,5 +46,9 @@ public class ClientGameManager {
 
     public float getInterpolationAlpha() {
         return accumulator / TIME_STEP;
+    }
+
+    public void addSimulation(Simulation sim) {
+        this.simulation = sim;
     }
 }
