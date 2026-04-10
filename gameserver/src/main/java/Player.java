@@ -4,7 +4,9 @@ import simulation.SimPlayer;
 public class Player {
     private final int id;
     private final Channel channel;
-    private final int team;
+    private int team;
+
+    private GameRoom room;
     private SimPlayer simPlayer;
 
     public Player(int id, Channel channel) {
@@ -17,6 +19,11 @@ public class Player {
         this.simPlayer = simPlayer;
     }
 
+    public void setRoom(GameRoom room) {this.room = room;}
+    public void setTeam(int team) {this.team = team;}
+
+    public GameRoom getRoom() {return this.room;}
+    public SimPlayer getSimPlayer() {return this.simPlayer;}
     public int getId() {return id;}
     public Channel getChannel() {return channel;}
     public int getTeam() {return team;}

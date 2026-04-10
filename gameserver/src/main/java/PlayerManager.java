@@ -11,7 +11,7 @@ public class PlayerManager {
     public Player addPlayer(Channel channel) {
         Player newPlayer = new Player(idCounter.getAndIncrement(), channel);
         activePlayers.put(channel, newPlayer);
-        System.out.println("player " + newPlayer.getId() + " connected");
+        System.out.println("player " + newPlayer.getId() + " connected!");
         return newPlayer;
     }
 
@@ -21,6 +21,7 @@ public class PlayerManager {
 
     public Player removePlayer(Channel channel) {
         Player removed = activePlayers.remove(channel);
+
         if (removed != null) {
             System.out.println("player " + removed.getId() + " removed");
         }

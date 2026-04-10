@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -12,20 +15,19 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import network.GameOverPacket;
 import network.Packet;
-import network.Routes;
-import network.StartGamePacket;
 
 class StartServer {
-    public static int port = 9000;
+    private static int port = 9000;
 
     
     private PlayerManager playerManager;
-    private GameSimulation simulation;
     private NotifyApi api;
+    private Map<Integer, GameRoom> rooms = new ConcurrentHashMap<>();
 
     private int currentGameId = 0;
+    private GameRoom currentRoom;
+
     private Random rng = new Random();
 
     public StartServer() {
@@ -74,30 +76,14 @@ class StartServer {
         }
     }
 
-    public void readyGame() {
-        this.simulation = new GameSimulation(this);
+    public void readyGame() {;
         this.currentGameId = rng.nextInt(10000);
+        this.currentRoom = new GameRoom(this, currentGameId);
+
+        this.rooms.put(currentGameId, currentRoom);
+        
         api.reserveGameFromApi();
     }
-
-    public void startGame() {
-        new Thread(this.simulation).start();
-        broadcast(new StartGamePacket());
-    }
-
-    public void endGame(int winnerId) {
-        broadcast(new GameOverPacket(winnerId));
-
-        for (Player p : playerManager.getAllPlayers()) {
-            p.getChannel().close(); 
-        }
-
-        playerManager.clearPlayers();
-
-        this.readyGame();
-    }
-
-    public long getCurrentGameId() {return currentGameId;}
 
 
     public void sendPacket(Channel channel, Packet packet) {
@@ -112,9 +98,16 @@ class StartServer {
 
     public void kickClient(Channel channel, String reason, Packet packet) {
         System.out.println("kicked client: " + channel.remoteAddress() + " for reason: " + reason);
+
         channel.writeAndFlush(packet).addListener(ChannelFutureListener.CLOSE);
     }
 
-    public GameSimulation getSimulation() {return simulation;}
+    public GameRoom getRoom(int id) {
+        return rooms.get(id);
+    }
+
+    public int getCurrentGameId() {return currentGameId;}
+    public GameRoom getCurrentRoom() {return currentRoom;}
+    public Map<Integer, GameRoom> getRooms() {return rooms;}
     public PlayerManager getPlayerManager() {return playerManager;}
 }

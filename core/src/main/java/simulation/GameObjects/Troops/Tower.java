@@ -38,7 +38,8 @@ public class Tower extends Troop{
         }
     }
 
-    public void attack(Troop target) {
-        target.takeDamage(damage);
+    @Override
+    public boolean canAttack(Troop target) {
+        return this.team != target.getTeam();
     }
 }

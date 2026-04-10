@@ -65,6 +65,8 @@ public abstract class Troop extends GameObject implements Movable {
     }
 
     public boolean canAttack(Troop troop) {
+        if(troop.team == this.team) {return false;}
+        
         if (troop instanceof Tower) {
             return true;
         }

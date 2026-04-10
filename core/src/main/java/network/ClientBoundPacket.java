@@ -7,6 +7,7 @@ public abstract class ClientBoundPacket extends Packet {
     static public final int PACKET_ACTION = 2;
     static public final int PACKET_GAMEOVER = 3;
     static public final int PACKET_STARTGAME = 4;
+    static public final int PACKET_DISCONNECT = 5;
     
     public ClientBoundPacket(int type, ByteBuf data) {
         super(type);

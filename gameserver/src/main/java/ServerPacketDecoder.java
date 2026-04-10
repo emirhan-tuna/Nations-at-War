@@ -6,6 +6,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import network.AuthPacket;
 import network.ChecksumPacket;
 import network.Packet;
+import network.ServerBoundPacket;
 import network.SpawnPacket;
 
 public class ServerPacketDecoder extends ByteToMessageDecoder {
@@ -16,15 +17,15 @@ public class ServerPacketDecoder extends ByteToMessageDecoder {
         Packet packet = null;
 
         switch(packetType) {
-            case 0:
+            case ServerBoundPacket.PACKET_AUTH:
                 //auth
                 packet = new AuthPacket(in);
                 break;
-            case 1:
+            case ServerBoundPacket.PACKET_CHECKSUM:
                 //checksum
                 packet = new ChecksumPacket(in);
                 break;
-            case 2:
+            case ServerBoundPacket.PACKET_SPAWN:
                 //spawn
                 packet = new SpawnPacket(in);
                 break;

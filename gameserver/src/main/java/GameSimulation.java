@@ -3,11 +3,11 @@ import simulation.Simulation;;
 public class GameSimulation implements Runnable {
     private Simulation simulation;
     private boolean running = true;
-    public StartServer server;
+    public GameRoom room;
 
-    public GameSimulation(StartServer server) {
+    public GameSimulation(GameRoom room) {
         this.simulation = new Simulation(true);
-        this.server = server;
+        this.room = room;
     }
 
     public Simulation getSimulation() {
@@ -29,7 +29,7 @@ public class GameSimulation implements Runnable {
                 int winnerId = simulation.getWinner();
                 if (winnerId != -1) {
                     running = false;
-                    server.endGame(winnerId);
+                    room.endGame(winnerId);
                 }
                 
             } else {
@@ -41,5 +41,9 @@ public class GameSimulation implements Runnable {
                 }
             }
         }
+    }
+
+    public void stop() {
+        this.running = false;
     }
 }

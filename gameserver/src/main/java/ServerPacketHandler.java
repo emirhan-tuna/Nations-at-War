@@ -5,6 +5,7 @@ import network.AuthPacket;
 import network.AuthResponsePacket;
 import network.ChecksumPacket;
 import network.ChecksumResponsePacket;
+import network.DisconnectPacket;
 import network.Packet;
 import network.SpawnPacket;
 import simulation.Simulation;
@@ -14,11 +15,9 @@ import simulation.ScheduledActions.SpawnAction;
 
 public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private StartServer server;
-    private Simulation simulation;
 
     protected ServerPacketHandler(StartServer server) {
         this.server = server;
-        this.simulation = server.getSimulation().getSimulation();
     }
 
     @Override
@@ -32,22 +31,25 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
 
         if(msg instanceof AuthPacket) {
 
+            if(player != null) {
+                System.out.println("double auth by " + player.getId());
+                return;
+            }
+
             AuthPacket auth = (AuthPacket) msg;
 
-            if(server.getCurrentGameId() != 0 && auth.getCode() == server.getCurrentGameId()) {
-                System.out.println("client at addr " + ctx.channel().remoteAddress() + " authenticated successfully");
+            if(server.getRoom(auth.getCode()) != null) {
+                System.out.println("client at addr " + ctx.channel().remoteAddress() + " attempting to join room with id: " + server.getCurrentGameId());
+
                 player = server.getPlayerManager().addPlayer(ctx.channel());
-                System.out.println("got id " + player.getId());
+                server.getRoom(auth.getCode()).addPlayer(player);
 
-                ctx.writeAndFlush(new AuthResponsePacket(player.getId(), true));
+                System.out.println("got team " + player.getTeam());
 
-                if(server.getPlayerManager().getAllPlayers().size() == 2) {
-                    server.startGame();
-                }
+                ctx.writeAndFlush(new AuthResponsePacket(player.getTeam(), true));
             } else {
-
-                System.out.println("wrong code by " + ctx.channel().remoteAddress() + " (" + auth.getCode() + ") " + " kicking...");
-                server.kickClient(ctx.channel(), "wrong auth", new AuthResponsePacket(0, false));
+                System.out.println("room " + auth.getCode() + " does not exist! this address tried to connect: " + ctx.channel().remoteAddress() + " (" + auth.getCode() + ") " + " kicking...");
+                server.kickClient(ctx.channel(), "room doesnt exist", new DisconnectPacket());
             }
 
             return;
@@ -65,6 +67,10 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             ChecksumPacket checksumPacket = (ChecksumPacket) msg;
             int tick = checksumPacket.getTick();
             long checksum = checksumPacket.getChecksum();
+            GameRoom room = player.getRoom();
+            Simulation simulation = room.getSimulation();
+
+            if(simulation == null) {return;}
 
             simulation.scheduleFromNetwork(() -> {
                 long serverChecksum = simulation.getChecksum(tick);
@@ -83,13 +89,17 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             int type = actionPacket.getObjType();
             int team = player.getTeam();
             int lane = actionPacket.getLane();
+            GameRoom room = player.getRoom();
+            Simulation simulation = room.getSimulation();
+
+            if (simulation == null) {return;}
             
             System.out.println("spawn request: " + type + " from: " + player.getId());
 
             simulation.scheduleFromNetwork(() -> {
                 SpawnAction spawn = new SpawnAction(type, team, 0, lane);
                 ScheduledAction scheduledSpawn = simulation.scheduleAction(spawn);
-                server.broadcast(new ActionPacket(scheduledSpawn));
+                room.broadcast(new ActionPacket(scheduledSpawn));
             });
         }
     }
@@ -100,6 +110,10 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
         
         if (removed != null) {
              System.out.println("player " + removed.getId() + " disconnected.");
+
+             if(removed.getRoom() != null) {
+                removed.getRoom().playerQuit(removed.getTeam());
+             }
         } else {
              System.out.println("anonymous socket disconnected.");
         }

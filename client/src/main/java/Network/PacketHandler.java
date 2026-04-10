@@ -9,6 +9,7 @@ import network.ClientBoundPacket;
 import network.GameOverPacket;
 import network.Packet;
 import network.StartGamePacket;
+import network.DisconnectPacket;
 
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class PacketHandler extends ByteToMessageDecoder {
                 break;
             case ClientBoundPacket.PACKET_STARTGAME:
                 packet = new StartGamePacket(in);
+                break;
+            case ClientBoundPacket.PACKET_DISCONNECT:
+                packet = new DisconnectPacket(in);
                 break;
             default:
                 System.out.println("unknown packet type: " + packetType);

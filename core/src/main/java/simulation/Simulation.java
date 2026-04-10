@@ -63,6 +63,9 @@ public class Simulation {
                 if (gameObject instanceof Troop && gameObject2 instanceof Troop) {
                     Troop troop1 = (Troop) gameObject;
                     Troop troop2 = (Troop) gameObject2;
+
+                    if (troop1 == troop2 || troop1.getTeam() == troop2.getTeam()) continue;
+                    
                     if (troop1.canAttack(troop2)) {
                         if (troop1.getTarget() == null) {
                             troop1.setTarget(troop2);

@@ -12,6 +12,7 @@ import network.ChecksumResponsePacket;
 import network.GameOverPacket;
 import network.Packet;
 import network.StartGamePacket;
+import network.DisconnectPacket;
 import simulation.Simulation;
 import simulation.ScheduledActions.ScheduledAction;
 import simulation.Simulation.Snapshot;
@@ -72,6 +73,8 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
                     }
                 }
             });
+        } else if(msg instanceof DisconnectPacket) {
+            //handle it here...
         }
     }
 
