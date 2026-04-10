@@ -9,20 +9,14 @@ import simulation.GameObjects.GameObject;
 public class Tower extends Troop{
 
     public Tower(int type, int x, int y, int team) {
-        super(5, x, y, team);
+        super(type, x, y, team);
 
-        this.type = 0;
         this.damage = 75;
         this.health = 1000; 
-        this.cost = 75;
+        this.cost = 0;
         this.range = 100;
-        this.canAttackOtherLane = false;
+        this.canAttackOtherLane = true;
 
-        if (team == 0) {
-            this.x = 50;
-        } else {
-            this.x = 900;
-        }
     }
 
     public Tower(ByteBuf buf) {

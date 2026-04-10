@@ -45,7 +45,7 @@ public class Simulation {
         players[0] = new SimPlayer(0);
         players[1] = new SimPlayer(1);
         towerList[0] = new Tower(4, 20, 50,  0);
-        towerList[1] = new Tower(4, 500, 50, 1);
+        towerList[1] = new Tower(4, 1440, 50, 1);
 
         towerList[0].setId(currentObjId++);
         this.addObject(towerList[0]);
