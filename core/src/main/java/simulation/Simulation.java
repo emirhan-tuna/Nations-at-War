@@ -177,10 +177,13 @@ public class Simulation {
                 break;
             case 1:
                 newObj = new Dragon(x, y , team); 
+                break;
             case 2:
                 newObj = new Knight(x, y, team);
+                break;
             case 3: 
                 newObj = new Mage(x, y, team);
+                break;
             default:
                 System.out.println("unknown object");
                 break;
