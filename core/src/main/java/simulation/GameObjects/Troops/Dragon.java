@@ -6,14 +6,15 @@ import io.netty.buffer.ByteBuf;
 
 
 public class Dragon extends Troop {
-    final int damage = 150;
-    final int health = 200;
-    final int cost = 250;
-    final int range = 100;
-    final boolean canAttackOtherLane = true;
+    
 
     public Dragon(int x, int y, int team) {
         super(1, x, y, team);
+        damage = 150;
+        health = 200;
+        cost = 250;
+        range = 100;
+        canAttackOtherLane = true;
     }
 
     public Dragon(ByteBuf buf) {

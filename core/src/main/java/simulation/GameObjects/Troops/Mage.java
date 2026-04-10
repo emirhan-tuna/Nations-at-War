@@ -7,14 +7,15 @@ import io.netty.buffer.ByteBuf;
 
 
 public class Mage extends Troop {
-    final int damage = 100;
-    final int health = 40;
-    final int cost = 150;
-    final int range = 100;
-    final boolean canAttackOtherLane = true;
+    
 
     public Mage(int x, int y, int team) {
         super(3, x, y, team);
+        damage = 100;
+        health = 40;
+        cost = 150;
+        range = 100;
+        canAttackOtherLane = true;
     }
 
     public Mage(ByteBuf buf) {
