@@ -112,5 +112,12 @@ public class GameRoom {
 
     public int getGameState() {return this.gameState;}
 
-    public Simulation getSimulation() {return this.simulation.getSimulation();}
+    public Simulation getSimulation() {
+
+        if(simulation == null) {
+            return null;
+        }
+        
+        return this.simulation.getSimulation();
+    }
 }
