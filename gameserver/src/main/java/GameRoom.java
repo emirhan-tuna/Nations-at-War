@@ -14,7 +14,7 @@ public class GameRoom {
     private Map<Integer, GameRoom> rooms;
     private StartServer server;
     private Player[] players = new Player[2];
-    private int playerCount;
+    private int playerCount = 0;
 
     private GameSimulation simulation;
     private int roomId;
