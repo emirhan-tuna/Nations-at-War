@@ -242,7 +242,7 @@ public class Simulation {
         gameObjects.sort((a, b) -> Integer.compare(a.getId(), b.getId()));
 
         for (GameObject obj : gameObjects) {
-            buffer.clear();
+            ((java.nio.Buffer) buffer).clear();
             buffer.putInt(obj.getId());
             buffer.putInt(obj.getX());
             buffer.putInt(obj.getY());
