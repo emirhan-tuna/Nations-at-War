@@ -1,8 +1,7 @@
 package Network;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 
-import UI.GameScreenUI;
+import Game.ClientGameManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.ActionPacket;
@@ -19,12 +18,12 @@ import simulation.Simulation.Snapshot;
 
 public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private int code;
-    private Screen screen;
+    private ClientGameManager manager;
     private Simulation simulation;
 
-    public ClientPacketHandler(int code, Screen screen) {
+    public ClientPacketHandler(int code, ClientGameManager manager) {
         this.code = code;
-        this.screen = screen;
+        this.manager = manager;
     }
 
     @Override
@@ -56,7 +55,7 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
         } else if(msg instanceof ActionPacket) {
             ActionPacket actionPacket = (ActionPacket) msg;
             ScheduledAction action = actionPacket.getAction();
-            Simulation sim = ((GameScreenUI)screen).getClientManager().getSimulation();
+            Simulation sim = manager.getSimulation();
             sim.scheduleFromNetwork(() -> {
                 sim.addAction(action, action.getTick());
             });
@@ -66,11 +65,7 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    if (screen instanceof GameScreenUI) {
-                        ((GameScreenUI)screen).getClientManager().start();
-                    } else {
-                        System.out.println("Warning: Received StartGamePacket but current screen is not GameScreenUI");
-                    }
+                    manager.start();
                 }
             });
         } else if(msg instanceof DisconnectPacket) {

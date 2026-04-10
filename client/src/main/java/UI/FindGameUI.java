@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import Game.ClientGameManager;
 import Game.Main;
 import Network.NetworkManager;
 import network.Routes;
@@ -65,9 +66,10 @@ public class FindGameUI implements Screen{
                         int id = file.getInt("id");
 
                         GameScreenUI newUI = new GameScreenUI(game, networkManage);
+                        ClientGameManager manager = newUI.getClientManager();
 
-                        networkManage.connect(serverIP, port, id, newUI);
-                        game.setScreen(new GameScreenUI(game, networkManage));
+                        networkManage.connect(serverIP, port, id, manager);
+                        game.setScreen(newUI);
 
                     }
                 });

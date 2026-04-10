@@ -2,6 +2,7 @@ package Network;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
+import Game.ClientGameManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -27,7 +28,7 @@ public class NetworkManager {
         this.workerGroup = new NioEventLoopGroup();
     }
 
-    public void connect(String host, int port, int code, Screen screen) {
+    public void connect(String host, int port, int code, ClientGameManager manager) {
 
         if (isConnected()) {
             System.out.println("already connected");
@@ -55,7 +56,7 @@ public class NetworkManager {
                     ch.pipeline().addLast(new PacketHandler());
                     
                     //clientbound
-                    ch.pipeline().addLast(new ClientPacketHandler(code, screen)); 
+                    ch.pipeline().addLast(new ClientPacketHandler(code, manager)); 
                 }
             });
 
