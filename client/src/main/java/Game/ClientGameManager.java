@@ -59,4 +59,8 @@ public class ClientGameManager {
     public void addSimulation(Simulation sim) {
         this.simulation = sim;
     }
+
+    public boolean isOver() {
+        return simulation.isGameOver();
+    }
 }

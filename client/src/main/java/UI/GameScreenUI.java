@@ -1,6 +1,5 @@
 package UI;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -205,6 +203,10 @@ public class GameScreenUI implements Screen {
         mainTable.add(troopTable).expand().top().right().row();
     }
 
+    public Main getScreen() {
+        return game;
+    }
+
     public int troopID(String troop) {
         if (troop.equals("archer")) {
             return 0;
@@ -263,6 +265,9 @@ public class GameScreenUI implements Screen {
         batch.draw(groundTexture, 0, 0, 1920, 1080);
 
         if(clientManager.getStarted()) {
+            if (clientManager.isOver()) {
+                game.setScreen(new GameOverUI(game));
+            }
             clientManager.update(delta);
         }
 
