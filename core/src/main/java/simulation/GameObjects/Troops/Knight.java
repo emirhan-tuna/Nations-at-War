@@ -13,11 +13,11 @@ public class Knight extends Troop {
     
     public Knight(int x, int y, int team) {
         super(2, x, y, team);
-        damage = 50;
-        health = 100;
-        cost = 50;
-        range = 10;
-        canAttackOtherLane = false;
+        this.damage = 50;
+        this.health = 100;
+        this.cost = 50;
+        this.range = 10;
+        this.canAttackOtherLane = false;
     }
 
     public Knight(ByteBuf buf) {

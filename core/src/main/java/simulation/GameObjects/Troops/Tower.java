@@ -1,9 +1,6 @@
 package simulation.GameObjects.Troops;
 
-import com.badlogic.gdx.graphics.Texture;
-
 import io.netty.buffer.ByteBuf;
-import simulation.GameObjects.GameObject;
 
 
 public class Tower extends Troop{

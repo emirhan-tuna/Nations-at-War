@@ -11,11 +11,11 @@ public class Mage extends Troop {
 
     public Mage(int x, int y, int team) {
         super(3, x, y, team);
-        damage = 100;
-        health = 40;
-        cost = 150;
-        range = 100;
-        canAttackOtherLane = true;
+        this.damage = 100;
+        this.health = 40;
+        this.cost = 150;
+        this.range = 100;
+        this.canAttackOtherLane = true;
     }
 
     public Mage(ByteBuf buf) {

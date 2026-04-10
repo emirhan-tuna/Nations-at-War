@@ -7,11 +7,11 @@ public class Archer extends Troop {
 
     public Archer(int x, int y, int team) {
         super(0, x, y, team);
-        damage = 75;
-        health = 50;
-        cost = 75;
-        range = 100;
-        canAttackOtherLane = false;
+        this.damage = 75;
+        this.health = 50;
+        this.cost = 75;
+        this.range = 100;
+        this.canAttackOtherLane = false;
     }
 
     public Archer(ByteBuf buf) {

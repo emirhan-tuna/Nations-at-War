@@ -10,11 +10,11 @@ public class Dragon extends Troop {
 
     public Dragon(int x, int y, int team) {
         super(1, x, y, team);
-        damage = 150;
-        health = 200;
-        cost = 250;
-        range = 100;
-        canAttackOtherLane = true;
+        this.damage = 150;
+        this.health = 200;
+        this.cost = 250;
+        this.range = 100;
+        this.canAttackOtherLane = true;
     }
 
     public Dragon(ByteBuf buf) {
