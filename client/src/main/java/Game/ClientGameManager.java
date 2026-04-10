@@ -25,6 +25,10 @@ public class ClientGameManager {
         isStarted = true;
     }
 
+    public void stop() {
+        isStarted = false;
+    }
+
     public boolean getStarted() {
         return isStarted;
     }
@@ -34,6 +38,10 @@ public class ClientGameManager {
     }
 
     public void update(float delta) {
+        if (!isStarted || simulation == null) {
+            return; 
+        }
+        
         float frameTime = Math.min(delta, 0.25f); 
         
         accumulator += frameTime;
