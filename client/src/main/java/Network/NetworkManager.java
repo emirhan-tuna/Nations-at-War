@@ -1,6 +1,5 @@
 package Network;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 
 import Game.ClientGameManager;
 import io.netty.bootstrap.Bootstrap;

@@ -13,6 +13,7 @@ public class Main extends Game {
     public int games;
     public int wins;
     public String userID;
+    public String userToken;
     public NetworkManager networkManager;
 
     @Override

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -23,7 +22,6 @@ import Network.Stats;
 
 public class InitialUi implements Screen {
     private Texture backTexture;
-    private Image backImage;
     private SpriteBatch batch;
     private Main game;
     private Stage stage;
@@ -120,8 +118,14 @@ public class InitialUi implements Screen {
                         });
                     }
                     @Override
-                    public void getUserID(String userID) {
-                        Gdx.app.postRunnable(() -> game.userID = userID);
+                    public void getUserID(String idToken, String userID) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run(){
+                                game.userToken = idToken;
+                                game.userID = userID;
+                            }
+                        });
                     }
                 });
             }
@@ -182,8 +186,14 @@ public class InitialUi implements Screen {
                             });
                         }
                         @Override
-                        public void getUserID(String userID) {
-                            Gdx.app.postRunnable(() -> game.userID = userID);
+                        public void getUserID(String userToken,String userID) {
+                            Gdx.app.postRunnable(new Runnable() {
+                                @Override
+                                public void run() {
+                                    game.userToken = userToken;
+                                    game.userID = userID;
+                                }
+                            });
                         }
                     });
                 }

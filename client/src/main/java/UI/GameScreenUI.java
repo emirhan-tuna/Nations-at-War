@@ -22,17 +22,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.ClientGameManager;
 import Game.Main;
-import Game.Player;
 import Network.NetworkManager;
-import simulation.SimPlayer;
-import simulation.Simulation;
 import simulation.GameObjects.GameObject;
 import simulation.GameObjects.Troops.Troop;
 
 public class GameScreenUI implements Screen {
-    private Label leftHealthLabel;
-    private Label leftResourceLabel;
-    private Label rightHealthLabel;
     private SpriteBatch batch;
     private Table popupMenu;
     private String lastTroop = "";
@@ -44,7 +38,6 @@ public class GameScreenUI implements Screen {
     private Main game;
     private Stage stage;
     private Table mainTable;
-    private Game.Player player;
     private NetworkManager manager;
     private ClientGameManager clientManager;
     private Texture archer, knight, dragon, towerPlayer, towerEnemy, mage;
@@ -74,7 +67,6 @@ public class GameScreenUI implements Screen {
         blankTexture = new Texture(pixmap);
         pixmap.dispose();
 
-        this.player = new Player(1);
         this.game = game;
         this.stage = new Stage();
         batch = new SpriteBatch();

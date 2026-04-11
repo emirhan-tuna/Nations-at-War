@@ -1,5 +1,6 @@
 package UI;
 
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
@@ -40,43 +41,14 @@ public class FindGameUI implements Screen{
         stage.addActor(backImage);
 
         mainTable = new Table(); 
-;
-        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+        matchmake();
 
-        String url = "https://nationsapi.fly.dev/hello";
-
-        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
-
-        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+        Timer.schedule(new Timer.Task() {
             @Override
-            public void handleHttpResponse(Net.HttpResponse response) {
-
-                System.out.print("Got response");
-                String responseString = response.getResultAsString();
-                JsonReader reader = new JsonReader();
-                JsonValue file = reader.parse(responseString);
-
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        String serverIP = file.getString("host");
-                        int port = file.getInt("port");
-                        int id = file.getInt("id");
-
-                        GameScreenUI newUI = new GameScreenUI(game, networkManage);
-                        ClientGameManager manager = newUI.getClientManager();
-
-                        networkManage.connect(serverIP, port, id, manager);
-                        game.setScreen(newUI);
-
-                    }
-                });
+            public void run() {
+                getAnswer(this);
             }
-            @Override
-            public void failed(Throwable t) {}
-            @Override
-            public void cancelled() {}
-        });
+        }, 0f, 1f);
     }
 
     public void createUI() {
@@ -94,6 +66,89 @@ public class FindGameUI implements Screen{
         loadingImage.addAction(Actions.forever(Actions.rotateBy(360f, 1.5f)));
 
         mainTable.add(loadingImage).padBottom(20f);
+    }
+
+    public void getAnswer(Timer.Task task) {
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+
+        String url = "https://nationsapi.fly.dev/hello";
+        String matchmakeURL = "https://nationsapi.fly.dev/matchmake";
+
+        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(matchmakeURL).build();
+
+        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse response) {
+
+                System.out.print("Got response");
+                int status = response.getStatus().getStatusCode();
+                String responseString = response.getResultAsString();
+                JsonReader reader = new JsonReader();
+                JsonValue file = reader.parse(responseString);
+
+                int serverStatus = file.getInt("status"); 
+
+                if (serverStatus == 0) {
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            JsonValue serverInfo = file.get("server");
+                            int gameId = serverInfo.getInt("gameId");
+                            String host = serverInfo.getString("host");
+                            int port = serverInfo.getInt("port");
+
+                            GameScreenUI newUI = new GameScreenUI(game, networkManage);
+                            ClientGameManager manager = newUI.getClientManager();
+
+                            networkManage.connect(host, port, gameId, manager);
+                            game.setScreen(newUI);
+
+                        }
+                    });
+                } else if (serverStatus == 2) {
+                    game.setScreen(new MainMenuUi(game, stage, game.skin));
+                }
+                
+            }
+            @Override
+            public void failed(Throwable t) {}
+            @Override
+            public void cancelled() {}
+        });
+    }
+
+    public void matchmake() {
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+
+        String matchmakeURL = "https://nationsapi.fly.dev/matchmake";
+
+        Net.HttpRequest request = requestBuilder.newRequest()
+            .method(Net.HttpMethods.POST)
+            .url(matchmakeURL)
+            .header("Content-type", "application/json")
+            .header("Authorization", "Bearer " + game.userToken) 
+            .build();
+
+        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse response) {
+
+                System.out.print("Got response");
+                int status = response.getStatus().getStatusCode();
+                String responseString = response.getResultAsString();
+                JsonReader reader = new JsonReader();
+                JsonValue file = reader.parse(responseString);
+
+                if (status == 200) {
+                    System.out.println("Success.");
+                }
+                
+            }
+            @Override
+            public void failed(Throwable t) {}
+            @Override
+            public void cancelled() {}
+        });
     }
 
     @Override

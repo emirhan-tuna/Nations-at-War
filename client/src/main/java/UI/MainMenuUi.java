@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,22 +15,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Game.Main;
-import Network.FirebaseTest;
-import Network.NetworkManager;
 
 public class MainMenuUi implements Screen{
     private Texture backTexture;
-    private Image backImage;
     private Stage stage;
     private Main game;
     private Table mainTable;
-    private FirebaseTest test;
     private Table statsTable;
     private SpriteBatch batch;
 
     public MainMenuUi(Main game, Stage stage, Skin skin) {
         this.stage = stage;
-        this.test = new FirebaseTest();
         this.game = game;
         this.batch = new SpriteBatch();
 

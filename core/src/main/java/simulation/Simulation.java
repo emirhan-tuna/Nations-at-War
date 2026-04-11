@@ -168,7 +168,19 @@ public class Simulation {
     }
 
     public void spawnObject(int type, int team, int lane) {
+        int requiredGold = 0;
+        if (type == 0) {
+            requiredGold = 75;
+        } else if (type == 1) {
+            requiredGold = 250;
+        } else if (type == 2) {
+            requiredGold = 50;
+        } else if (type == 3) {
+            requiredGold = 150;
+        }
+
         GameObject newObj = null;
+        
         int y;
         if (lane == 1) {
             y = 420;
@@ -184,7 +196,8 @@ public class Simulation {
             x = 1410; 
         }
 
-        switch(type) {
+        if (players[team].getGold() > requiredGold) {
+            switch(type) {
             case 0:
                 newObj = new Archer(x, y, team);
                 break;
@@ -200,15 +213,16 @@ public class Simulation {
             default:
                 System.out.println("unknown object");
                 break;
-        }
+            }
 
-        newObj.setId(currentObjId);
+            newObj.setId(currentObjId);
 
-        incrementObjId();
+            incrementObjId();
 
-        if(newObj != null) {
-            gameObjects.add(newObj);
-        }
+            if(newObj != null) {
+                gameObjects.add(newObj);
+            }
+        } 
     }
 
     public void addObject(GameObject object) {

@@ -79,8 +79,7 @@ public class FirebaseTest {
                     String userId = json.getString("localId");
 
                     createNewUser(userId, idToken, username, aStats);
-                    getPlayerStats(idToken, aStats);
-                    aStats.getUserID(userId);
+                    aStats.getUserID(idToken, userId);
                 } else {
                     System.out.println("Not 200");
                 }
@@ -118,7 +117,7 @@ public class FirebaseTest {
                     String idToken = file.getString("idToken");
 
                     getPlayerStats(idToken, aStats);
-                    aStats.getUserID(userId);
+                    aStats.getUserID(idToken, userId);
                 } else {
                     System.out.println("Status code not 200.");
                 }
