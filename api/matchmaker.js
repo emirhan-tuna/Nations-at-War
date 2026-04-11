@@ -21,7 +21,7 @@ const matchmake = () => {
 
         const player1 = playerQueue.shift();
         const player2 = playerQueue.shift();
-        setServerStatus(server.id, 'in-game');
+        setServerStatus(server.id, 0);
 
         const matchData = {
             gameId: server.id,
@@ -38,7 +38,7 @@ const matchmake = () => {
 
 const getPlayerMatchStatus = (userUid) => {
     if (activeMatches[userUid]) {
-        return {status: '0', server: activeMatches[userUid]};
+        return {status: 0, server: activeMatches[userUid]};
     }
     if (playerQueue.includes(userUid)) {
         return {status: 1};

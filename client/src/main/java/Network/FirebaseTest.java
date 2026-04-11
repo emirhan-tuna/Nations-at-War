@@ -79,7 +79,7 @@ public class FirebaseTest {
                     String userId = json.getString("localId");
 
                     createNewUser(userId, idToken, username, aStats);
-                    getPlayerStats(userId, aStats);
+                    getPlayerStats(idToken, aStats);
                     aStats.getUserID(userId);
                 } else {
                     System.out.println("Not 200");
@@ -117,7 +117,7 @@ public class FirebaseTest {
                     String userId = file.getString("localId");
                     String idToken = file.getString("idToken");
 
-                    getPlayerStats(userId, aStats);
+                    getPlayerStats(idToken, aStats);
                     aStats.getUserID(userId);
                 } else {
                     System.out.println("Status code not 200.");
@@ -135,12 +135,15 @@ public class FirebaseTest {
         });
     }
     
-    public void getPlayerStats (String uID, Stats aStats) {
-        HttpRequestBuilder requestBuild = new HttpRequestBuilder();
+    public void getPlayerStats (String idToken, Stats aStats) {
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String url = "https://firestore.googleapis.com/v1/projects/" + PROJECT_ID + "/databases/(default)/documents/users/" + uID  + "?key=" + API_KEY;
-
-        Net.HttpRequest request = requestBuild.newRequest().method(Net.HttpMethods.GET).url(url).build();
+        String url = "https://" + Routes.API_HOST + Routes.API_PROFILE;
+        Net.HttpRequest request = requestBuilder.newRequest()
+                .method(Net.HttpMethods.GET)
+                .url(url)
+                .header("Authorization", "Bearer " + idToken) 
+                .build();
 
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
@@ -150,28 +153,27 @@ public class FirebaseTest {
 
                 if (statusCode == 200) {
                     JsonReader json = new JsonReader();
+                    JsonValue responseJson = json.parse(responseString);
 
-                    JsonValue file = json.parse(responseString);
-                    JsonValue fields = file.get("fields");
-
-                    String username = fields.get("username").getString("stringValue");
-                    int playedGames = Integer.parseInt(fields.get("playedGames").getString("integerValue"));
-                    int wins = Integer.parseInt(fields.get("wins").getString("integerValue"));
+                    JsonValue profile = responseJson.get("profile");
+                    String username = profile.getString("username", "something went wrong");
+                    int playedGames = profile.getInt("playedGames", 0);
+                    int wins = profile.getInt("wins", 0);
 
                     aStats.statsLoaded(username, playedGames, wins);
                 } else {
-                    System.out.println("Not 200 or 404.");
+                    System.out.println("api error with status: " + statusCode + ", reason: " + responseString);
                 }
             }
 
             @Override
-            public void failed(Throwable t) {
-                System.out.println("Failed. get player");
+            public void failed(Throwable error) {
+                System.out.println("failed get player: " + error.getMessage());
             }
 
             @Override
             public void cancelled() {
-                System.out.println("Cancelled.");
+                System.out.println("cancelled get player");
             }
         });
     }
@@ -180,7 +182,7 @@ public class FirebaseTest {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
         String jsonPayload = "{\"username\":\"" + username + "\"}";
-        String url = "https://" + Routes.API_HOST + Routes.API_PROFILE;
+        String url = "https://" + Routes.API_HOST + Routes.API_UPDATE_PROFILE;
         Net.HttpRequest request = requestBuilder.newRequest()
             .method(Net.HttpMethods.POST)
             .url(url)
@@ -196,7 +198,7 @@ public class FirebaseTest {
                 
                 if (statusCode == 201 ||statusCode == 200) {
                     System.out.println("Created user.");
-                    aStats.statsLoaded(username, 0, 0);
+                    getPlayerStats(idToken, aStats);
                 } else {
                     System.out.println("Failed to create user.");
                 }
