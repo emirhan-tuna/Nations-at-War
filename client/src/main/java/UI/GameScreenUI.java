@@ -218,8 +218,13 @@ public class GameScreenUI implements Screen {
     }
 
     public void draw(GameObject object, float alpha) {
+        
         float width = 128f;
         float height = 128f;
+        if (object.getType() == 4) {
+            width = 512f;
+            height = 512f;
+        }        
 
         if (object.getTeam() == 1) {
             float objX = MathUtils.lerp(object.getLastX(), object.getX(), alpha);
@@ -272,7 +277,7 @@ public class GameScreenUI implements Screen {
             } else if (object.getType() == 3) {
                 batch.draw(mage, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 4) {
-                batch.draw(towerPlayer, object.getX(), object.getY(), 512f, 512f);
+                batch.draw(towerEnemy, object.getX(), object.getY(), width, height);
             }
         }
     }
