@@ -24,12 +24,15 @@ import Game.ClientGameManager;
 import Game.Main;
 import Game.Player;
 import Network.NetworkManager;
+import simulation.SimPlayer;
+import simulation.Simulation;
 import simulation.GameObjects.GameObject;
 import simulation.GameObjects.Troops.Troop;
 
 public class GameScreenUI implements Screen {
-    private Label healthLabel;
-    private Label resourceLabel;
+    private Label leftHealthLabel;
+    private Label leftResourceLabel;
+    private Label rightHealthLabel;
     private SpriteBatch batch;
     private Table popupMenu;
     private String lastTroop = "";
@@ -134,24 +137,6 @@ public class GameScreenUI implements Screen {
         });
     }
 
-    public void showHealthandResourc() {
-        Table infoTable = new Table();
-
-        if(player.getId() == 1) {
-            infoTable.left();
-        } else {
-            infoTable.right();
-        }
-
-        healthLabel = new Label("Base Health: " + Integer.toString(player.getHealth()), game.skin, "very_big_title");
-        resourceLabel = new Label("Gold: " + Integer.toString(player.getResources()), game.skin, "very_big_title");
-
-        infoTable.add(healthLabel).padRight(20f).padBottom(20f).right().row();
-        infoTable.add(resourceLabel).padRight(20f).right();
-
-        mainTable.add(infoTable).expand().bottom().right().pad(30f);
-    }
-
     public void showTroops() {
         Table troopTable = new Table();
 
@@ -236,7 +221,7 @@ public class GameScreenUI implements Screen {
         float width = 128f;
         float height = 128f;
 
-        if (object.getTeam() == 0) {
+        if (object.getTeam() == 1) {
             float objX = MathUtils.lerp(object.getLastX(), object.getX(), alpha);
             float objY = MathUtils.lerp(object.getLastY(), object.getY(), alpha);
 
@@ -287,7 +272,7 @@ public class GameScreenUI implements Screen {
             } else if (object.getType() == 3) {
                 batch.draw(mage, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 4) {
-                batch.draw(towerEnemy, object.getX(), object.getY(), 512f, 512f);
+                batch.draw(towerPlayer, object.getX(), object.getY(), 512f, 512f);
             }
         }
     }
@@ -320,9 +305,6 @@ public class GameScreenUI implements Screen {
 
         batch.end();
 
-        healthLabel.setText("Health: " + Integer.toString(player.getHealth()));
-        resourceLabel.setText("Gold: " + Integer.toString(player.getResources()));
-
         stage.act();
         stage.draw();
     }
@@ -347,7 +329,6 @@ public class GameScreenUI implements Screen {
         mainTable.setFillParent(true);
 
         showTroops();
-        showHealthandResourc();
         stage.addActor(mainTable);
         stage.addActor(popupMenu);
     }

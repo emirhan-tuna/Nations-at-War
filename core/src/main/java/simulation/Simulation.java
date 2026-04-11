@@ -176,7 +176,7 @@ public class Simulation {
         if(team == 0) {
             x = 0;
         } else {
-            x = 500;
+            x = 1300; 
         }
 
         switch(type) {
