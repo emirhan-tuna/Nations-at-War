@@ -82,7 +82,7 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 long serverChecksum = simulation.getChecksum(tick);
                 
                 if (serverChecksum != checksum) {
-                    System.out.println("wrong checksum by player: " + playerId + "! sending correction...");
+                    System.out.println("wrong checksum by player: " + playerId + " with checksum " + checksum + "! sending correction...");
                     
                     Snapshot snapshot = simulation.getSnapshot();
                     ChecksumResponsePacket response = new ChecksumResponsePacket(snapshot);
@@ -90,6 +90,7 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
                     ctx.writeAndFlush(response); 
                 } else {
                     System.out.println("checksum from player: " + playerId + " is correct!");
+                    System.out.println("server checksum: " + serverChecksum + " player checksum: " + checksum + " at tick: " + tick);
                 }
             });
         } else if(msg instanceof SpawnPacket) {

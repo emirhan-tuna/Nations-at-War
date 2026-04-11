@@ -35,7 +35,7 @@ public class Simulation {
 
     private final CRC32 crc32 = new CRC32();
     private final ByteBuffer buffer = ByteBuffer.allocate(12);
-    private static final int HISTORY_SIZE = 256;
+    private static final int HISTORY_SIZE = 5;
     private final long[] checksumHistory = new long[HISTORY_SIZE];
 
     private long currentChecksum;
