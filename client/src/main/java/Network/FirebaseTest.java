@@ -115,6 +115,7 @@ public class FirebaseTest {
 
                     JsonValue file = reader.parse(responseString);
                     String userId = file.getString("localId");
+                    String idToken = file.getString("idToken");
 
                     getPlayerStats(userId, aStats);
                     aStats.getUserID(userId);
