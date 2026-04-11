@@ -87,7 +87,8 @@ public class GameScreenUI implements Screen {
         skyTexture = new Texture(Gdx.files.internal("Sprites/sky_background_144x81.png"));
         skyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
-        groundTexture = new Texture(Gdx.files.internal("Sprites/ground_lanes.png"));
+        groundTexture = new Texture(Gdx.files.internal("Sprites/lane_background_48x14.png"));
+        groundTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
         mainTable = new Table();
         popupMenu = new Table();
@@ -268,16 +269,46 @@ public class GameScreenUI implements Screen {
                 batch.draw(towerEnemy, objX, objY, width, height);
             } 
         } else {
-            if (object.getType() == 0) {   
-                batch.draw(archer, object.getX() + width, object.getY(), -width, height);
-            } else if (object.getType() == 1) {
-                batch.draw(dragon, object.getX() + width, object.getY(), -width, height);
-            } else if (object.getType() == 2) {
-                batch.draw(knight, object.getX() + width, object.getY(), -width, height);
-            } else if (object.getType() == 3) {
-                batch.draw(mage, object.getX() + width, object.getY(), -width, height);
-            } else if (object.getType() == 4) {
-                batch.draw(towerPlayer, object.getX(), object.getY(), width, height);
+
+            float objX = MathUtils.lerp(object.getLastX(), object.getX(), alpha);
+            float objY = MathUtils.lerp(object.getLastY(), object.getY(), alpha);
+
+            if(object instanceof Troop) {
+                //draw healthbar
+                Troop troop = (Troop) object;
+
+                float healthPercent = MathUtils.lerp((float) troop.getLastHealth(), (float) troop.getHealth(), alpha) / troop.getMaxHealth();;
+
+                float barWidth = width * 0.8f; 
+                float barHeight = height * 0.2f;
+                float barX = objX + (width - barWidth) / 2f;
+                float barY = objY + height + barHeight;
+
+                float originalColor = batch.getPackedColor();
+
+                batch.setColor(0f, 0f, 0f, 0.3f);
+                batch.draw(blankTexture, barX, barY, barWidth, barHeight);
+
+                if(troop.getHealth() < troop.getLastHealth()) {
+                    batch.setColor(0.5f, 1f - alpha, 0f, 1f);
+                } else {
+                    batch.setColor(Color.GREEN);
+                }
+
+                batch.draw(blankTexture, barX, barY, barWidth * healthPercent, barHeight);
+
+                batch.setPackedColor(originalColor);
+                if (object.getType() == 0) {   
+                    batch.draw(archer, object.getX() + width, object.getY(), -width, height);
+                } else if (object.getType() == 1) {
+                    batch.draw(dragon, object.getX() + width, object.getY(), -width, height);
+                } else if (object.getType() == 2) {
+                    batch.draw(knight, object.getX() + width, object.getY(), -width, height);
+                } else if (object.getType() == 3) {
+                    batch.draw(mage, object.getX() + width, object.getY(), -width, height);
+                } else if (object.getType() == 4) {
+                    batch.draw(towerPlayer, object.getX() - width + 20, object.getY(), width, height);
+                }
             }
         }
     }
@@ -292,7 +323,7 @@ public class GameScreenUI implements Screen {
         batch.begin();
         batch.draw(skyTexture, 0, 0, 1920, 1080);
 
-        batch.draw(groundTexture, 0, 0, 1920, 1080);
+        batch.draw(groundTexture, 0, 0, 1920, 560);
 
         if(clientManager.getStarted()) {
             if (clientManager.isOver()) {

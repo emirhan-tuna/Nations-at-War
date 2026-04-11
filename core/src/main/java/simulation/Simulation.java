@@ -171,15 +171,15 @@ public class Simulation {
         GameObject newObj = null;
         int y;
         if (lane == 1) {
-            y = 900;
+            y = 420;
         } else if (lane == 2) {
-            y = 540;
+            y = 300;
         } else {
             y = 180;
         } 
         int x;
         if(team == 0) {
-            x = 150;
+            x = 512;
         } else {
             x = 1410; 
         }
