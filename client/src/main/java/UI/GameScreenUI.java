@@ -239,7 +239,7 @@ public class GameScreenUI implements Screen {
         if (object.getTeam() == 0) {
             float objX = MathUtils.lerp(object.getLastX(), object.getX(), alpha);
             float objY = MathUtils.lerp(object.getLastY(), object.getY(), alpha);
-            
+
             if(object instanceof Troop) {
                 //draw healthbar
                 Troop troop = (Troop) object;
@@ -307,14 +307,15 @@ public class GameScreenUI implements Screen {
             if (clientManager.isOver()) {
                 game.setScreen(new GameOverUI(game));
             }
+
+            List<GameObject> objects= clientManager.getObjects();
+
             clientManager.update(delta);
+            for(GameObject object : objects) {
+                draw(object, clientManager.getInterpolationAlpha());
+            }
         }
 
-        List<GameObject> objects= clientManager.getObjects();
-
-        for(GameObject object : objects) {
-            draw(object, clientManager.getInterpolationAlpha());
-        }
 
         batch.end();
 
