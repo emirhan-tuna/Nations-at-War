@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import Game.ClientGameManager;
 import Game.Main;
 import Network.NetworkManager;
+import network.Routes;
 
 public class FindGameUI implements Screen{
     private Texture backTexture;
@@ -71,10 +72,12 @@ public class FindGameUI implements Screen{
     public void getAnswer(Timer.Task task) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String url = "https://nationsapi.fly.dev/hello";
-        String matchmakeURL = "https://nationsapi.fly.dev/matchmake";
+        String matchmakeURL = "https://" + Routes.API_HOST + Routes.API_MATCHMAKER_STATUS;
 
-        HttpRequest request = requestBuilder.newRequest().method(Net.HttpMethods.GET).url(matchmakeURL).build();
+        HttpRequest request = requestBuilder.newRequest()
+        .method(Net.HttpMethods.GET)
+        .url(matchmakeURL)
+        .build();
 
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
@@ -120,7 +123,7 @@ public class FindGameUI implements Screen{
     public void matchmake() {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String matchmakeURL = "https://nationsapi.fly.dev/matchmake";
+        String matchmakeURL = "https://" + Routes.API_HOST + Routes.API_MATCHMAKER_JOIN;
 
         Net.HttpRequest request = requestBuilder.newRequest()
             .method(Net.HttpMethods.POST)

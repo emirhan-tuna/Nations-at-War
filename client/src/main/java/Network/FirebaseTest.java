@@ -79,7 +79,7 @@ public class FirebaseTest {
                     String userId = json.getString("localId");
 
                     createNewUser(userId, idToken, username, aStats);
-                    aStats.getUserID(userId);
+                    aStats.getUserID(idToken, userId);
                 } else {
                     System.out.println("Not 200");
                 }
