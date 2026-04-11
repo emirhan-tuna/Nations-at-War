@@ -20,11 +20,9 @@ public abstract class Troop extends GameObject implements Movable {
     protected int range;
     protected boolean canAttackOtherLane;
     protected int cooldown;
-    protected int maxHealth;
 
     public Troop(int type, int x, int y, int team) {
         super(type, x, y, team);
-        this.maxHealth = this.health;
         cooldown = 20;
     }
 
@@ -112,9 +110,7 @@ public abstract class Troop extends GameObject implements Movable {
         return this.lastHealth;
     }
 
-    public int getMaxHealth() {
-        return this.maxHealth;
-    }
+    public abstract int getMaxHealth();
 
     @Override
     public void savePreviousState() {

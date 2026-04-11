@@ -8,7 +8,7 @@ public class Archer extends Troop {
     public Archer(int x, int y, int team) {
         super(0, x, y, team);
         this.damage = 75;
-        this.health = 50;
+        this.health = getMaxHealth();
         this.cost = 75;
         this.range = 100;
         this.canAttackOtherLane = false;
@@ -30,5 +30,10 @@ public class Archer extends Troop {
         } else {
             move();
         }
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return 50;
     }
 }

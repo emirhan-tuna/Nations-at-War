@@ -1,8 +1,6 @@
 
 package simulation.GameObjects.Troops;
 
-import com.badlogic.gdx.graphics.Texture;
-
 import io.netty.buffer.ByteBuf;
 
 
@@ -12,7 +10,7 @@ public class Mage extends Troop {
     public Mage(int x, int y, int team) {
         super(3, x, y, team);
         this.damage = 100;
-        this.health = 40;
+        this.health = getMaxHealth();
         this.cost = 150;
         this.range = 100;
         this.canAttackOtherLane = true;
@@ -35,5 +33,10 @@ public class Mage extends Troop {
         } else {
             move();
         }
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return 40;
     }
 }

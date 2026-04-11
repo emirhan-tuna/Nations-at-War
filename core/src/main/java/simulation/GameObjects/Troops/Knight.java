@@ -1,10 +1,6 @@
 
 package simulation.GameObjects.Troops;
 
-import java.util.ArrayList;
-
-import com.badlogic.gdx.graphics.Texture;
-
 import io.netty.buffer.ByteBuf;
 
 
@@ -14,7 +10,7 @@ public class Knight extends Troop {
     public Knight(int x, int y, int team) {
         super(2, x, y, team);
         this.damage = 50;
-        this.health = 100;
+        this.health = getMaxHealth();
         this.cost = 50;
         this.range = 10;
         this.canAttackOtherLane = false;
@@ -37,5 +33,10 @@ public class Knight extends Troop {
         } else {
             move();
         }
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return 100;
     }
 }

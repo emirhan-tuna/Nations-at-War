@@ -9,7 +9,7 @@ public class Tower extends Troop{
         super(type, x, y, team);
 
         this.damage = 75;
-        this.health = 1000; 
+        this.health = getMaxHealth(); 
         this.cost = 0;
         this.range = 100;
         this.canAttackOtherLane = true;
@@ -33,5 +33,10 @@ public class Tower extends Troop{
     @Override
     public boolean canAttack(Troop target) {
         return this.team != target.getTeam();
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return 1000;
     }
 }
