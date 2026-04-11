@@ -41,7 +41,7 @@ public class NotifyApi {
             conn.setReadTimeout(5000);
             conn.setDoOutput(true);
             
-            String jsonBody = "{\"host\": \"" + Routes.SERVER_IP + "\", \"port\": " + Routes.SERVER_PORT + "}";
+            String jsonBody = "{\"host\": \"" + Routes.SERVER_IP + "\", \"port\": " + Routes.SERVER_PORT + ", \"gameId\": " + getCurrentGameId() + "}";
             
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonBody.getBytes("utf-8");
@@ -67,7 +67,7 @@ public class NotifyApi {
             
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", Routes.SERVER_SECRET);
+            conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(10000);
             conn.setDoOutput(true);
