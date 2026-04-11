@@ -59,6 +59,8 @@ public class GameRoom {
     public void endGame(int winner) {
         //todo: db add points
 
+        System.out.println("ending game");
+
         gameState = 2;
 
         broadcast(new GameOverPacket(winner));

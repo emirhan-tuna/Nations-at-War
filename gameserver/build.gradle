@@ -1,4 +1,7 @@
-apply plugin: "java-library"
+plugins {
+    id "java-library"
+    id "com.gradleup.shadow" version "8.3.3" //why
+}
 
 dependencies {
     implementation project(":core")
@@ -6,18 +9,16 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
 }
 
-jar {
-    dependsOn(':core:jar')
+shadowJar {
+    archiveBaseName.set('server')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+    
+    mergeServiceFiles() 
     
     manifest {
         attributes(
             'Main-Class': 'StartServer' 
         )
     }
-    
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE 
 }
