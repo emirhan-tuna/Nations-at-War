@@ -29,6 +29,7 @@ public abstract class Troop extends GameObject implements Movable {
     public Troop(ByteBuf buf) {
         super(buf);
         this.health = buf.readInt();
+        this.lastHealth = this.health;
         this.cooldown = buf.readInt();
     }
 

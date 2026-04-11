@@ -31,5 +31,6 @@ public class Main extends Game {
     public void dispose() {
         if (skin != null) skin.dispose();
         if (screen != null) screen.dispose();
+        if (networkManager != null) networkManager.dispose();
     }
 }

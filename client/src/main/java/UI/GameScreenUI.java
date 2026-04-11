@@ -248,10 +248,11 @@ public class GameScreenUI implements Screen {
 
                 float barWidth = width * 0.8f; 
                 float barHeight = height * 0.2f;
-                float barX = object.getX() + (width - barWidth) / 2f;
-                float barY = object.getY() + height + barHeight;
+                float barX = objX + (width - barWidth) / 2f;
+                float barY = objY + height + barHeight;
 
-                Color originalColor = batch.getColor();
+                float originalColor = batch.getPackedColor();
+
                 batch.setColor(0f, 0f, 0f, 0.3f);
                 batch.draw(blankTexture, barX, barY, barWidth, barHeight);
 
@@ -263,7 +264,7 @@ public class GameScreenUI implements Screen {
 
                 batch.draw(blankTexture, barX, barY, barWidth * healthPercent, barHeight);
 
-                batch.setColor(originalColor);
+                batch.setPackedColor(originalColor);
             }
             if (object.getType() == 0) {   
                 batch.draw(archer, objX, objY, width, height);
