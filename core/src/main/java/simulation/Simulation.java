@@ -62,6 +62,9 @@ public class Simulation {
             for (GameObject gameObject2 : gameObjects) {
                 if (gameObject instanceof Troop && gameObject2 instanceof Troop) {
                     Troop troop1 = (Troop) gameObject;
+                    if (troop1.getTarget() != null && troop1.getTarget().isDead()) {
+                        troop1.setTarget(null);
+                    }
                     Troop troop2 = (Troop) gameObject2;
 
                     if (troop1 == troop2 || troop1.getTeam() == troop2.getTeam()) {
