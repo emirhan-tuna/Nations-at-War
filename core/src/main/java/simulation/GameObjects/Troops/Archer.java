@@ -20,7 +20,7 @@ public class Archer extends Troop {
     }
 
     public void update() {
-        if (this.target != null) {
+        if (this.target != null && target.getHealth() > 0) {
             int dist = Math.abs(target.getX() - x);
             if (dist <= range) {
                 attack(target);

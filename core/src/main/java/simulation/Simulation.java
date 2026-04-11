@@ -62,18 +62,23 @@ public class Simulation {
             for (GameObject gameObject2 : gameObjects) {
                 if (gameObject instanceof Troop && gameObject2 instanceof Troop) {
                     Troop troop1 = (Troop) gameObject;
+                    if (troop1.getTarget() != null && troop1.getTarget().isDead()) {
+                        troop1.setTarget(null);
+                    }
                     Troop troop2 = (Troop) gameObject2;
 
-                    if (troop1 == troop2 || troop1.getTeam() == troop2.getTeam()) continue;
-                    
-                    if (troop1.canAttack(troop2)) {
-                        if (troop1.getTarget() == null) {
-                            troop1.setTarget(troop2);
-                        } else {
-                            int distance = troop1.calculateDistance(troop2); 
-                            if (troop1.calculateDistance(troop1.getTarget()) > distance) {
+                    if (troop1 == troop2 || troop1.getTeam() == troop2.getTeam()) {
+                        continue;
+                    } else {
+                        if (troop1.canAttack(troop2)) {
+                            if (troop1.getTarget() == null) {
                                 troop1.setTarget(troop2);
-                            } 
+                            } else {
+                                int distance = troop1.calculateDistance(troop2); 
+                                if (troop1.calculateDistance(troop1.getTarget()) > distance) {
+                                    troop1.setTarget(troop2);
+                                } 
+                            }
                         }
                     }
                 }
@@ -174,9 +179,9 @@ public class Simulation {
         } 
         int x;
         if(team == 0) {
-            x = 0;
+            x = 50;
         } else {
-            x = 1300; 
+            x = 1410; 
         }
 
         switch(type) {
