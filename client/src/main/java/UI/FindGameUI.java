@@ -76,6 +76,8 @@ public class FindGameUI implements Screen{
 
         HttpRequest request = requestBuilder.newRequest()
         .method(Net.HttpMethods.GET)
+        .header("Content-type", "application/json")
+        .header("Authorization", "Bearer " + game.userToken) 
         .url(matchmakeURL)
         .build();
 
@@ -85,11 +87,13 @@ public class FindGameUI implements Screen{
 
                 System.out.print("Got response");
                 int status = response.getStatus().getStatusCode();
+                System.out.println(status);
                 String responseString = response.getResultAsString();
                 JsonReader reader = new JsonReader();
                 JsonValue file = reader.parse(responseString);
 
                 int serverStatus = file.getInt("status"); 
+                System.out.println("Server status");
 
                 if (serverStatus == 0) {
                     Gdx.app.postRunnable(new Runnable() {
