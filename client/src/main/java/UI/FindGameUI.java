@@ -96,6 +96,8 @@ public class FindGameUI implements Screen{
                 System.out.println("Server status");
 
                 if (serverStatus == 0) {
+                    task.cancel();
+
                     Gdx.app.postRunnable(new Runnable() {
                         @Override
                         public void run() {
