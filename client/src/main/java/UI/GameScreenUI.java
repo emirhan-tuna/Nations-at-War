@@ -265,7 +265,7 @@ public class GameScreenUI implements Screen {
             } else if (object.getType() == 3) {
                 batch.draw(mage, objX, objY, width, height);
             } else if (object.getType() == 4) {
-                batch.draw(towerPlayer, objX, objY, 512f, 512f);
+                batch.draw(towerEnemy, objX, objY, width, height);
             } 
         } else {
             if (object.getType() == 0) {   
@@ -277,7 +277,7 @@ public class GameScreenUI implements Screen {
             } else if (object.getType() == 3) {
                 batch.draw(mage, object.getX() + width, object.getY(), -width, height);
             } else if (object.getType() == 4) {
-                batch.draw(towerEnemy, object.getX(), object.getY(), width, height);
+                batch.draw(towerPlayer, object.getX(), object.getY(), width, height);
             }
         }
     }
