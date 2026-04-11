@@ -21,7 +21,7 @@ public class Archer extends Troop {
 
     public void update() {
         if (this.target != null) {
-            int dist = target.getX() - x;
+            int dist = Math.abs(target.getX() - x);
             if (dist <= range) {
                 attack(target);
             } else {

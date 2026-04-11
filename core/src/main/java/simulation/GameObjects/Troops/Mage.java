@@ -23,7 +23,7 @@ public class Mage extends Troop {
 
     public void update() {
         if (this.target != null && target.health > 0) {
-            int dist = (int) (target.getX() - x);
+            int dist = (int) Math.abs((target.getX() - x));
             if (dist <= range) {
                 attack(target);
             }

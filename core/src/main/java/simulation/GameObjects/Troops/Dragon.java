@@ -24,7 +24,7 @@ public class Dragon extends Troop {
 
     public void update() {
         if (this.target != null && target.health > 0) {
-            int dist = (int) Math.hypot(target.getX() - x, target.getY() - y);
+            int dist = (int) Math.hypot(Math.abs(target.getX() - x), Math.abs(target.getY() - y));
             if (dist <= range) {
                 attack(target);
             }
