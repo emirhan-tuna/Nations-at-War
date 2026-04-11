@@ -47,6 +47,13 @@
                 "StartServer",
                 "api"
             ],
+        },
+        {
+            "name": "2 clients",
+            "configurations": [
+                "Lwjgl3Launcher(1)",
+                "Lwjgl3Launcher(1)"
+            ],
         }
     ]
 }

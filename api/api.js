@@ -1,32 +1,15 @@
 require('dotenv').config();
 
 const express = require('express');
-const {auth, db} = require('./user/firebase');
-const {serverAuth} = require('./server/server.js')
+const {db} = require('./user/firebase.js');
+const {checkAuth} = require('./user/authenticate.js');
+const {registerServer, updateHeartbeat, serverAuth} = require('./server/server.js');
+const {joinQueue, getPlayerMatchStatus} = require('./matchmaker.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-
-const checkAuth = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({error: 'unauthorized: missing/malformed token'});
-    }
-
-    const idToken = authHeader.split('Bearer ')[1];
-
-    try {
-        const decodedToken = await auth.verifyIdToken(idToken);
-        req.user = decodedToken; 
-        next(); 
-    } catch (error) {
-        console.error('token verification failed:', error.message);
-        return res.status(403).json({error: 'unauthorized: invalid/expired token'});
-    }
-};
 
 app.get('/', (req, res) => {
     res.send("api is running");
@@ -82,17 +65,19 @@ app.post('/update-profile', checkAuth, async (req, res) => {
     }
 });
 
+//matchmaker
+
+app.post('/matchmake/join', checkAuth, (req, res) => {
+    joinQueue(req.user.uid);
+    res.status(200).json({message: "added to matchmaking queue"});
+});
+
+app.get('/matchmake/status', checkAuth, (req, res) => {
+    const status = getPlayerMatchStatus(req.user.uid);
+    res.status(200).json(status);
+});
+
 //server
-
-let serverActive = null;
-
-const setActive = function(active) {
-    serverActive = active;
-};
-
-const getActive = function() {
-    return serverActive;
-};
 
 //check server
 
@@ -106,42 +91,15 @@ app.get('/hello', (req, res) => {
 
 app.post('/reserve', serverAuth, (req, res) => {
     const {host, port, gameId} = req.body;
-
-    if(!host || !port || !gameId) {
-        return res.status(400).json({error: "missing host/port/gameId"});
-    }
-
-    setActive({
-        id: gameId,
-        host: host,
-        port: port,
-        lastHeartbeat: Date.now(),
-        status: 1
-    });
-
+    registerServer(gameId, host, port);
     res.status(204).send();
 })
 
 app.post('/heartbeat', serverAuth, (req, res) => {
-    const {host, port} = req.body
-    const currentServer = getActive();
-    if(currentServer == null) {
-        setActive({
-            id: 0,
-            host: null,
-            port: null,
-            lastHeartbeat: Date.now(),
-            status: 0
-        });
-    } else {
-        currentServer.host = host;
-        currentServer.port = port;
-        currentServer.lastHeartbeat = Date.now();
-    }
-
-    res.status(204).send(); 
+    const {host, port, gameId} = req.body;
+    updateHeartbeat(gameId, host, port);
+    res.status(204).send();
 });
-
 
 
 app.listen(PORT, () => {

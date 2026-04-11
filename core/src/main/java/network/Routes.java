@@ -5,6 +5,8 @@ public final class Routes {
     public static final String API_PORT = "443";
     public static final String API_MATCHMAKE = "/matchmake";
     public static final String API_HEARTBEAT = "/heartbeat";
+    public static final String API_UPDATE_PROFILE = "/update-profile";
+    public static final String API_PROFILE = "/my-profile";
     //hello😊🌸🌈🌈
     public static final String API_hello = "/hello";
     public static final String SERVER_IP = "169.155.61.249";

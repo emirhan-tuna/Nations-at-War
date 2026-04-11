@@ -8,6 +8,8 @@ import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import network.Routes;
+
 public class FirebaseTest {
 
     FileHandle file = Gdx.files.internal("secrets.json");
@@ -71,11 +73,12 @@ public class FirebaseTest {
 
                 if (statusCode == 200 || statusCode == 201) {
                     JsonReader reader = new JsonReader();
-                    JsonValue file = reader.parse(responseString);
+                    JsonValue json = reader.parse(responseString);
 
-                    String userId = file.getString("localId");
+                    String idToken = json.getString("idToken");
+                    String userId = json.getString("localId");
 
-                    createNewUser(userId, username, aStats);
+                    createNewUser(userId, idToken, username, aStats);
                     getPlayerStats(userId, aStats);
                     aStats.getUserID(userId);
                 } else {
@@ -172,13 +175,18 @@ public class FirebaseTest {
         });
     }
 
-    public void createNewUser(String uID, String username, Stats aStats) {
+    public void createNewUser(String uID, String idToken, String username, Stats aStats) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String jsonPayload = "{\"fields\": {\"username\": {\"stringValue\": \"" + username + "\"}, \"playedGames\": {\"integerValue\": \"0\"}, \"wins\": {\"integerValue\": \"0\"}}}";
-        String url = "https://firestore.googleapis.com/v1/projects/" + PROJECT_ID + "/databases/(default)/documents/users?documentId=" + uID + "&key=" + API_KEY;
-
-        Net.HttpRequest request = requestBuilder.newRequest().method(HttpMethods.POST).url(url).header("Content-type", "application/json").content(jsonPayload).build();
+        String jsonPayload = "{\"username\":\"" + username + "\"}";
+        String url = "https://" + Routes.API_HOST + Routes.API_PROFILE;
+        Net.HttpRequest request = requestBuilder.newRequest()
+            .method(Net.HttpMethods.POST)
+            .url(url)
+            .header("Content-type", "application/json")
+            .header("Authorization", "Bearer " + idToken) 
+            .content(jsonPayload)
+            .build();
 
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
