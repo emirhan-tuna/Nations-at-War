@@ -69,17 +69,27 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             long checksum = checksumPacket.getChecksum();
             GameRoom room = player.getRoom();
             Simulation simulation = room.getSimulation();
+            int playerId = player.getId();
 
-            if(simulation == null) {return;}
+            if(simulation == null) {
+                System.out.println("no sim! cant check the sum");
+                return;
+            }
+
+            System.out.println("checking sum from player: " + playerId);
 
             simulation.scheduleFromNetwork(() -> {
                 long serverChecksum = simulation.getChecksum(tick);
                 
                 if (serverChecksum != checksum) {
+                    System.out.println("wrong checksum by player: " + playerId + "! sending correction...");
+                    
                     Snapshot snapshot = simulation.getSnapshot();
                     ChecksumResponsePacket response = new ChecksumResponsePacket(snapshot);
                     
                     ctx.writeAndFlush(response); 
+                } else {
+                    System.out.println("checksum from player: " + playerId + " is correct!");
                 }
             });
         } else if(msg instanceof SpawnPacket) {
