@@ -13,8 +13,8 @@ public class ClientGameManager {
     private static final float TIME_STEP = 1f / 20f; 
     private float accumulator = 0f;
 
-    public ClientGameManager(Main main) {
-        this.simulation = new Simulation(false); 
+    public ClientGameManager(Main game) {
+        this.game = game;
     }
 
     public Simulation getSimulation() {

@@ -30,7 +30,7 @@ public class FindGameUI implements Screen{
     public FindGameUI(Main game) {
         this.game = game;
         this.stage = new Stage();
-        networkManage = new NetworkManager();
+        networkManage = game.networkManager;
 
         backTexture = new Texture("menu_items/background.jpg");
         backImage = new Image(backTexture);
@@ -40,8 +40,7 @@ public class FindGameUI implements Screen{
         stage.addActor(backImage);
 
         mainTable = new Table(); 
-
-        this.networkManage = new NetworkManager();
+;
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
         String url = "https://nationsapi.fly.dev/hello";

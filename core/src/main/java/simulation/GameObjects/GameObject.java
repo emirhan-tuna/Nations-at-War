@@ -7,6 +7,8 @@ public abstract class GameObject {
     protected int type;
     protected int x;
     protected int y;
+    protected int lastX;
+    protected int lastY;
     protected int size;
     protected int team;
 
@@ -14,6 +16,8 @@ public abstract class GameObject {
         this.type = type;
         this.x = x;
         this.y = y;
+        this.lastX = x;
+        this.lastY = y;
         this.team = team;
     }
 
@@ -31,10 +35,17 @@ public abstract class GameObject {
         buf.writeByte(team);
     }
 
+    public void savePreviousState() {
+        this.lastX = this.x;
+        this.lastY = this.y;
+    }
+
     public int getId() {return this.id;}
     public int getType() {return this.type;}
     public int getX() {return this.x;}
     public int getY() {return this.y;}
+    public int getLastX() {return this.lastX;}
+    public int getLastY() {return this.lastY;}
     public int getTeam() {return this.team;}
 
     public void setId(int id) {this.id = id;}

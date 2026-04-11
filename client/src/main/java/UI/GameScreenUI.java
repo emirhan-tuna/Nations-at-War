@@ -4,10 +4,13 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -22,6 +25,7 @@ import Game.Main;
 import Game.Player;
 import Network.NetworkManager;
 import simulation.GameObjects.GameObject;
+import simulation.GameObjects.Troops.Troop;
 
 public class GameScreenUI implements Screen {
     private Label healthLabel;
@@ -32,6 +36,7 @@ public class GameScreenUI implements Screen {
 
     private Texture skyTexture;
     private Texture groundTexture;
+    private Texture blankTexture; //DONT REMOVE!!!!!!!!!!!!!!!!!! used for objs with no asset (custom drawing like healthbar)
 
     private Main game;
     private Stage stage;
@@ -59,6 +64,12 @@ public class GameScreenUI implements Screen {
 
         towerEnemy = new Texture(Gdx.files.internal("Sprites/tower_enemy_16x16.png"));
         towerEnemy.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        blankTexture = new Texture(pixmap);
+        pixmap.dispose();
 
         this.player = new Player(1);
         this.game = game;
@@ -209,33 +220,61 @@ public class GameScreenUI implements Screen {
 
     public int troopID(String troop) {
         if (troop.equals("archer")) {
-            return 0;
+            return Troop.ARCHER;
         } else if (troop.equals("dragon")) {
-            return 1;
+            return Troop.DRAGON;
         } else if (troop.equals("knight")) {
-            return 2;
+            return Troop.KNIGHT;
         } else if (troop.equals("mage")) {
-            return 3;
+            return Troop.MAGE;
         }
 
         return -1;
     }
 
-    public void draw(GameObject object) {
+    public void draw(GameObject object, float alpha) {
         float width = 128f;
         float height = 128f;
 
         if (object.getTeam() == 0) {
+            float objX = MathUtils.lerp(object.getLastX(), object.getX(), alpha);
+            float objY = MathUtils.lerp(object.getLastY(), object.getY(), alpha);
+            
+            if(object instanceof Troop) {
+                //draw healthbar
+                Troop troop = (Troop) object;
+
+                float healthPercent = MathUtils.lerp((float) troop.getLastHealth(), (float) troop.getHealth(), alpha) / troop.getMaxHealth();;
+
+                float barWidth = width * 0.8f; 
+                float barHeight = height * 0.2f;
+                float barX = object.getX() + (width - barWidth) / 2f;
+                float barY = object.getY() + height + barHeight;
+
+                Color originalColor = batch.getColor();
+                batch.setColor(0f, 0f, 0f, 0.3f);
+                batch.draw(blankTexture, barX, barY, barWidth, barHeight);
+
+                if(troop.getHealth() < troop.getLastHealth()) {
+                    batch.setColor(0.5f, 1f - alpha, 0f, 1f);
+                } else {
+                    batch.setColor(Color.GREEN);
+                }
+
+                batch.draw(blankTexture, barX, barY, barWidth * healthPercent, barHeight);
+
+                batch.setColor(originalColor);
+            }
             if (object.getType() == 0) {   
-                batch.draw(archer, object.getX(), object.getY(), width, height);
+                batch.draw(archer, objX, objY, width, height);
             } else if (object.getType() == 1) {
-                batch.draw(dragon, object.getX(), object.getY(), width, height);
+                batch.draw(dragon, objX, objY, width, height);
             } else if (object.getType() == 2) {
-                batch.draw(knight, object.getX(), object.getY(), width, height);
+                batch.draw(knight, objX, objY, width, height);
             } else if (object.getType() == 3) {
-                batch.draw(mage, object.getX(), object.getY(), width, height);
+                batch.draw(mage, objX, objY, width, height);
             } else if (object.getType() == 4) {
-                batch.draw(towerPlayer, object.getX(), object.getY(), 512f, 512f);
+                batch.draw(towerPlayer, objX, objY, 512f, 512f);
             } 
         } else {
             if (object.getType() == 0) {   
@@ -274,7 +313,7 @@ public class GameScreenUI implements Screen {
         List<GameObject> objects= clientManager.getObjects();
 
         for(GameObject object : objects) {
-            draw(object);
+            draw(object, clientManager.getInterpolationAlpha());
         }
 
         batch.end();

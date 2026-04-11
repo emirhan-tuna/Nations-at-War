@@ -5,23 +5,26 @@ import simulation.GameObjects.GameObject;
 import simulation.GameObjects.Movable;
 
 public abstract class Troop extends GameObject implements Movable {
-    protected int size;
-    protected int damage;
-    protected int health;
-    protected Troop target;
-    protected int cost;
-    protected int range;
-    protected boolean canAttackOtherLane;
-    protected int cooldown;
-
     public static int ARCHER = 0;
     public static int DRAGON = 1;
     public static int KNIGHT = 2;
     public static int MAGE = 3;
     public static int TOWER = 4;
 
+    protected int size;
+    protected int damage;
+    protected int health;
+    protected int lastHealth;
+    protected Troop target;
+    protected int cost;
+    protected int range;
+    protected boolean canAttackOtherLane;
+    protected int cooldown;
+    protected int maxHealth;
+
     public Troop(int type, int x, int y, int team) {
         super(type, x, y, team);
+        this.maxHealth = this.health;
         cooldown = 20;
     }
 
@@ -103,5 +106,19 @@ public abstract class Troop extends GameObject implements Movable {
 
     public int getHealth() {
         return this.health;
+    }
+
+    public int getLastHealth() {
+        return this.lastHealth;
+    }
+
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
+
+    @Override
+    public void savePreviousState() {
+        super.savePreviousState();
+        this.lastHealth = this.health;
     }
 }

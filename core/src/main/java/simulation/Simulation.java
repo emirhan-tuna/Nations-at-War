@@ -101,15 +101,22 @@ public class Simulation {
     }
 
     public void update() {
-
-        if(this.tick % 20 == 0) {
-            players[0].addGold(100);
-            players[1].addGold(100);
-        }
         
         if (!isGameOver()) {
             processNetworkTasks();
             this.tick++;
+
+            //for interpolation
+            if (!isServer) {
+                for (GameObject gameObject : gameObjects) {
+                    gameObject.savePreviousState();
+                }
+            }
+
+            if(this.tick % 20 == 0) {
+                players[0].addGold(100);
+                players[1].addGold(100);
+            }
 
             setTarget();
             ArrayList<Troop> toRemove = new ArrayList<>();
@@ -118,6 +125,7 @@ public class Simulation {
                 if (gameObject instanceof Troop) {
                     if(((Troop)gameObject).isDead()) {
                         toRemove.add((Troop) gameObject);
+                        continue;
                     }
                 }
 
