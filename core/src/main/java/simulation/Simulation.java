@@ -234,8 +234,11 @@ public class Simulation {
 
         this.gameObjects.clear();
         for (GameObject serverObj : snapshot.getObjects()) {
-            this.addObject(serverObj); 
+            this.addObject(serverObj);
         }
+
+        this.towerList[0] = snapshot.towers[0];
+        this.towerList[1] = snapshot.towers[1];
 
         this.tick = snapshot.getTick();
         this.currentObjId = snapshot.nextObjectId;
@@ -275,6 +278,7 @@ public class Simulation {
         private int nextObjectId;
         private List<GameObject> objects;
         private List<ScheduledAction> actions;
+        private Tower[] towers = new Tower[2];
 
         public Snapshot(int tick, int nextObjectId, List<GameObject> serverObjects, Map<Integer, List<ScheduledAction>> serverActionsMap) {
             this.tick = tick;
@@ -282,6 +286,7 @@ public class Simulation {
             this.objects = serverObjects;
             
             this.actions = new ArrayList<>();
+
             for (List<ScheduledAction> actionList : serverActionsMap.values()) {
                 this.actions.addAll(actionList);
             }
@@ -298,7 +303,13 @@ public class Simulation {
             int objCount = buf.readInt();
 
             for(int i = 0; i < objCount; i++) {
-                objects.add(ObjectDecoder.decode(buf));
+                GameObject ob = ObjectDecoder.decode(buf);
+
+                if(ob.getType() == Troop.TOWER) {
+                    towers[ob.getTeam()] = (Tower) ob;
+                }
+
+                objects.add(ob);
             }
 
             //read actions
@@ -330,6 +341,7 @@ public class Simulation {
 
         public int getTick() {return tick;}
         public int getNextObjectId() {return nextObjectId;}
+        public Tower[] getTowers() {return towers;}
         public List<GameObject> getObjects() {return objects;}
         public List<ScheduledAction> getActions() {return actions;}
     }

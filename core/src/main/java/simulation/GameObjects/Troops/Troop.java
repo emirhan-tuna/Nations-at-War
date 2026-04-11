@@ -5,11 +5,11 @@ import simulation.GameObjects.GameObject;
 import simulation.GameObjects.Movable;
 
 public abstract class Troop extends GameObject implements Movable {
-    public static int ARCHER = 0;
-    public static int DRAGON = 1;
-    public static int KNIGHT = 2;
-    public static int MAGE = 3;
-    public static int TOWER = 4;
+    public static final int ARCHER = 0;
+    public static final int DRAGON = 1;
+    public static final int KNIGHT = 2;
+    public static final int MAGE = 3;
+    public static final int TOWER = 4;
 
     protected int size;
     protected int damage;
@@ -65,7 +65,7 @@ public abstract class Troop extends GameObject implements Movable {
     } 
 
     public int calculateDistance(Troop troop) {
-        if (this.canAttackOtherLane) {
+        if (!this.canAttackOtherLane) {
             return (int) Math.abs(troop.getX() - x);
         } else {
             return (int) Math.hypot(Math.abs(troop.getX() - x), Math.abs(troop.getY() - y));

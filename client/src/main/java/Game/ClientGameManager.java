@@ -45,6 +45,10 @@ public class ClientGameManager {
             return; 
         }
 
+        if(game.networkManager != null && game.networkManager.isConnected() && simulation.getTick() % 20 == 10) {
+            game.networkManager.sendChecksum(getChecksum(), simulation.getTick());
+        }
+
         float frameTime = Math.min(delta, 0.25f); 
         
         accumulator += frameTime;
@@ -57,6 +61,10 @@ public class ClientGameManager {
 
     public float getInterpolationAlpha() {
         return accumulator / TIME_STEP;
+    }
+
+    public long getChecksum() {
+        return simulation.getCurrentChecksum();
     }
 
     public void addSimulation(Simulation sim) {

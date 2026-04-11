@@ -23,7 +23,9 @@ public abstract class GameObject {
 
     public GameObject(ByteBuf buf) {
         this.x = buf.readInt();
+        this.lastX = this.x;
         this.y = buf.readInt();
+        this.lastY = this.y;
         this.team = buf.readByte();
     }
 
