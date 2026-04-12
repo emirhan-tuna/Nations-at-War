@@ -61,6 +61,7 @@ app.post('/update-profile', checkAuth, async (req, res) => {
         res.status(200).json({success: true, message: "profile updated/created"});
 
     } catch (error) {
+        console.error("firestore update profile error:", error);
         res.status(500).json({error: "failed to update"});
     }
 });

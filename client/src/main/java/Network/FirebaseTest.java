@@ -198,7 +198,7 @@ public class FirebaseTest {
                     System.out.println("Created user.");
                     getPlayerStats(idToken, aStats);
                 } else {
-                    System.out.println("Failed to create user.");
+                    System.out.println("Failed to create user. reason:" + response.getResultAsString());
                 }
             }
             @Override
