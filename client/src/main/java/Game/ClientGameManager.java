@@ -46,7 +46,7 @@ public class ClientGameManager {
         }
 
 
-        float frameTime = delta;//Math.min(delta, 0.25f); 
+        float frameTime = delta;//Math.min(delta, 0.25f);
         
         accumulator += frameTime;
 

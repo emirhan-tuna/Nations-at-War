@@ -111,6 +111,43 @@ app.post('/end-match', serverAuth, (req, res) => {
     res.status(200).send();
 });
 
+app.post('/update-stats', serverAuth, async (req, res) => {
+    const { winnerId, loserId } = req.body;
+
+    try {
+        const batch = db.batch();
+
+        if (winnerId && winnerId.trim() !== "") {
+
+        const winner = db.collection('users').doc(winnerId);
+            batch.set(winner,
+                {
+                    playedGames: admin.firestore.FieldValue.increment(1),
+                    wins: admin.firestore.FieldValue.increment(1)
+                },
+                {merge: true}
+            );
+        }
+
+        if (loserId && loserId.trim() !== "") {
+            const loser = db.collection('users').doc(loserId);
+            batch.set(loser,
+                {
+                    playedGames: admin.firestore.FieldValue.increment(1)
+                },
+                {merge: true}
+            );
+        }
+
+        await batch.commit();
+        console.log(`stats updated, winner: ${winnerId}, loser: ${loserId}`);
+        res.status(200).send();
+    } catch (error) {
+        console.error('failed to update stats:', error);
+        res.status(500).json({ error: "failed to update database with game stats" });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`api listening on port: ${PORT}`);

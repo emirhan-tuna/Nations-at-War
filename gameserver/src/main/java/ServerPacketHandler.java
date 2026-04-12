@@ -1,3 +1,6 @@
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import network.ActionPacket;
@@ -7,6 +10,7 @@ import network.ChecksumPacket;
 import network.ChecksumResponsePacket;
 import network.DisconnectPacket;
 import network.Packet;
+import network.Routes;
 import network.SpawnPacket;
 import simulation.SimPlayer;
 import simulation.Simulation;
@@ -40,19 +44,30 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
 
             AuthPacket auth = (AuthPacket) msg;
 
-            if(server.getRoom(auth.getCode()) != null) {
-                System.out.println("client at addr " + ctx.channel().remoteAddress() + " attempting to join room with id: " + server.getCurrentGameId());
+            new Thread(() -> {
+                String uid = verifyToken(auth.getToken()); 
 
-                player = server.getPlayerManager().addPlayer(ctx.channel());
-                server.getRoom(auth.getCode()).addPlayer(player);
+                //game crashes if 2 players join too fast so execute on netty, dont change this
+                ctx.executor().execute(() -> {
+                    if (uid != null) {
+                        if(server.getRoom(auth.getCode()) != null) {
+                            System.out.println("client authenticated successfully for room: " + auth.getCode() + " with user id: " + uid);
 
-                System.out.println("got team " + player.getTeam());
+                            Player newPlayer = server.getPlayerManager().addPlayer(ctx.channel());
+                            newPlayer.setUserId(uid);
 
-                ctx.writeAndFlush(new AuthResponsePacket(player.getTeam(), true));
-            } else {
-                System.out.println("room " + auth.getCode() + " does not exist! this address tried to connect: " + ctx.channel().remoteAddress() + " (" + auth.getCode() + ") " + " kicking...");
-                server.kickClient(ctx.channel(), "room doesnt exist", new DisconnectPacket());
-            }
+                            server.getRoom(auth.getCode()).addPlayer(newPlayer);
+                            ctx.writeAndFlush(new AuthResponsePacket(newPlayer.getTeam(), true));
+                        } else {
+                            System.out.println("room " + auth.getCode() + " does not exist!");
+                            server.kickClient(ctx.channel(), "room doesnt exist", new DisconnectPacket());
+                        }
+                    } else {
+                        System.out.println("client " + ctx.channel().remoteAddress() + " sent an invalid token.");
+                        server.kickClient(ctx.channel(), "invalid token", new DisconnectPacket());
+                    }
+                });
+            }).start();
 
             return;
 
@@ -136,5 +151,52 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         System.err.println("error with client: " + ctx.channel().remoteAddress() + " ,cause: " + cause.getMessage());
         ctx.close();
+    }
+
+    private String verifyToken(String token) {
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/my-profile");
+            conn = (HttpURLConnection) url.openConnection();
+            
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Connection", "close");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            
+            int responseCode = conn.getResponseCode();
+            
+            if (responseCode >= 200 && responseCode < 300) {
+                java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(conn.getInputStream(), "utf-8"));
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+
+                String json = response.toString();
+
+                String uidMarker = "\"uid\":\"";
+                int start = json.indexOf(uidMarker);
+                if (start != -1) {
+                    start += uidMarker.length();
+                    int end = json.indexOf("\"", start);
+                    return json.substring(start, end); //no more libraries it already compiles super slowly
+                }
+
+                return null;
+
+            } else {
+                if (conn.getErrorStream() != null) conn.getErrorStream().close();
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("api token verification error: " + e.getMessage());
+            return null;
+        } finally {
+            if (conn != null) conn.disconnect();
+        }
     }
 }

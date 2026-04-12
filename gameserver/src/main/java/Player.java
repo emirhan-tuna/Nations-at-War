@@ -9,6 +9,8 @@ public class Player {
     private GameRoom room;
     private SimPlayer simPlayer;
 
+    private String userId; //db id
+
     public Player(int id, Channel channel) {
         this.id = id;
         this.team = id % 2;
@@ -21,7 +23,9 @@ public class Player {
 
     public void setRoom(GameRoom room) {this.room = room;}
     public void setTeam(int team) {this.team = team;}
+    public void setUserId(String id) {this.userId = id;}
 
+    public String getUserId() {return this.userId;}
     public GameRoom getRoom() {return this.room;}
     public SimPlayer getSimPlayer() {return this.simPlayer;}
     public int getId() {return id;}

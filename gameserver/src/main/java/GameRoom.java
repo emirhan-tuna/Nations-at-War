@@ -18,7 +18,7 @@ public class GameRoom {
     private NotifyApi api;
     private int roomId;
 
-    //0 s 1 started 2 over
+    //0 lobby 1 started 2 over
     private int gameState;
 
     public GameRoom(StartServer server, int id) {
@@ -63,10 +63,21 @@ public class GameRoom {
         //todo: db add points
 
         System.out.println("ending game");
-
         gameState = 2;
-
         broadcast(new GameOverPacket(winner));
+
+        String winnerId = null;
+        String loserId = null;
+        if (winner == 0) {
+            if (players[0] != null) winnerId = players[0].getUserId();
+            if (players[1] != null) loserId = players[1].getUserId();
+        } else if (winner == 1) {
+            if (players[1] != null) winnerId = players[1].getUserId();
+            if (players[0] != null) loserId = players[0].getUserId();
+        }
+
+        api.sendMatchResults(winnerId, loserId);
+
         destroy();
     }
 

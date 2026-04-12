@@ -17,12 +17,14 @@ public class NotifyApi {
         this.room = room;
     }
 
-    public long getCurrentGameId() {return room.getId();}
+    public long getCurrentGameId() {
+        return room.getId();
+    }
 
     public void startHeartbeat() {
 
         System.out.println("Starting API heartbeat for game: " + getCurrentGameId());
-        
+
         heartbeatTimer = Executors.newSingleThreadScheduledExecutor();
 
         heartbeatTimer.scheduleAtFixedRate(() -> ping(), 10, 10, TimeUnit.SECONDS);
@@ -38,28 +40,31 @@ public class NotifyApi {
     private void ping() {
         try {
 
-            if(getCurrentGameId() == 0) {return;}
+            if (getCurrentGameId() == 0) {
+                return;
+            }
 
             URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_HEARTBEAT);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            
+
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
-            conn.setConnectTimeout(5000); 
+            conn.setConnectTimeout(5000);
             conn.setReadTimeout(5000);
             conn.setDoOutput(true);
-            
-            String jsonBody = "{\"host\": \"" + Routes.SERVER_IP + "\", \"port\": " + Routes.SERVER_PORT + ", \"gameId\": " + getCurrentGameId() + "}";
-            
+
+            String jsonBody = "{\"host\": \"" + Routes.SERVER_IP + "\", \"port\": " + Routes.SERVER_PORT
+                    + ", \"gameId\": " + getCurrentGameId() + "}";
+
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonBody.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
-            
+
             int responseCode = conn.getResponseCode();
 
-            if(responseCode == 404) {
+            if (responseCode == 404) {
                 System.out.print("game was not on api, reserving...");
                 reserveGameFromApi();
             } else if (responseCode != 200 && responseCode != 204) {
@@ -70,95 +75,136 @@ public class NotifyApi {
         }
     }
 
-    public boolean endGame(int id) {
+    public void endGame(int id) {
         System.out.println("reserving game...");
-        
-        try {
-            URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/end-match");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            conn.setDoOutput(true);
-            
-            String jsonBody = "{\"gameId\": " + id + "}";
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = jsonBody.getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
 
-            int responseCode = conn.getResponseCode();
-            if (responseCode == 200 || responseCode == 204) {
-                
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
+        new Thread(() -> {
+            try {
+                URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/end-match");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
+                conn.setDoOutput(true);
+
+                String jsonBody = "{\"gameId\": " + id + "}";
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonBody.getBytes("utf-8");
+                    os.write(input, 0, input.length);
                 }
-                
-                System.out.println("api gameremove response: " + response.toString());
-                System.out.println("successfully removed game: " + id);
-                return true;
-                
-            } else {
-                System.err.println("game removal error: " + responseCode + " id: " + id);
-                return false;
-            }
 
-        } catch (Exception e) {
-            System.err.println("api connection failed: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200 || responseCode == 204) {
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                    StringBuilder response = new StringBuilder();
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+
+                    System.out.println("api gameremove response: " + response.toString());
+                    System.out.println("successfully removed game: " + id);
+
+                } else {
+                    System.err.println("game removal error: " + responseCode + " id: " + id);
+                }
+
+            } catch (Exception e) {
+                System.err.println("api connection failed: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
     }
 
-        public boolean reserveGameFromApi() {
+    public void reserveGameFromApi() {
         System.out.println("reserving game...");
-        
-        try {
-            URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/reserve");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            conn.setDoOutput(true);
-            
-            String jsonBody = "{\"host\": \"" + Routes.SERVER_IP + "\", \"port\": " + Routes.SERVER_PORT + ", \"gameId\": " + getCurrentGameId() + "}";
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = jsonBody.getBytes("utf-8");
-                os.write(input, 0, input.length);
-            }
 
-            int responseCode = conn.getResponseCode();
-            if (responseCode == 200 || responseCode == 204) {
-                
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
+        new Thread(() -> {
+            try {
+                URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/reserve");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
+                conn.setDoOutput(true);
+
+                String jsonBody = "{\"host\": \"" + Routes.SERVER_IP + "\", \"port\": " + Routes.SERVER_PORT
+                        + ", \"gameId\": " + getCurrentGameId() + "}";
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonBody.getBytes("utf-8");
+                    os.write(input, 0, input.length);
                 }
-                
-                System.out.println("api gameadd response: " + response.toString());
-                System.out.println("successfully reserved game: " + getCurrentGameId());
-                return true;
-                
-            } else {
-                System.err.println("reservation error: " + responseCode);
-                return false;
-            }
 
-        } catch (Exception e) {
-            System.err.println("api connection failed: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200 || responseCode == 204) {
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                    StringBuilder response = new StringBuilder();
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+
+                    System.out.println("api gameadd response: " + response.toString());
+                    System.out.println("successfully reserved game: " + getCurrentGameId());
+
+                } else {
+                    System.err.println("reservation error: " + responseCode);
+                }
+
+            } catch (Exception e) {
+                System.err.println("api connection failed: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void sendMatchResults(String winnerId, String loserId) {
+        new Thread(() -> {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/server/update-stats");
+                conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
+                conn.setRequestProperty("Connection", "close");
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setDoOutput(true);
+
+                String wUid = winnerId != null ? winnerId : "";
+                String lUid = loserId != null ? loserId : "";
+                String jsonBody = "{\"winnerUid\": \"" + wUid + "\", \"loserUid\": \"" + lUid + "\"}";
+
+                try (java.io.OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonBody.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode >= 200 && responseCode < 300) {
+                    conn.getInputStream().close();
+                    System.out.println("successfully updated match stats!!!!!!!!!!!!!");
+                } else {
+                    if (conn.getErrorStream() != null)
+                        conn.getErrorStream().close();
+                    System.err.println("failed to update stats, with error: " + responseCode);
+                }
+            } catch (Exception e) {
+                System.err.println("error sending match results: " + e.getMessage());
+            } finally {
+                if (conn != null)
+                    conn.disconnect();
+            }
+        }).start();
     }
 }
