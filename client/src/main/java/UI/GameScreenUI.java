@@ -79,7 +79,7 @@ public class GameScreenUI implements Screen {
         skyTexture = new Texture(Gdx.files.internal("Sprites/sky_background_144x81.png"));
         skyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
-        groundTexture = new Texture(Gdx.files.internal("Sprites/lane_backround_48x14.png"));
+        groundTexture = new Texture(Gdx.files.internal("Sprites/lane_backround_56x14.png"));
         groundTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
         mainTable = new Table();
