@@ -31,6 +31,11 @@ public class Tower extends Troop{
     }
 
     @Override
+    public int calculateDistance(Troop troop) {
+        return Math.abs(x - troop.getX());
+    }
+
+    @Override
     public boolean canAttack(Troop target) {
         return this.team != target.getTeam();
     }

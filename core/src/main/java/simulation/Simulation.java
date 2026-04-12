@@ -183,11 +183,11 @@ public class Simulation {
         
         int y;
         if (lane == 1) {
-            y = 420;
-        } else if (lane == 2) {
             y = 300;
-        } else {
+        } else if (lane == 2) {
             y = 180;
+        } else {
+            y = 60;
         } 
         int x;
         if(team == 0) {
@@ -197,6 +197,8 @@ public class Simulation {
         }
 
         if (players[team].getGold() > requiredGold) {
+            players[team].addGold(-requiredGold);
+
             switch(type) {
             case 0:
                 newObj = new Archer(x, y, team);
