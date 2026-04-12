@@ -36,6 +36,15 @@ const matchmake = () => {
     }
 };
 
+const endMatchByServerId = (gameId) => {
+    for (const [uid, match] of Object.entries(activeMatches)) {
+        if (match.gameId === gameId) {
+            delete activeMatches[uid];
+            console.log(`removed player ${uid} from active matches.`);
+        }
+    }
+};
+
 const getPlayerMatchStatus = (userUid) => {
     if (activeMatches[userUid]) {
         return {status: 0, server: activeMatches[userUid]};
@@ -46,4 +55,4 @@ const getPlayerMatchStatus = (userUid) => {
     return {status: 2};
 };
 
-module.exports = {joinQueue, getPlayerMatchStatus};
+module.exports = {joinQueue, getPlayerMatchStatus, endMatchByServerId};

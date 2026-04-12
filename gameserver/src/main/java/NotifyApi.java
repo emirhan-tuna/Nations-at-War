@@ -60,7 +60,53 @@ public class NotifyApi {
         }
     }
 
-    public boolean reserveGameFromApi() {
+    public boolean endGame(int id) {
+        System.out.println("reserving game...");
+        
+        try {
+            URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/end-match");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "Bearer " + Routes.SERVER_SECRET);
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(10000);
+            conn.setDoOutput(true);
+            
+            String jsonBody = "{\"gameId\": " + id + "}";
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonBody.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200 || responseCode == 204) {
+                
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                
+                System.out.println("api gameremove response: " + response.toString());
+                System.out.println("successfully removed game: " + id);
+                return true;
+                
+            } else {
+                System.err.println("game removal error: " + responseCode + " id: " + id);
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.err.println("api connection failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+        public boolean reserveGameFromApi() {
         System.out.println("reserving game...");
         
         try {

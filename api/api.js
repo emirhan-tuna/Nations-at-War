@@ -4,7 +4,7 @@ const express = require('express');
 const {db} = require('./user/firebase.js');
 const {checkAuth} = require('./user/authenticate.js');
 const {registerServer, updateHeartbeat, serverAuth} = require('./server/server.js');
-const {joinQueue, getPlayerMatchStatus} = require('./matchmaker.js');
+const {joinQueue, getPlayerMatchStatus, endMatchByServerId} = require('./matchmaker.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -89,6 +89,19 @@ app.post('/heartbeat', serverAuth, (req, res) => {
     const {host, port, gameId} = req.body;
     updateHeartbeat(gameId, host, port);
     res.status(204).send();
+});
+
+app.post('/end-match', serverAuth, (req, res) => {
+    const {gameId} = req.body;
+
+    if (!gameId) {
+        return res.status(400).json({error: "missing gameId"});
+    }
+
+    endMatchByServerId(gameId);
+
+    console.log(`game ${gameId} ended. server and players freed.`);
+    res.status(200).send();
 });
 
 

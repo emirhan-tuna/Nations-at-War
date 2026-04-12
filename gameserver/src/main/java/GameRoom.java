@@ -15,15 +15,17 @@ public class GameRoom {
     private int playerCount = 0;
 
     private GameSimulation simulation;
+    private NotifyApi api;
     private int roomId;
 
     //0 lobby 1 started 2 over
     private int gameState;
 
-    public GameRoom(StartServer server, int id) {
+    public GameRoom(StartServer server, int id, NotifyApi api) {
         this.server = server;
         this.rooms = server.getRooms();
         this.roomId = id;
+        this.api = api;
     }
 
     public void addPlayer(Player player) {
@@ -69,6 +71,8 @@ public class GameRoom {
         if(this.simulation != null) {
             this.simulation.stop();
         }
+
+        api.endGame(roomId);
 
         rooms.remove(this.getId());
         kickAll("room destroyed");
