@@ -51,12 +51,12 @@ app.post('/update-profile', checkAuth, async (req, res) => {
     if (username) updates.username = username;
 
     if (Object.keys(updates).length === 0) {
-         return res.status(400).json({error: "nothing to update"});
+        return res.status(400).json({error: "nothing to update"});
     }
 
     try {
         const userRef = db.collection('users').doc(userUid);
-        await userRef.update(updates);
+        await userRef.set(updates, {merge: true});
 
         res.status(200).json({success: true, message: "profile updated/created"});
 
