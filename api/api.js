@@ -79,16 +79,6 @@ app.get('/matchmake/status', checkAuth, (req, res) => {
 
 //server
 
-//check server
-
-app.get('/hello', (req, res) => {
-    if(serverActive != null) {
-        res.status(200).json(serverActive);
-    } else {
-        res.status(500).json({error: "no server"});
-    }
-})
-
 app.post('/reserve', serverAuth, (req, res) => {
     const {host, port, gameId} = req.body;
     registerServer(gameId, host, port);
@@ -104,4 +94,8 @@ app.post('/heartbeat', serverAuth, (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`api listening on port: ${PORT}`);
+
+    db.collection('users').limit(1).get()
+        .then(() => console.log('firebase starting.')) //doesnt automatically do the ssl handshake upon launching for some reasonb
+        .catch(err => console.error('firebase fail:', err));
 });
