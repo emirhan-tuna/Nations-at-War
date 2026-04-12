@@ -22,6 +22,7 @@ import Network.NetworkManager;
 import network.Routes;
 
 public class FindGameUI implements Screen{
+    private boolean gameFound = false;
     private Texture backTexture;
     private Image backImage;
     private Main game;
@@ -96,33 +97,34 @@ public class FindGameUI implements Screen{
                 System.out.println("Server status");
 
                 if (serverStatus == 0) {
-                    task.cancel();
+                    if (gameFound) {
+                        task.cancel();
 
-                    Gdx.app.postRunnable(new Runnable() {
-                        @Override
-                        public void run() {
-                            JsonValue serverInfo = file.get("server");
-                            int gameId = serverInfo.getInt("gameId");
-                            String host = serverInfo.getString("host");
-                            int port = serverInfo.getInt("port");
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                JsonValue serverInfo = file.get("server");
+                                int gameId = serverInfo.getInt("gameId");
+                                String host = serverInfo.getString("host");
+                                int port = serverInfo.getInt("port");
 
-                            GameScreenUI newUI = new GameScreenUI(game, networkManage);
-                            ClientGameManager manager = newUI.getClientManager();
+                                GameScreenUI newUI = new GameScreenUI(game, networkManage);
+                                ClientGameManager manager = newUI.getClientManager();
 
-                            networkManage.connect(host, port, gameId, game.userToken, manager);
-                            game.setScreen(newUI);
+                                networkManage.connect(host, port, gameId, game.userToken, manager);
+                                game.setScreen(newUI);
 
-                        }
-                    });
-                } else if (serverStatus == 2) {
-                    Gdx.app.postRunnable(new Runnable() {
-                        @Override
-                        public void run() {
-                            game.setScreen(new MainMenuUi(game, stage, game.skin));
-                        }
-                    });
-                }
-                
+                            }
+                        });
+                    } else if (serverStatus == 2) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.setScreen(new MainMenuUi(game, stage, game.skin));
+                            }
+                        });
+                    }  
+                }  
             }
             @Override
             public void failed(Throwable t) {}
