@@ -251,6 +251,9 @@ public class Simulation {
         this.tick = snapshot.getTick();
         this.currentObjId = snapshot.nextObjectId;
 
+        this.players[0].setGold(snapshot.getPlayerGoldCounts()[0]);
+        this.players[1].setGold(snapshot.getPlayerGoldCounts()[1]);
+
         if (tickDiff > 0) {
             for (int i = 0; i < tickDiff; i++) {
                 this.update();
@@ -278,7 +281,7 @@ public class Simulation {
     }
 
     public Snapshot getSnapshot() {
-        return new Snapshot(this.tick, this.currentObjId, gameObjects, actionQueue);
+        return new Snapshot(this.tick, this.currentObjId, gameObjects, actionQueue, this.players);
     }
 
     public static class Snapshot {
@@ -287,12 +290,14 @@ public class Simulation {
         private List<GameObject> objects;
         private List<ScheduledAction> actions;
         private Tower[] towers = new Tower[2];
+        private int[] playerGoldCounts = new int[2];
 
-        public Snapshot(int tick, int nextObjectId, List<GameObject> serverObjects,
-                Map<Integer, List<ScheduledAction>> serverActionsMap) {
+        public Snapshot(int tick, int nextObjectId, List<GameObject> serverObjects, Map<Integer, List<ScheduledAction>> serverActionsMap, SimPlayer[] players) {
             this.tick = tick;
             this.nextObjectId = nextObjectId;
             this.objects = serverObjects;
+            this.playerGoldCounts[0] = players[0].getGold();
+            this.playerGoldCounts[1] = players[1].getGold();
 
             this.actions = new ArrayList<>();
 
@@ -304,6 +309,8 @@ public class Simulation {
         public Snapshot(ByteBuf buf) {
             this.tick = buf.readInt();
             this.nextObjectId = buf.readInt();
+            this.playerGoldCounts[0] = buf.readInt();
+            this.playerGoldCounts[1] = buf.readInt();
 
             this.objects = new ArrayList<>();
             this.actions = new ArrayList<>();
@@ -332,6 +339,8 @@ public class Simulation {
         public void write(ByteBuf buf) {
             buf.writeInt(tick);
             buf.writeInt(nextObjectId);
+            buf.writeInt(playerGoldCounts[0]);
+            buf.writeInt(playerGoldCounts[1]);
 
             // objects
             buf.writeInt(objects.size());
@@ -346,6 +355,10 @@ public class Simulation {
             for (ScheduledAction action : actions) {
                 ActionEncoder.encode(buf, action);
             }
+        }
+
+        public int[] getPlayerGoldCounts() {
+            return playerGoldCounts;
         }
 
         public int getTick() {
