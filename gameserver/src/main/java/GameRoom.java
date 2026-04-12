@@ -76,6 +76,9 @@ public class GameRoom {
             if (players[0] != null) loserId = players[0].getUserId();
         }
 
+        System.out.println(loserId);
+        System.out.println(winnerId);
+
         api.sendMatchResults(winnerId, loserId);
 
         destroy();

@@ -183,7 +183,7 @@ public class NotifyApi {
 
                 String wUid = winnerId != null ? winnerId : "";
                 String lUid = loserId != null ? loserId : "";
-                String jsonBody = "{\"winnerUid\": \"" + wUid + "\", \"loserUid\": \"" + lUid + "\"}";
+                String jsonBody = "{\"winnerId\": \"" + wUid + "\", \"loserId\": \"" + lUid + "\"}";
 
                 try (java.io.OutputStream os = conn.getOutputStream()) {
                     byte[] input = jsonBody.getBytes("utf-8");
