@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const {db} = require('./user/firebase.js');
+const {db, admin} = require('./user/firebase.js');
 const {checkAuth} = require('./user/authenticate.js');
 const {registerServer, updateHeartbeat, serverAuth, setServerStatus, removeServer} = require('./server/server.js');
 const {joinQueue, getPlayerMatchStatus, endMatchByServerId} = require('./matchmaker.js');
