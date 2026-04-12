@@ -76,7 +76,7 @@ class StartServer {
     }
 
     public void readyGame() {;
-        this.currentGameId = rng.nextInt(10000);
+        this.currentGameId = rng.nextInt(10000) + 1;
         this.currentRoom = new GameRoom(this, currentGameId);
 
         this.rooms.put(currentGameId, currentRoom);

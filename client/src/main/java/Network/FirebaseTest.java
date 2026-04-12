@@ -137,7 +137,7 @@ public class FirebaseTest {
     public void getPlayerStats (String idToken, Stats aStats) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String url = "https://" + Routes.API_HOST + Routes.API_PROFILE;
+        String url = Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_PROFILE;
         Net.HttpRequest request = requestBuilder.newRequest()
                 .method(Net.HttpMethods.GET)
                 .url(url)
@@ -181,7 +181,7 @@ public class FirebaseTest {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
         String jsonPayload = "{\"username\":\"" + username + "\"}";
-        String url = "https://" + Routes.API_HOST + Routes.API_UPDATE_PROFILE;
+        String url = Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_UPDATE_PROFILE;
         Net.HttpRequest request = requestBuilder.newRequest()
             .method(Net.HttpMethods.POST)
             .url(url)

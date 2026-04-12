@@ -49,6 +49,7 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
         } else if(msg instanceof ChecksumResponsePacket) {
             ChecksumResponsePacket checksum = (ChecksumResponsePacket) msg;
             Snapshot snapshot = checksum.getSnapshot();
+            Simulation simulation = manager.getSimulation();
 
             simulation.scheduleFromNetwork(() -> {
                 simulation.correct(snapshot);

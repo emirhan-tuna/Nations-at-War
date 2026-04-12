@@ -72,7 +72,7 @@ public class FindGameUI implements Screen{
     public void getAnswer(Timer.Task task) {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String matchmakeURL = "https://" + Routes.API_HOST + Routes.API_MATCHMAKER_STATUS;
+        String matchmakeURL = Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_MATCHMAKER_STATUS;
 
         HttpRequest request = requestBuilder.newRequest()
         .method(Net.HttpMethods.GET)
@@ -129,7 +129,7 @@ public class FindGameUI implements Screen{
     public void matchmake() {
         HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
-        String matchmakeURL = "https://" + Routes.API_HOST + Routes.API_MATCHMAKER_JOIN;
+        String matchmakeURL = Routes.API_HOST + ":" + Routes.API_PORT + Routes.API_MATCHMAKER_JOIN;
 
         Net.HttpRequest request = requestBuilder.newRequest()
             .method(Net.HttpMethods.POST)
