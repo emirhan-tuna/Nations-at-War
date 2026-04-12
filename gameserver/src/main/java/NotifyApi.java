@@ -170,7 +170,7 @@ public class NotifyApi {
         new Thread(() -> {
             HttpURLConnection conn = null;
             try {
-                URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/server/update-stats");
+                URL url = new URL(Routes.API_HOST + ":" + Routes.API_PORT + "/update-stats");
                 conn = (HttpURLConnection) url.openConnection();
 
                 conn.setRequestMethod("POST");
