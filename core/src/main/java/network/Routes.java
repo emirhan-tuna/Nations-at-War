@@ -10,7 +10,7 @@ public final class Routes {
     public static final String API_MATCHMAKER_JOIN = "/matchmake/join";
     public static final String API_MATCHMAKER_STATUS = "/matchmake/status";
     //hello😊🌸🌈🌈
-    public static final String API_hello = "/hello";
+    public static final String API_hello = "/hello"; //goodbye😞😞🌧️🌧️(removed)
     public static final String SERVER_IP = "169.155.61.249"; //169.155.61.249
     public static final String SERVER_PORT = "9000";
     //not secret

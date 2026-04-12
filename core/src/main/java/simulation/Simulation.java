@@ -44,12 +44,11 @@ public class Simulation {
     public Simulation(boolean isServer) {
         players[0] = new SimPlayer(0);
         players[1] = new SimPlayer(1);
-        towerList[0] = new Tower(4, 512, 50,  0);
+        towerList[0] = new Tower(4, 512, 50, 0);
         towerList[1] = new Tower(4, 1440, 50, 1);
 
         towerList[0].setId(currentObjId++);
         this.addObject(towerList[0]);
-
 
         towerList[1].setId(currentObjId++);
         this.addObject(towerList[1]);
@@ -58,7 +57,7 @@ public class Simulation {
     }
 
     public void setTarget() {
-        for(GameObject gameObject : gameObjects) {
+        for (GameObject gameObject : gameObjects) {
             for (GameObject gameObject2 : gameObjects) {
                 if (gameObject instanceof Troop && gameObject2 instanceof Troop) {
                     Troop troop1 = (Troop) gameObject;
@@ -74,10 +73,10 @@ public class Simulation {
                             if (troop1.getTarget() == null) {
                                 troop1.setTarget(troop2);
                             } else {
-                                int distance = troop1.calculateDistance(troop2); 
+                                int distance = troop1.calculateDistance(troop2);
                                 if (troop1.calculateDistance(troop1.getTarget()) > distance) {
                                     troop1.setTarget(troop2);
-                                } 
+                                }
                             }
                         }
                     }
@@ -91,7 +90,7 @@ public class Simulation {
     }
 
     public boolean isGameOver() {
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             if (towerList[i].isDead()) {
                 return true;
             }
@@ -100,25 +99,28 @@ public class Simulation {
     }
 
     public int getWinner() {
-        if (towerList[0].isDead()) return 1;
-        else if (towerList[1].isDead()) return 0;
-        else return -1;
+        if (towerList[0].isDead())
+            return 1;
+        else if (towerList[1].isDead())
+            return 0;
+        else
+            return -1;
     }
 
     public void update() {
-        
+
         if (!isGameOver()) {
             processNetworkTasks();
             this.tick++;
 
-            //for interpolation
+            // for interpolation
             if (!isServer) {
                 for (GameObject gameObject : gameObjects) {
                     gameObject.savePreviousState();
                 }
             }
 
-            if(this.tick % 20 == 0) {
+            if (this.tick % 20 == 0) {
                 players[0].addGold(100);
                 players[1].addGold(100);
             }
@@ -126,9 +128,9 @@ public class Simulation {
             setTarget();
             ArrayList<Troop> toRemove = new ArrayList<>();
 
-            for(GameObject gameObject : gameObjects) {
+            for (GameObject gameObject : gameObjects) {
                 if (gameObject instanceof Troop) {
-                    if(((Troop)gameObject).isDead()) {
+                    if (((Troop) gameObject).isDead()) {
                         toRemove.add((Troop) gameObject);
                         continue;
                     }
@@ -142,7 +144,7 @@ public class Simulation {
             List<ScheduledAction> actionsThisTick = actionQueue.get(this.tick);
             if (actionsThisTick != null) {
                 for (ScheduledAction action : actionsThisTick) {
-                    action.execute(this); 
+                    action.execute(this);
                 }
             }
 
@@ -150,7 +152,7 @@ public class Simulation {
 
             long currChecksum = updateChecksum();
             this.currentChecksum = currChecksum;
-            if(this.isServer) {
+            if (this.isServer) {
                 checksumHistory[this.tick % HISTORY_SIZE] = currChecksum;
             }
         }
@@ -163,24 +165,13 @@ public class Simulation {
     private void processNetworkTasks() {
         Runnable task;
         while ((task = taskQueue.poll()) != null) {
-            task.run(); 
+            task.run();
         }
     }
 
     public void spawnObject(int type, int team, int lane) {
-        int requiredGold = 0;
-        if (type == 0) {
-            requiredGold = 75;
-        } else if (type == 1) {
-            requiredGold = 250;
-        } else if (type == 2) {
-            requiredGold = 50;
-        } else if (type == 3) {
-            requiredGold = 150;
-        }
-
         GameObject newObj = null;
-        
+
         int y;
         if (lane == 1) {
             y = 300;
@@ -188,50 +179,46 @@ public class Simulation {
             y = 180;
         } else {
             y = 60;
-        } 
+        }
         int x;
-        if(team == 0) {
+        if (team == 0) {
             x = 512;
         } else {
-            x = 1410; 
+            x = 1410;
         }
 
-        if (players[team].getGold() > requiredGold) {
-            players[team].addGold(-requiredGold);
-
-            switch(type) {
+        switch (type) {
             case 0:
                 newObj = new Archer(x, y, team);
                 break;
             case 1:
-                newObj = new Dragon(x, y , team); 
+                newObj = new Dragon(x, y, team);
                 break;
             case 2:
                 newObj = new Knight(x, y, team);
                 break;
-            case 3: 
+            case 3:
                 newObj = new Mage(x, y, team);
                 break;
             default:
                 System.out.println("unknown object");
                 break;
-            }
+        }
 
-            newObj.setId(currentObjId);
+        newObj.setId(currentObjId);
 
-            incrementObjId();
+        incrementObjId();
 
-            if(newObj != null) {
-                gameObjects.add(newObj);
-            }
-        } 
+        if (newObj != null) {
+            gameObjects.add(newObj);
+        }
     }
 
     public void addObject(GameObject object) {
         gameObjects.add(object);
     }
 
-    //used by client
+    // used by client
     public void addAction(ScheduledAction action, int tick) {
         actionQueue.putIfAbsent(tick, new ArrayList<>());
         actionQueue.get(tick).add(action);
@@ -264,8 +251,8 @@ public class Simulation {
         this.tick = snapshot.getTick();
         this.currentObjId = snapshot.nextObjectId;
 
-        if(tickDiff > 0) {
-            for(int i = 0; i < tickDiff; i++) {
+        if (tickDiff > 0) {
+            for (int i = 0; i < tickDiff; i++) {
                 this.update();
             }
         }
@@ -273,7 +260,7 @@ public class Simulation {
 
     private long updateChecksum() {
         crc32.reset();
-        
+
         gameObjects.sort((a, b) -> Integer.compare(a.getId(), b.getId()));
 
         for (GameObject obj : gameObjects) {
@@ -301,11 +288,12 @@ public class Simulation {
         private List<ScheduledAction> actions;
         private Tower[] towers = new Tower[2];
 
-        public Snapshot(int tick, int nextObjectId, List<GameObject> serverObjects, Map<Integer, List<ScheduledAction>> serverActionsMap) {
+        public Snapshot(int tick, int nextObjectId, List<GameObject> serverObjects,
+                Map<Integer, List<ScheduledAction>> serverActionsMap) {
             this.tick = tick;
             this.nextObjectId = nextObjectId;
             this.objects = serverObjects;
-            
+
             this.actions = new ArrayList<>();
 
             for (List<ScheduledAction> actionList : serverActionsMap.values()) {
@@ -320,24 +308,24 @@ public class Simulation {
             this.objects = new ArrayList<>();
             this.actions = new ArrayList<>();
 
-            //read objs
+            // read objs
             int objCount = buf.readInt();
 
-            for(int i = 0; i < objCount; i++) {
+            for (int i = 0; i < objCount; i++) {
                 GameObject ob = ObjectDecoder.decode(buf);
 
-                if(ob.getType() == Troop.TOWER) {
+                if (ob.getType() == Troop.TOWER) {
                     towers[ob.getTeam()] = (Tower) ob;
                 }
 
                 objects.add(ob);
             }
 
-            //read actions
+            // read actions
             int actionCount = buf.readInt();
 
-            for(int i = 0; i < actionCount; i++) {
-                actions.add(ActionDecoder.decode(buf)); 
+            for (int i = 0; i < actionCount; i++) {
+                actions.add(ActionDecoder.decode(buf));
             }
         }
 
@@ -345,26 +333,40 @@ public class Simulation {
             buf.writeInt(tick);
             buf.writeInt(nextObjectId);
 
-            //objects
+            // objects
             buf.writeInt(objects.size());
 
-            for(GameObject obj : objects) {
+            for (GameObject obj : objects) {
                 ObjectEncoder.encode(buf, obj);
             }
 
-            //actions
+            // actions
             buf.writeInt(actions.size());
 
-            for(ScheduledAction action : actions) {
+            for (ScheduledAction action : actions) {
                 ActionEncoder.encode(buf, action);
             }
         }
 
-        public int getTick() {return tick;}
-        public int getNextObjectId() {return nextObjectId;}
-        public Tower[] getTowers() {return towers;}
-        public List<GameObject> getObjects() {return objects;}
-        public List<ScheduledAction> getActions() {return actions;}
+        public int getTick() {
+            return tick;
+        }
+
+        public int getNextObjectId() {
+            return nextObjectId;
+        }
+
+        public Tower[] getTowers() {
+            return towers;
+        }
+
+        public List<GameObject> getObjects() {
+            return objects;
+        }
+
+        public List<ScheduledAction> getActions() {
+            return actions;
+        }
     }
 
     public long getCurrentChecksum() {

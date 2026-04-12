@@ -18,7 +18,7 @@ public class GameRoom {
     private NotifyApi api;
     private int roomId;
 
-    //0 lobby 1 started 2 over
+    //0 s 1 started 2 over
     private int gameState;
 
     public GameRoom(StartServer server, int id) {

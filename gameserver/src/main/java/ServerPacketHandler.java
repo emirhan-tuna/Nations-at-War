@@ -8,8 +8,10 @@ import network.ChecksumResponsePacket;
 import network.DisconnectPacket;
 import network.Packet;
 import network.SpawnPacket;
+import simulation.SimPlayer;
 import simulation.Simulation;
 import simulation.Simulation.Snapshot;
+import simulation.GameObjects.Troops.Troop;
 import simulation.ScheduledActions.ScheduledAction;
 import simulation.ScheduledActions.SpawnAction;
 
@@ -104,7 +106,7 @@ public class ServerPacketHandler extends SimpleChannelInboundHandler<Packet> {
             Simulation simulation = room.getSimulation();
 
             if (simulation == null) {return;}
-            
+
             System.out.println("spawn request: " + type + " from: " + player.getId());
 
             simulation.scheduleFromNetwork(() -> {

@@ -89,6 +89,22 @@ public abstract class Troop extends GameObject implements Movable {
         }
     }
 
+    public static int getRequiredGold(int type) {
+        int requiredGold = 0;
+
+        if (type == 0) {
+            requiredGold = 75;
+        } else if (type == 1) {
+            requiredGold = 250;
+        } else if (type == 2) {
+            requiredGold = 50;
+        } else if (type == 3) {
+            requiredGold = 150;
+        }
+
+        return requiredGold;
+    }
+
     public boolean getAttack() {
         return this.canAttackOtherLane;
     }

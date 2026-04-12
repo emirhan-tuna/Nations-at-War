@@ -1,7 +1,9 @@
 package simulation.ScheduledActions;
 
 import io.netty.buffer.ByteBuf;
+import simulation.SimPlayer;
 import simulation.Simulation;
+import simulation.GameObjects.Troops.Troop;
 
 public class SpawnAction extends ScheduledAction {
     private int type;
@@ -23,7 +25,19 @@ public class SpawnAction extends ScheduledAction {
     }
 
     public void execute(Simulation sim) {
-        sim.spawnObject(this.type, team, lane);
+        SimPlayer player = sim.getSimPlayer(this.team);
+        int cost = Troop.getRequiredGold(this.type);
+
+        if (player.getGold() >= cost) {
+            
+            player.setGold(player.getGold() - cost); 
+            sim.spawnObject(this.type, this.team, this.lane);
+            
+            System.out.println("spawned " + type + " for team " + team + " at tick " + getTick());
+
+        } else {
+            System.out.println("spawn failed at tick " + getTick() + " (not enough gold).");
+        }
     }
 
     public void write(ByteBuf buf) {
