@@ -46,16 +46,17 @@ public class GameOverUI implements Screen{
                                 game.games = games;
                                 game.wins = wins;
                                 game.username = username;
+
+                                game.setScreen(new MainMenuUi(game, stage, game.skin));
                             }
                         });
                     }
 
                     @Override
                     public void getUserID(String username, String token) {
-                        
+
                     }
                 });
-                game.setScreen(new MainMenuUi(game, stage, game.skin));
             }
         });
 
