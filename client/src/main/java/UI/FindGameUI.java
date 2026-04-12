@@ -115,7 +115,12 @@ public class FindGameUI implements Screen{
                         }
                     });
                 } else if (serverStatus == 2) {
-                    game.setScreen(new MainMenuUi(game, stage, game.skin));
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.setScreen(new MainMenuUi(game, stage, game.skin));
+                        }
+                    });
                 }
                 
             }
