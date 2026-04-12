@@ -69,6 +69,7 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 @Override
                 public void run() {
                     manager.stop();
+                    System.out.println("GameOver");
                     game.setScreen(new GameOverUI(game));
                 }
             });
@@ -78,10 +79,20 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
                 @Override
                 public void run() {
                     manager.start();
+                    System.out.println("Started");
                 }
             });
         } else if(msg instanceof DisconnectPacket) {
-            //handle it here...
+            Main game = manager.getGame();
+
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Disconnect");
+                    manager.stop();
+                    game.setScreen(new GameOverUI(game));
+                }
+            });
         }
     }
 
