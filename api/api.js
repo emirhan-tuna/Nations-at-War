@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const {db} = require('./user/firebase.js');
 const {checkAuth} = require('./user/authenticate.js');
-const {registerServer, updateHeartbeat, serverAuth} = require('./server/server.js');
+const {registerServer, updateHeartbeat, serverAuth, setServerStatus, removeServer} = require('./server/server.js');
 const {joinQueue, getPlayerMatchStatus, endMatchByServerId} = require('./matchmaker.js');
 
 const app = express();
@@ -87,8 +87,13 @@ app.post('/reserve', serverAuth, (req, res) => {
 
 app.post('/heartbeat', serverAuth, (req, res) => {
     const {host, port, gameId} = req.body;
-    updateHeartbeat(gameId, host, port);
-    res.status(204).send();
+    const success = updateHeartbeat(gameId, host, port);
+
+    if(success) {
+        res.status(204).send();
+    } else {
+        res.status(404).send();
+    }
 });
 
 app.post('/end-match', serverAuth, (req, res) => {
@@ -99,6 +104,8 @@ app.post('/end-match', serverAuth, (req, res) => {
     }
 
     endMatchByServerId(gameId);
+
+    removeServer(gameId);
 
     console.log(`game ${gameId} ended. server and players freed.`);
     res.status(200).send();

@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit;
 import network.Routes;
 
 public class NotifyApi {
-    private StartServer server;
+    private GameRoom room;
     private ScheduledExecutorService heartbeatTimer;
 
-    public NotifyApi(StartServer server) {
-        this.server = server;
+    public NotifyApi(GameRoom room) {
+        this.room = room;
     }
 
-    public long getCurrentGameId() {return server.getCurrentGameId();}
+    public long getCurrentGameId() {return room.getId();}
 
     public void startHeartbeat() {
 
@@ -26,6 +26,13 @@ public class NotifyApi {
         heartbeatTimer = Executors.newSingleThreadScheduledExecutor();
 
         heartbeatTimer.scheduleAtFixedRate(() -> ping(), 10, 10, TimeUnit.SECONDS);
+    }
+
+    public void stopHeartbeat() {
+        if (heartbeatTimer != null && !heartbeatTimer.isShutdown()) {
+            heartbeatTimer.shutdownNow();
+            System.out.println("Stopped API heartbeat for game: " + getCurrentGameId());
+        }
     }
 
     private void ping() {
@@ -51,8 +58,11 @@ public class NotifyApi {
             }
             
             int responseCode = conn.getResponseCode();
-            
-            if (responseCode != 200 && responseCode != 204) {
+
+            if(responseCode == 404) {
+                System.out.print("game was not on api, reserving...");
+                reserveGameFromApi();
+            } else if (responseCode != 200 && responseCode != 204) {
                 System.err.println("heartbeat fail(?????): " + responseCode);
             }
         } catch (Exception e) {

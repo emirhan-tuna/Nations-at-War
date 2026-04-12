@@ -32,14 +32,19 @@ const registerServer = (gameId, host, port) => {
     });
 };
 
+const removeServer = (gameId) => {
+    activeGames.delete(gameId);
+};
+
 const updateHeartbeat = (gameId, host, port) => {
     if (activeGames.has(gameId)) {
         const game = activeGames.get(gameId);
         game.lastHeartbeat = Date.now();
         game.host = host;
         game.port = port;
+        return true;
     } else {
-        registerServer(gameId, host, port);
+        return false;
     }
 };
 
@@ -63,5 +68,6 @@ module.exports = {
     registerServer, 
     updateHeartbeat, 
     getAvailableGame,
-    setServerStatus 
+    setServerStatus,
+    removeServer
 };

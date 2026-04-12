@@ -21,7 +21,6 @@ class StartServer {
 
     
     private PlayerManager playerManager;
-    private NotifyApi api;
     private Map<Integer, GameRoom> rooms = new ConcurrentHashMap<>();
 
     private int currentGameId = 0;
@@ -31,8 +30,6 @@ class StartServer {
 
     public StartServer() {
         this.playerManager = new PlayerManager();
-        this.api = new NotifyApi(this);
-        api.startHeartbeat();
     }
 
     public static void main(String[] args) throws Exception {
@@ -77,11 +74,9 @@ class StartServer {
 
     public void readyGame() {;
         this.currentGameId = rng.nextInt(10000) + 1;
-        this.currentRoom = new GameRoom(this, currentGameId, this.api);
+        this.currentRoom = new GameRoom(this, currentGameId);
 
         this.rooms.put(currentGameId, currentRoom);
-        
-        api.reserveGameFromApi();
     }
 
 

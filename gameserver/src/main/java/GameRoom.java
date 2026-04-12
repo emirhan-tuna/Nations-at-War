@@ -21,11 +21,14 @@ public class GameRoom {
     //0 lobby 1 started 2 over
     private int gameState;
 
-    public GameRoom(StartServer server, int id, NotifyApi api) {
+    public GameRoom(StartServer server, int id) {
         this.server = server;
         this.rooms = server.getRooms();
         this.roomId = id;
-        this.api = api;
+        this.api = new NotifyApi(this);
+
+        this.api.reserveGameFromApi();
+        this.api.startHeartbeat();
     }
 
     public void addPlayer(Player player) {
@@ -71,6 +74,8 @@ public class GameRoom {
         if(this.simulation != null) {
             this.simulation.stop();
         }
+
+        api.stopHeartbeat();
 
         api.endGame(roomId);
 
