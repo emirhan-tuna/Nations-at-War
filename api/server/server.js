@@ -7,7 +7,20 @@ const serverAuth = (req, res, next) => {
     return res.status(401).json({error: 'unauthorized server access'});
 };
 
-const activeGames = new Map(); 
+const activeGames = new Map();
+
+const HEARTBEAT_TIMEOUT_MS = 20000;
+const CLEANUP_INTERVAL_MS = 5000;
+
+setInterval(() => {
+    const now = Date.now();
+    for (const [gameId, game] of activeGames.entries()) {
+        if (now - game.lastHeartbeat > HEARTBEAT_TIMEOUT_MS) {
+            console.log(`ggame ${gameId} timed out. terminating...`);
+            activeGames.delete(gameId);
+        }
+    }
+}, CLEANUP_INTERVAL_MS)
 
 const registerServer = (gameId, host, port) => {
     activeGames.set(gameId, {
