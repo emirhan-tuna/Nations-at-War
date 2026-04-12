@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import Game.Main;
+import Network.FirebaseTest;
+import Network.Stats;
 
 public class GameOverUI implements Screen{
     private Main game;
@@ -34,6 +36,25 @@ public class GameOverUI implements Screen{
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
+                FirebaseTest test = new FirebaseTest();
+                test.getPlayerStats(game.userToken, new Stats() {
+                    @Override
+                    public void statsLoaded(String username, int games, int wins) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.games = games;
+                                game.wins = wins;
+                                game.username = username;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void getUserID(String username, String token) {
+                        
+                    }
+                });
                 game.setScreen(new MainMenuUi(game, stage, game.skin));
             }
         });
