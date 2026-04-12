@@ -119,10 +119,12 @@ public class FindGameUI implements Screen{
                         }
                     });
                 } else if (serverStatus == 2) {
+                    task.cancel();
+
                     Gdx.app.postRunnable(new Runnable() {
                         @Override
                         public void run() {
-                            game.setScreen(new MainMenuUi(game, stage, game.skin));
+                            System.out.println("No available servers!");
                         }
                     });
                 }
