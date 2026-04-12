@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import Game.ClientGameManager;
 import Game.Main;
 import Network.NetworkManager;
+import simulation.Simulation;
 import simulation.GameObjects.GameObject;
 import simulation.GameObjects.Troops.Troop;
 
@@ -30,6 +31,9 @@ public class GameScreenUI implements Screen {
     private SpriteBatch batch;
     private Table popupMenu;
     private String lastTroop = "";
+
+    private Label leftGoldLabel;
+    private Label rightGoldLabel;
 
     private Texture skyTexture;
     private Texture groundTexture;
@@ -79,7 +83,7 @@ public class GameScreenUI implements Screen {
         skyTexture = new Texture(Gdx.files.internal("Sprites/sky_background_144x81.png"));
         skyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
-        groundTexture = new Texture(Gdx.files.internal("Sprites/lane_backround_48x14.png"));
+        groundTexture = new Texture(Gdx.files.internal("Sprites/lane_background_96x28.png"));
         groundTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
         mainTable = new Table();
@@ -265,6 +269,11 @@ public class GameScreenUI implements Screen {
             float objX = MathUtils.lerp(object.getLastX(), object.getX(), alpha);
             float objY = MathUtils.lerp(object.getLastY(), object.getY(), alpha);
 
+            float offsetX = objX;
+            if (object.getType() == 4) {
+                offsetX = objX - width;
+            }
+
             if(object instanceof Troop) {
                 //draw healthbar
                 Troop troop = (Troop) object;
@@ -273,7 +282,7 @@ public class GameScreenUI implements Screen {
 
                 float barWidth = width * 0.8f; 
                 float barHeight = height * 0.2f;
-                float barX = objX + (width - barWidth) / 2f;
+                float barX = offsetX + (width - barWidth) / 2f;
                 float barY = objY + height + barHeight;
 
                 float originalColor = batch.getPackedColor();
@@ -291,15 +300,15 @@ public class GameScreenUI implements Screen {
 
                 batch.setPackedColor(originalColor);
                 if (object.getType() == 0) {   
-                    batch.draw(archer, object.getX() + width, object.getY(), -width, height);
+                    batch.draw(archer, objX + width, objY, -width, height);
                 } else if (object.getType() == 1) {
-                    batch.draw(dragon, object.getX() + width, object.getY(), -width, height);
+                    batch.draw(dragon, objX + width, objY, -width, height);
                 } else if (object.getType() == 2) {
-                    batch.draw(knight, object.getX() + width, object.getY(), -width, height);
+                    batch.draw(knight, objX + width, objY, -width, height);
                 } else if (object.getType() == 3) {
-                    batch.draw(mage, object.getX() + width, object.getY(), -width, height);
+                    batch.draw(mage, objX + width, objY, -width, height);
                 } else if (object.getType() == 4) {
-                    batch.draw(towerPlayer, object.getX() - width + 20, object.getY(), width, height);
+                    batch.draw(towerPlayer, offsetX, objY, width, height);
                 }
             }
         }
@@ -310,6 +319,9 @@ public class GameScreenUI implements Screen {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        
+
+
         batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
 
         batch.begin();
@@ -318,6 +330,13 @@ public class GameScreenUI implements Screen {
         batch.draw(groundTexture, 0, 0, 1920, 560);
 
         if(clientManager.getStarted()) {
+            Simulation sim = clientManager.getSimulation();
+            int leftGold = sim.getSimPlayer(0).getGold();
+            int rightGold = sim.getSimPlayer(1).getGold();
+
+            leftGoldLabel.setText("Gold: " + leftGold);
+            rightGoldLabel.setText("Gold: " + rightGold);
+
             if (clientManager.isOver()) {
                 game.setScreen(new GameOverUI(game));
             }
@@ -357,6 +376,15 @@ public class GameScreenUI implements Screen {
         mainTable.setFillParent(true);
 
         showTroops();
+
+        leftGoldLabel = new Label("Gold: 0", game.skin, "title");
+        leftGoldLabel.setPosition(50, 800);
+
+        rightGoldLabel = new Label("Gold: 0", game.skin, "title");
+        rightGoldLabel.setPosition(1750, 800);
+
+        stage.addActor(leftGoldLabel);
+        stage.addActor(rightGoldLabel);
         stage.addActor(mainTable);
         stage.addActor(popupMenu);
     }

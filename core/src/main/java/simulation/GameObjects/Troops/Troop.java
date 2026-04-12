@@ -138,4 +138,8 @@ public abstract class Troop extends GameObject implements Movable {
         super.savePreviousState();
         this.lastHealth = this.health;
     }
+
+    public int getGold() {
+        return this.cost;
+    }
 }

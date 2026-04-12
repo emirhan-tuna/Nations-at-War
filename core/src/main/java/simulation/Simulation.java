@@ -121,8 +121,8 @@ public class Simulation {
             }
 
             if (this.tick % 20 == 0) {
-                players[0].addGold(100);
-                players[1].addGold(100);
+                players[0].addGold(10);
+                players[1].addGold(10);
             }
 
             setTarget();
