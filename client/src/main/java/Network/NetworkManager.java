@@ -27,7 +27,7 @@ public class NetworkManager {
         this.workerGroup = new NioEventLoopGroup();
     }
 
-    public void connect(String host, int port, int code, ClientGameManager manager) {
+    public void connect(String host, int port, int code, String token, ClientGameManager manager) {
 
         if (isConnected()) {
             System.out.println("already connected");
@@ -55,7 +55,7 @@ public class NetworkManager {
                     ch.pipeline().addLast(new PacketHandler());
                     
                     //clientbound
-                    ch.pipeline().addLast(new ClientPacketHandler(code, manager)); 
+                    ch.pipeline().addLast(new ClientPacketHandler(code, token, manager)); 
                 }
             });
 

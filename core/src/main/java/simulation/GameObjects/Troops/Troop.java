@@ -42,7 +42,7 @@ public abstract class Troop extends GameObject implements Movable {
 
     @Override
     public void move() {
-        int speed = 2;
+        int speed = 10;
 
         if (this.team == 0) {
             setX(x + speed);
