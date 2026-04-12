@@ -65,6 +65,10 @@ public abstract class Troop extends GameObject implements Movable {
     } 
 
     public int calculateDistance(Troop troop) {
+        if (troop instanceof Tower) {
+            return (int) Math.abs(troop.getX() - x);
+        }
+
         if (!this.canAttackOtherLane) {
             return (int) Math.abs(troop.getX() - x);
         } else {
