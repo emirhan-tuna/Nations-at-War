@@ -23,7 +23,7 @@ public class Tower extends Troop{
 
     public void update() {
         if (this.target != null && target.health > 0) {
-            int dist = (int) Math.abs(target.getX() - x);
+            int dist = calculateDistance(target);
             if (dist <= range) {
                 attack(target);
             }

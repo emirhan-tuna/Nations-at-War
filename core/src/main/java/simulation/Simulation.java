@@ -44,7 +44,7 @@ public class Simulation {
     public Simulation(boolean isServer) {
         players[0] = new SimPlayer(0);
         players[1] = new SimPlayer(1);
-        towerList[0] = new Tower(4, 100, 50,  0);
+        towerList[0] = new Tower(4, 512, 50,  0);
         towerList[1] = new Tower(4, 1440, 50, 1);
 
         towerList[0].setId(currentObjId++);
