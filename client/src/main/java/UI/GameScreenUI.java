@@ -155,9 +155,9 @@ public class GameScreenUI implements Screen {
         troopTable.add(mageButton).size(buttonWidth, buttonHeight);
         troopTable.row().padTop(5f);
 
-        troopTable.add(new Label("500", game.skin)).center().padRight(10f);
-        troopTable.add(new Label("100", game.skin)).center().padRight(10f);
+        troopTable.add(new Label("250", game.skin)).center().padRight(10f);
         troopTable.add(new Label("75", game.skin)).center().padRight(10f);
+        troopTable.add(new Label("50", game.skin)).center().padRight(10f);
         troopTable.add(new Label("150", game.skin)).center();
 
         archerButton.addListener(new ClickListener() {
