@@ -22,7 +22,6 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private int code;
     private ClientGameManager manager;
     private String token;
-    private Simulation simulation;
 
     public ClientPacketHandler(int code, String token, ClientGameManager manager) {
         this.code = code;
@@ -32,7 +31,7 @@ public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        AuthPacket authPacket = new AuthPacket(code);
+        AuthPacket authPacket = new AuthPacket(code, token);
         ctx.writeAndFlush(authPacket);
     }
     
