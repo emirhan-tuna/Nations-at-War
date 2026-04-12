@@ -109,7 +109,7 @@ public class FindGameUI implements Screen{
                             GameScreenUI newUI = new GameScreenUI(game, networkManage);
                             ClientGameManager manager = newUI.getClientManager();
 
-                            networkManage.connect(host, port, gameId, manager);
+                            networkManage.connect(host, port, gameId, game.userToken, manager);
                             game.setScreen(newUI);
 
                         }

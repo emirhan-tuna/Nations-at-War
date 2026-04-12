@@ -21,11 +21,13 @@ import simulation.Simulation.Snapshot;
 public class ClientPacketHandler extends SimpleChannelInboundHandler<Packet> {
     private int code;
     private ClientGameManager manager;
+    private String token;
     private Simulation simulation;
 
-    public ClientPacketHandler(int code, ClientGameManager manager) {
+    public ClientPacketHandler(int code, String token, ClientGameManager manager) {
         this.code = code;
         this.manager = manager;
+        this.token = token;
     }
 
     @Override
